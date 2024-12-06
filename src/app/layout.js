@@ -1,8 +1,7 @@
 import localFont from "next/font/local";
 import "./globals.scss";
-import App from "@/common/App";
 
-const azFont = localFont({
+const AvenirNextLTPro = localFont({
   src: [
     {
       path: "../fonts/AvenirNextLTPro-Bold.otf",
@@ -36,11 +35,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${azFont.className} antialiased`}
+        className={`${AvenirNextLTPro.className} antialiased`}
       >
-        <App>
-          {children}
-        </App>
+        {children}
       </body>
     </html>
   );
