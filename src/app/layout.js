@@ -2,15 +2,29 @@ import localFont from "next/font/local";
 import "./globals.scss";
 import App from "@/common/App";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+const azFont = localFont({
+  src: [
+    {
+      path: "../fonts/AvenirNextLTPro-Bold.otf",
+      weight: "700",
+      style: "bolder",
+    },
+    {
+      path: "../fonts/AvenirNextLTPro-Demi.otf",
+      weight: "600",
+      style: "bold",
+    },
+    {
+      path: "../fonts/AvenirNextLTPro-Medium.otf",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../fonts/AvenirNextLTPro-Regular.otf",
+      weight: "400",
+      style: "lighter",
+    },
+  ],
 });
 
 export const metadata = {
@@ -22,7 +36,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${azFont.className} antialiased`}
       >
         <App>
           {children}

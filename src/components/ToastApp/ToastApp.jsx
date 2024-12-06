@@ -1,0 +1,57 @@
+import Image from "next/image";
+
+import iconWarning from './assets/iconWarning.svg';
+import iconSuccess from './assets/iconSuccess.svg';
+import toastClose from './assets/toastClose.svg';
+import { useEffect } from "react";
+
+const ToastApp = ({
+    status = 'success',
+    text = '',
+    show = false,
+    setShow,
+    timer = 0,
+    onClose = () => {
+
+    }
+}) => {
+
+    useEffect(() => {
+        let showTimer = null;
+        if(show && timer > 0){
+            showTimer = setTimeout(() => {
+                onClose();
+            },timer)
+        }
+        else if(!show){
+            clearTimeout(showTimer);
+        }
+    },[show, setShow, timer]);
+
+    return (
+        <div className={'absolute bottom-0 left-0'}>
+            <div className={'w-screen h-full relative flex items-end justify-center px-[16px] pb-[29px]'}>
+                <div className={`${status === 'error' ? 'bg-[#FFE9ED] border-[#EE4343]': 'bg-[#E3F5ED]  border-[#0FBB81]'} 
+                ${show ? 'flex' : 'hidden'}
+                border-[1px] rounded-[6px] w-full z-[100] max-w-[328px] p-[12px] items-center gap-[12px] justify-between`}>
+                    {(status === 'error') ?
+                        <Image src={iconWarning}/>
+                    :
+                        <Image src={iconSuccess}/>
+                    }
+                    {
+                        text && 
+                        <span className={'text-[#000000] text-[12px] font-[600] leading-[14.4px] grow max-w-[238px]'}>
+                            {text}
+                        </span>
+                    }
+                    <button onClick={onClose}>
+                        <Image src={toastClose}/>
+                    </button>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default ToastApp;
