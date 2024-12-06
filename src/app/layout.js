@@ -1,6 +1,5 @@
 import localFont from "next/font/local";
 import "./globals.scss";
-import App from "@/common/App";
 
 const azFont = localFont({
   src: [
@@ -35,13 +34,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${azFont.className} antialiased`}
-      >
-        <App>
-          {children}
-        </App>
-      </body>
+      <body className={`${azFont.className} antialiased`}>{children}</body>
     </html>
   );
 }

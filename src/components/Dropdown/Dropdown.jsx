@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect, forwardRef } from 'react'
 import PropTypes from 'prop-types'
 import IconComponent from '../IconComponent/IconComponent'
-import * as Icon from '../../icons'
+// import * as Icon from '../../icons'
 import style from './Dropdown.module.scss'
-const Dropdown = forwardRef(({ 
+const Dropdown = forwardRef(({
   options=[],
   classname,
   onSearchValue,
@@ -20,7 +20,7 @@ const Dropdown = forwardRef(({
   const [isOpen, setIsOpen] = useState(showDropdown)
   const [selected, setSelected] = useState([])
   const [search, setSearch] = useState('')
-  
+
   const dropdownRef = useRef(null)
 
   useEffect(() => {
@@ -90,9 +90,9 @@ const Dropdown = forwardRef(({
           <span className='bg-neutral-600 rounded-full text-neutral-50 px-1'>{selected.length-1}+</span>
           </span>: labelName?.length?labelName:<span className='text-[12px] text-neutral-600'>{placeholder}</span>
         }
-        <IconComponent src={selectedIconElement??Icon.ChevronDownIcon} color='default' classname={`${style.chevron} ${isOpen?style.chevronRotate:''}`} />
+        {/* <IconComponent src={selectedIconElement??Icon.ChevronDownIcon} color='default' classname={`${style.chevron} ${isOpen?style.chevronRotate:''}`} /> */}
       </button>
-     
+
       {isOpen && (
         <div className={style.listContainer} >
           {onSearchValue&& <div className='h-[32px] border border-neutral-500 rounded flex items-center py-2 px-3 '>
@@ -102,7 +102,7 @@ const Dropdown = forwardRef(({
               value={search}
               onChange={handleSearch}
               placeholder={searchPlaceholder}
-              className={`w-full h-full outline-none focus:outline-none rounded py-2 px-3 text-[12px] flex-1 text-neutral-900 placeholder:text-neutral-700`} 
+              className={`w-full h-full outline-none focus:outline-none rounded py-2 px-3 text-[12px] flex-1 text-neutral-900 placeholder:text-neutral-700`}
             />
             {search && <IconComponent src={'/icons/silang.svg'} onclick={e=>setSearch('')} />}
           </div>}
