@@ -5,7 +5,6 @@ import Dropdown from '@/components/Dropdown/Dropdown'
 import Input from '@/components/Input/Input'
 import IconComponent from '@/components/IconComponent/IconComponent'
 import Image from 'next/image'
-import Badges from '@/components/Badges/Badges'
 function HeaderContainerWeb({renderAppBar}) {
   return (
     <header className={style.main}>

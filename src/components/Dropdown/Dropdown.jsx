@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect, forwardRef } from 'react'
 import PropTypes from 'prop-types'
 import IconComponent from '../IconComponent/IconComponent'
-import * as Icon from '../../icons'
 import style from './Dropdown.module.scss'
 const Dropdown = forwardRef(({ 
   options=[],
@@ -90,7 +89,7 @@ const Dropdown = forwardRef(({
           <span className='bg-neutral-600 rounded-full text-neutral-50 px-1'>{selected.length-1}+</span>
           </span>: labelName?.length?labelName:<span className='text-[12px] text-neutral-600'>{placeholder}</span>
         }
-        <IconComponent src={selectedIconElement??Icon.ChevronDownIcon} color='default' classname={`${style.chevron} ${isOpen?style.chevronRotate:''}`} />
+        <IconComponent src={selectedIconElement??'/icons/chevron-down.svg'} color='default' classname={`${style.chevron} ${isOpen?style.chevronRotate:''}`} />
       </button>
      
       {isOpen && (
