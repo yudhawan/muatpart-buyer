@@ -1,0 +1,19 @@
+.main{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+.inputSearch{
+    width: 391px;
+    div{
+        background-color: white;
+        height: 32px;
+    }
+}
+.iconnSearch{
+    path{
+        // stroke: var(--primary-300);
+        fill: var(--primary-500);
+    }
+}
