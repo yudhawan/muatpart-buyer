@@ -8,15 +8,15 @@ function App({children}) {
     useEffect(()=>{
         if(window.innerWidth<500) setIsmobile(true)
         else setIsmobile(false)
-        document.addEventListener('resize',()=>{
+        window.addEventListener('resize',()=>{
             if(window.innerWidth<500) setIsmobile(true)
             else setIsmobile(false)
         })
-        return ()=> document.addEventListener('resize',()=>{})
+        return ()=> window.addEventListener('resize',()=>{})
     },[])
   return (
     <ResponsiveProvider>
-        <div>
+        <div className={`w-full max-w-[1280px] mx-auto`}>
             {children}
         </div>
     </ResponsiveProvider>

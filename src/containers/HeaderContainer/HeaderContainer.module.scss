@@ -17,3 +17,36 @@
         fill: var(--primary-500);
     }
 }
+.iconBackRed{
+    path{
+        stroke:#c22716
+    }
+}
+.iconBackWhite{
+    path{
+        stroke:var(--neutral-50)
+    }
+}
+.inputMobile{
+    width: 150px;
+    div{
+        height: 32px;
+        background-color: var(--neutral-50);
+        border: none;
+    }
+    input{
+        width: 100%;
+    }
+}
+.iconWhiteGarasi{
+    path{
+        // stroke-width: 2px;
+        fill:var(--neutral-50);
+    }
+}
+.iconCartMobile{
+    path{
+        fill: none;
+        stroke: var(--neutral-50);
+    }
+}

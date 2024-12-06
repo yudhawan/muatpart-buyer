@@ -12,7 +12,7 @@ function HeaderContainerWeb({renderAppBar}) {
         {
             <>
                 {!renderAppBar && (
-                    <div className="w-full h-8 bg-[#c22716] py-2 flex ">
+                    <div className="w-full h-9 bg-[#c22716] py-2 flex ">
                         <div className='w-full max-w-[1280px] mx-auto px-10 flex justify-between'>
                             <div className='flex items-center gap-2'>
                                 <Image src={'/icons/phone.svg'} width={10} height={14} alt='phone' />
@@ -33,7 +33,7 @@ function HeaderContainerWeb({renderAppBar}) {
                         </div>
                     </div>
                 )}
-                <div className="w-full bg-primary-700 h-16 flex items-center">
+                <div className="w-full bg-primary-700 flex py-3  h-[80px]">
                     {!renderAppBar ? (
                     <div className='w-full max-w-[1280px] mx-auto flex items-center px-10 justify-between'>
                         <Link href="/" className="mr-4">
@@ -73,7 +73,7 @@ function HeaderContainerWeb({renderAppBar}) {
                         
                         <Link 
                         href="/login"
-                        className="px-6 py-2 bg-[#002C84] rounded-3xl text-neutral-50 text-sm font-semibold flex gap-1"
+                        className="px-6 py-2 bg-[#002C84] rounded-3xl text-neutral-50 text-sm font-semibold flex gap-1 whitespace-nowrap"
                         >
                             <IconComponent src={'/icons/Plus.svg'} />
                             <p>Jual Produk</p>
@@ -84,7 +84,20 @@ function HeaderContainerWeb({renderAppBar}) {
                     )}
                 </div>
                 {!renderAppBar && (
-                    <div className="w-full h-8 bg-primary-700-red-500" />
+                    <div className="w-full flex h-8 bg-primary-700-red-500 bg-primary-700 ">
+                        <div className='w-full max-w-[1280px] mx-auto flex justify-between px-10 items-end'>
+                            <div className='w-[137px] h-7 bg-[#c22716] py-[6px] px-4 rounded-tr-md rounded-tl-md flex items-center gap-2 cursor-pointer'>
+                                <IconComponent src={'/icons/kategori.svg'} />
+                                <p className='font-semibold text-sm text-neutral-50'>Kategori</p>
+                                <IconComponent classname={'chevron-white'} src={'/icons/chevron-down.svg'} />
+                            </div>
+                            <div className='w-auto max-w-[274px] h-7 bg-[#c22716] py-[6px] px-4 rounded-tr-md rounded-tl-md flex items-center cursor-pointer gap-2'>
+                                <IconComponent classname={'chevron-white'} src={'/icons/lokasi.svg'} />
+                                <p className='font-semibold text-sm text-neutral-50 w-full max-w-[194px]'>Dikirim ke:  Surabaya</p>
+                                <IconComponent classname={'chevron-white'} src={'/icons/chevron-down.svg'} />
+                            </div>
+                        </div>
+                    </div>
                 )}
             </>
         }
