@@ -7,11 +7,12 @@ import AddressForm from "./AddressForm";
 import { useState } from "react";
 
 const LocationManagement = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <div>
       <AddressForm />
+
       <Modal
         isOpen={isOpen}
         setIsOpen={setIsOpen}

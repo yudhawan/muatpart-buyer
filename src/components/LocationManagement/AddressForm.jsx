@@ -1,10 +1,14 @@
-import React from "react";
-import { Dropdown } from "./ui/Dropdown";
-import { CustomTextArea } from "./ui/CustomTextArea";
+import React, { useState } from "react";
 import useLocationManagementStore from "@/store/locationManagementStore";
-import { CustomInput } from "./ui/CustomInput";
+import Dropdown from "../Dropdown/Dropdown";
+import TextArea from "../TextArea/TextArea";
+import Input from "../Input/Input";
+import SWRHandler from "@/services/useSWRHook";
 
 const AddressForm = () => {
+  const [addressInput, setAddressInput] = useState("");
+  const swrHandler = new SWRHandler();
+
   const {
     address,
     location,
@@ -12,68 +16,103 @@ const AddressForm = () => {
     kota,
     provinsi,
     postalCode,
-
     setAddress,
     setLocation,
     setKecamatan,
     setPostalCode,
   } = useLocationManagementStore();
-  const postalCodeList = [
-    "12345",
-    "67890",
-    "54321",
-    "09876",
-    "13579",
-    "24680",
-    "97531",
-    "86420",
-    "75319",
-    "64280",
-  ];
+
+  const formData = new FormData();
+  formData.append("phrase", addressInput);
+  formData.append("dataType", "json");
+
+  const customFetcher = (url) => {
+    return fetch(url, {
+      method: "POST",
+      body: formData,
+    }).then((res) => res.json());
+  };
+
+  const { data: autocompleteData, error: autocompleteError } =
+    swrHandler.useSWRHook(
+      addressInput
+        ? `${process.env.NEXT_PUBLIC_INTERNAL_API}get_autocomplete_street`
+        : null,
+      customFetcher,
+      (error) => {
+        console.error("Autocomplete error:", error);
+      }
+    );
+
+  const handleAddressBlur = (e) => {
+    const value = e.target.value;
+    setAddressInput(value);
+    setAddress(value);
+  };
+
+  // Effect to handle autocomplete response
+  React.useEffect(() => {
+    if (autocompleteData) {
+      console.log("Autocomplete results:", autocompleteData);
+      // Handle the autocomplete data here
+      // Update other fields based on selected address
+    }
+  }, [autocompleteData]);
 
   const kecamatanList = [
-    "Kebayoran Baru",
-    "Kebayoran Lama",
-    "Kebon Jeruk",
-    "Kelapa Gading",
-    "Kemayoran",
-    "Kembangan",
-    "Kuningan",
-    "Mampang Prapatan",
-    "Matraman",
-    "Palmerah",
+    { name: "Kecamatan 1", value: "kecamatan1" },
+    { name: "Kecamatan 2", value: "kecamatan2" },
+    { name: "Kecamatan 3", value: "kecamatan3" },
+  ];
+
+  const postalCodeList = [
+    { name: "Kode Pos 1", value: "kodepos1" },
+    { name: "Kode Pos 2", value: "kodepos2" },
+    { name: "Kode Pos 3", value: "kodepos3" },
   ];
 
   return (
     <div className="space-y-4 my-4 mx-12 text-xs">
       <div className="flex">
         <label className="w-1/3 text-neutral-600 font-medium">Alamat*</label>
-        <CustomTextArea
-          className="w-2/3"
-          label="Alamat"
-          maxLength={60}
-          errorMessage="Alamat tidak boleh kosong"
-          onChange={(value) => setAddress(value)}
-          onBlur={(value) => setLocation(value)}
-        />
+        <div className="w-2/3">
+          <TextArea
+            maxLength={60}
+            resize="none"
+            placeholder="Masukkan alamat lengkap dengan detail. Contoh : Nama Jalan (bila tidak ditemukan), Gedung, No. Rumah/Patokan, Blok/Unit"
+            blurEvent={handleAddressBlur}
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          />
+          {autocompleteError && (
+            <p className="text-red-500 mt-1">
+              Error fetching address suggestions
+            </p>
+          )}
+        </div>
       </div>
 
       <div className="flex">
         <label className="w-1/3 text-neutral-600 font-medium">Lokasi*</label>
-        <CustomInput
-          autoFillValue={location}
-          onChange={(value) => setLocation(value)}
-        />
+        <div className="w-2/3">
+          <Input
+            placeholder="Masukkan Lokasi Toko"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+          />
+        </div>
       </div>
 
       <div className="flex">
         <label className="w-1/3 text-neutral-600 font-medium">Kecamatan*</label>
-        <Dropdown
-          className="w-2/3"
-          items={kecamatanList}
-          label="Kecamatan"
-          onChange={setKecamatan}
-        />
+        <div className="w-2/3">
+          <Dropdown
+            options={kecamatanList}
+            onSearchValue={(value) => console.log(value)}
+            placeholder="Pilih Kecamatan"
+            searchPlaceholder="Cari Kecamatan"
+          />
+        </div>
       </div>
 
       <div className="flex">
@@ -82,6 +121,7 @@ const AddressForm = () => {
           {kota ? kota : "-"}
         </div>
       </div>
+
       <div className="flex">
         <label className="w-1/3 text-neutral-600 font-medium">Provinsi</label>
         <div className="w-2/3 text-neutral-900 font-medium">
@@ -91,19 +131,15 @@ const AddressForm = () => {
 
       <div className="flex">
         <label className="w-1/3 text-neutral-600 font-medium">Kode Pos*</label>
-        <Dropdown
-          className="w-2/3"
-          items={postalCodeList}
-          label="Kode Pos"
-          onChange={setPostalCode}
-        />
+        <div className="w-2/3">
+          <Dropdown
+            options={postalCodeList}
+            onSearchValue={(value) => console.log(value)}
+            placeholder="Pilih Kode Pos"
+            searchPlaceholder="Cari Kode Pos"
+          />
+        </div>
       </div>
-      <ul>
-        <li>Alamat: {address}</li>
-        <li>Lokasi: {location}</li>
-        <li>Kecamatan: {kecamatan}</li>
-        <li>Kode Pos: {postalCode}</li>
-      </ul>
     </div>
   );
 };
