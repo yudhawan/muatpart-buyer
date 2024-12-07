@@ -6,7 +6,6 @@ import style from './MapContainer.module.scss'
 import useSWR from 'swr'
 
 async function fetchAddress([lat,lng]) {
-    console.log(lat,lng)
     return new Promise((resolve,reject)=>{
         const geocoder = window.google.maps.Geocoder()
         const location = {lat,lng}
@@ -46,9 +45,8 @@ function MapContainer({lat=-7.2575,lng=112.7521,zoom=5,width,height,classname}) 
     const cleanUp = useCallback(()=>setMap(null),[])
     const {isLoaded}= useJsApiLoader({
         id:'google-map-script',
-        googleMapsApiKey:'AIzaSyDSQlLIM9-7wYw-r0sH7gHizg_SjvMek34'
+        googleMapsApiKey:process.env.NEXT_PUBLIC_MAP_API
     })
-    console.log(data)
   return isLoaded?(
     <div style={{width:width+'px',height:height+'px'}} className={`overflow-hidden rounded-md w-[200px] h-[200px] ${classname}`}>
         <GoogleMap 
