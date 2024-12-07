@@ -1,5 +1,5 @@
 "use client"
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api'
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
 import Image from 'next/image'
 import React, { useCallback, useState } from 'react'
 import style from './MapContainer.module.scss'
@@ -10,6 +10,7 @@ async function fetchAddress([lat,lng]) {
         const geocoder = window.google.maps.Geocoder()
         const location = {lat,lng}
         geocoder.geocode({location},(res,stat)=>{
+            console.log(stat,'ss')
             if(stat==='OK' && res[0]){
                 resolve(res[0])
             }else{
@@ -47,6 +48,7 @@ function MapContainer({lat=-7.2575,lng=112.7521,zoom=5,width,height,classname}) 
         id:'google-map-script',
         googleMapsApiKey:process.env.NEXT_PUBLIC_MAP_API
     })
+    // console.log(data)
   return isLoaded?(
     <div style={{width:width+'px',height:height+'px'}} className={`overflow-hidden rounded-md w-[200px] h-[200px] ${classname}`}>
         <GoogleMap 
@@ -57,6 +59,15 @@ function MapContainer({lat=-7.2575,lng=112.7521,zoom=5,width,height,classname}) 
             onUnmount={cleanUp}
             onDragEnd={onDragEnd}
         >
+            {/* <Marker 
+            position={getCenter}
+            draggable
+            onDragEnd={onDragEnd}
+            icon={{
+                url:'/icon/marker.svg',
+                scaledSize: new window.google.maps.Size(40, 58)
+            }}
+             /> */}
             <div className={style.marker}>
                 <Image className='w-full h-full' src={'/icons/marker.svg'} width={40} height={58}  />
             </div>
