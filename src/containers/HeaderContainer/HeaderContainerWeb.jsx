@@ -8,7 +8,6 @@ import Image from 'next/image'
 function HeaderContainerWeb({renderAppBar}) {
   return (
     <header className={style.main}>
-      
         {
             <>
                 {!renderAppBar && (
