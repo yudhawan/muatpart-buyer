@@ -2,7 +2,7 @@
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
 import React, { useCallback, useState } from 'react'
 
-function MapContainer({lat=-7.2575,lng=112.7521,zoom=5,width,height,classname,viewOnly,textLabel, onPosition}) {
+function MapContainer({lat=-7.2575,lng=112.7521,zoom=5,width,height,classname,viewOnly,textLabel, onPosition=()=>{}}) {
     const [getCenter,setCenter]=useState({
         lat,
         lng

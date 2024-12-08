@@ -4,10 +4,14 @@ import Dropdown from "../Dropdown/Dropdown";
 import TextArea from "../TextArea/TextArea";
 import Input from "../Input/Input";
 import SWRHandler from "@/services/useSWRHook";
+import MiniMap from "@/containers/MapContainer/MiniMap";
+import Modal from "../Modals/modal";
+import MapContainer from "@/containers/MapContainer/MapContainer";
 
 const AddressForm = () => {
   const [addressInput, setAddressInput] = useState("");
   const swrHandler = new SWRHandler();
+  const [isOpenMap,setOpenMap]=useState(false)
 
   const {
     address,
@@ -140,8 +144,22 @@ const AddressForm = () => {
           />
         </div>
       </div>
+      <div className="flex">
+        <label className="w-1/3 text-neutral-600 font-medium">Titik Lokasi*</label>
+        <div className="w-2/3">
+          <MiniMap onClick={()=>setOpenMap(true)} />
+        </div>
+      </div>
+      <Modal  isOpen={isOpenMap} setIsOpen={setOpenMap} isBig  >
+        <div className="flex item-start">
+          <MapContainer width={600} height={390} onPosition={(val)=>console.log(val.lat,val.lng)} />
+          <div className="flex flex-col gap-[22px]">
+            <span>Atur Pin Lokasi</span>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
-
+ 
 export default AddressForm;
