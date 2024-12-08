@@ -13,8 +13,8 @@ function HeaderContainerWeb({renderAppBar}) {
                 {!renderAppBar && (
                     <div className="w-full h-9 bg-[#c22716] py-2 flex ">
                         <div className='w-full max-w-[1280px] mx-auto px-10 flex justify-between'>
-                            <div className='flex items-center gap-2'>
-                                <Image src={'/icons/phone.svg'} width={10} height={14} alt='phone' />
+                            <div className='flex items-center gap-2 cursor-pointer'>
+                                <Image src={'/icons/phone.svg'} width={14} height={18} alt='phone' />
                                 <p className='text-neutral-50 font-semibold  text-xs pt-[1px]'>Download muatmuat</p>
                             </div>
                             <div className='flex items-center gap-6'>

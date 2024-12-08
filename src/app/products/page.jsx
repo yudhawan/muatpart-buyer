@@ -1,8 +1,8 @@
 import React from 'react'
-import ProductContainer from './ProductContainer'
+// import ProductContainer from './ProductContainer'
 
 function page() {
-  return <ProductContainer/>
+  return <></>
 }
 
 export default page
