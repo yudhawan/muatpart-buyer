@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import "react-datepicker/dist/react-datepicker.css";
+// @import "react-datepicker/dist/react-datepicker.css";
 
 :root {
   --background: #ffffff;
@@ -118,7 +118,7 @@
   --muat-trans-900: #770000;
 }
 input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button{
+input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -128,18 +128,18 @@ input::-webkit-inner-spin-button{
 //     --foreground: #ededed;
 //   }
 // }
-.chevron-white{
-  path{
+.chevron-white {
+  path {
     stroke: var(--neutral-50);
   }
 }
-.input-error{
-  div{
+.input-error {
+  div {
     border-color: var(--error-400);
   }
 }
-.input-error:hover{
-  div{
+.input-error:hover {
+  div {
     border-color: var(--error-400);
   }
 }
