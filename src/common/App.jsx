@@ -18,7 +18,7 @@ function App({children}) {
     },[])
   return (
     <ResponsiveProvider>
-        <div style={{marginTop:`${headerHeight+24}px`,paddingInline:isMobile?'16px':''}} className={`w-full max-w-[1280px] mx-auto`}>
+        <div style={{marginTop:`${isMobile?headerHeight+16:headerHeight+24}px`,paddingInline:isMobile?'16px':''}} className={`w-full max-w-[1280px] mx-auto`}>
             {children}
         </div>
     </ResponsiveProvider>

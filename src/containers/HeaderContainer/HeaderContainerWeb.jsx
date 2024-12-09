@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import style from './HeaderContainer.module.scss'
 import Link from 'next/link'
 import Dropdown from '@/components/Dropdown/Dropdown'
@@ -7,6 +7,7 @@ import IconComponent from '@/components/IconComponent/IconComponent'
 import Image from 'next/image'
 import { headerProps } from './headerProps'
 import ModalComponent from '@/components/Modals/ModalComponent'
+import { ResponsiveContext } from '@/common/ResponsiveContext'
 const ProfileHover = [
     {
         url:'/',
@@ -44,7 +45,6 @@ function HeaderContainerWeb({renderAppBar}) {
     const [getProfile,setProfile]=useState(ProfileHover)
     const [showCategory,setShowCategory]=useState(false)
     const [showLocation,setShowLocation]=useState(false)
-
     const {setHeaderHeight} = headerProps()
     useEffect(()=>{
         if(getProfile.length) {
@@ -57,7 +57,7 @@ function HeaderContainerWeb({renderAppBar}) {
         }
     },[])
     useEffect(()=>{
-        if(headerRef?.current?.offsetHeight) setHeaderHeight(headerRef?.current?.offsetHeight)
+        if(headerRef?.current?.offsetHeight) setHeaderHeight?.(headerRef?.current?.offsetHeight)
 
     },[])
   return (
@@ -193,7 +193,7 @@ function HeaderContainerWeb({renderAppBar}) {
                                 <p className='font-semibold text-sm text-neutral-50'>Kategori</p>
                                 <IconComponent classname={'chevron-white'} src={'/icons/chevron-down.svg'} />
                             </div>
-                            <div className='w-auto max-w-[274px] h-7 bg-[#c22716] py-[6px] px-4 rounded-tr-md rounded-tl-md flex items-center cursor-pointer gap-2' onClick={()=>setShowLocation(!showLocation)}>
+                            <div className=' w-auto max-w-[274px] h-7 bg-[#c22716] py-[6px] px-4 rounded-tr-md rounded-tl-md flex items-center cursor-pointer gap-2' onClick={()=>setShowLocation(!showLocation)}>
                                 <IconComponent classname={'chevron-white'} src={'/icons/lokasi.svg'} width={24} />
                                 <p className='font-semibold text-sm text-neutral-50 w-full max-w-[194px]'>Dikirim ke:  Surabaya</p>
                                 <IconComponent classname={'chevron-white'} src={'/icons/chevron-down.svg'} />
