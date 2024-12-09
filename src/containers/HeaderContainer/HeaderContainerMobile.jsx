@@ -1,22 +1,24 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import style from './HeaderContainer.module.scss'
 import Image from 'next/image'
 import IconComponent from '@/components/IconComponent/IconComponent'
 import Input from '@/components/Input/Input'
 import { headerProps } from './headerProps'
+import { ResponsiveContext } from '@/common/ResponsiveContext'
 function HeaderContainerMobile({
     renderAppBarMobile,
     type
 }) {
-  const {setHeaderHeight,searchTitle} = headerProps()
+  const {setHeaderHeight,searchTitle,setSearch} = headerProps()
   const headerRef = useRef(null)
+  const {setAppBarTypeMobile,appBarType} = useContext(ResponsiveContext)
   useEffect(()=>{
-      if(headerRef?.current?.offsetHeight) setHeaderHeight(headerRef?.current?.offsetHeight)
-  },[])
+      if(headerRef?.current?.offsetHeight) setHeaderHeight?.(headerRef?.current?.offsetHeight)
+  },[appBarType])
   return (
     <header className={style.main} ref={headerRef}>
       {
-      type=='search'?<HeaderMainSearchMobile type={type} title={'Search berdasarkan '}/>
+      type?<HeaderMainSearchMobile type={type} title={searchTitle}/>
       :<div className='bg-[#c22716] relative w-full h-auto max-h-[88px] p-4 pb-3'>
         {
             renderAppBarMobile?
@@ -27,7 +29,9 @@ function HeaderContainerMobile({
                   <span className='w-6 h-6 rounded-full bg-neutral-50 flex justify-center items-center cursor-pointer'>
                     <IconComponent src={'/icons/chevron-left.svg'} classname={style.iconBackRed} />
                   </span>
-                  <Input classname={style.inputMobile} placeholder='Cari Produk' icon={{left:'/icons/search.svg'}} />
+                  <Input onFocus={()=>{
+                    setSearch('searchTitle','Cari berdasarkan')
+                    setAppBarTypeMobile('defaultTitleMain')}} classname={style.inputMobile} placeholder='Cari Produk' icon={{left:'/icons/search.svg'}} />
                 </div>
                 <div className='flex gap-4 items-start'>
                   <span className='gap-[2px] flex flex-col items-center'>
@@ -44,7 +48,7 @@ function HeaderContainerMobile({
                   </span>
                 </div>
               </div>
-              <div className='w-auto max-w-[155px] h-6 p-2 rounded-md bg-neutral-50 flex items-center gap-1'>
+              <div className='w-auto max-w-[155px] h-6 p-2 rounded-md bg-neutral-50 flex items-center gap-1 ml-8'>
                 <span className='font-semibold text-[9px] text-[#c22716]'>Dikirim Ke: Kota Surabaya</span>
                 <IconComponent src={'/icons/chevron-right.svg'} classname={style.iconBackRed} />
               </div>
@@ -56,16 +60,17 @@ function HeaderContainerMobile({
     </header>
   )
 }
-export function HeaderMainSearchMobile({type,title}){
+export function HeaderMainSearchMobile({type,title,onBack}){
   const {searchPlaceholder, searchValue,setSearch} = headerProps()
 
   return(
     <div className='bg-neutral-50 relative w-full h-auto max-h-[88px] p-4 pb-3 flex gap-2 shadow-lg '>
       <div className='flex gap-5 w-full items-center'>
-        <span className='w-7 h-6 bg-[#176cf7] rounded-full flex justify-center items-center cursor-pointer whitespace-nowrap'>
+        <span onClick={onBack} className='w-6 h-6 bg-[#176cf7] rounded-full flex justify-center items-center cursor-pointer whitespace-nowrap'>
           <IconComponent width={16} height={16} classname={style.iconBackWhite} src={'/icons/chevron-left.svg'} />
         </span>
-        {type==='search'?<Input classname={style.inputSearchMobile} placeholder={searchPlaceholder} value={searchValue} changeEvent={e=>setSearch('searchValue',e.target.value)} />:<span className='font-bold text-base text-[#176cf7]'>{title}</span>}
+        {type==='search'&&<Input classname={style.inputSearchMobile} placeholder={searchPlaceholder} value={searchValue} changeEvent={e=>setSearch('searchValue',e.target.value)} />}
+        {(type==='title' || type==='defaultTitleMain')&&<span className='font-bold text-base text-[#176cf7]'>{title}</span>}
       </div>
     </div>
   )
