@@ -9,7 +9,7 @@ function HeaderContainer({
     type
 }) {
     const {isMobile} = viewport()
-    if(isMobile) return <HeaderContainerMobile renderAppBarMobile={renderAppBarMobile} type={type} />
+    if(isMobile) return <HeaderContainerMobile renderAppBarMobile={renderAppBarMobile} type={'search'} />
     return <HeaderContainerWeb renderAppBar={renderAppBar} />
 }
 

@@ -4,7 +4,7 @@ import MapPage from './MapPage'
 
 function page() {
   return (
-    <div className='w-full mt-[160px]'>
+    <div className='w-full'>
         <MapPage/>
     </div>
   )
