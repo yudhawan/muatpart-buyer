@@ -11,7 +11,7 @@ function HeaderContainerMobile({
 }) {
   const {setHeaderHeight,searchTitle,setSearch} = headerProps()
   const headerRef = useRef(null)
-  const {setAppBarTypeMobile,appBarType} = useContext(ResponsiveContext)
+  const {setAppBarTypeMobile,appBarType,onBack} = useContext(ResponsiveContext)
   useEffect(()=>{
       if(headerRef?.current?.offsetHeight) setHeaderHeight?.(headerRef?.current?.offsetHeight)
   },[appBarType])
@@ -26,12 +26,11 @@ function HeaderContainerMobile({
             :<div className='flex flex-col'>
               <div className='flex items-start justify-between'>
                 <div className='flex items-center gap-2'>
-                  <span className='w-6 h-6 rounded-full bg-neutral-50 flex justify-center items-center cursor-pointer'>
+                  <span onClick={()=>onBack()} className='w-6 h-6 rounded-full bg-neutral-50 flex justify-center items-center cursor-pointer'>
                     <IconComponent src={'/icons/chevron-left.svg'} classname={style.iconBackRed} />
                   </span>
                   <Input onFocus={()=>{
-                    setSearch('searchTitle','Cari berdasarkan')
-                    setAppBarTypeMobile('defaultTitleMain')}} classname={style.inputMobile} placeholder='Cari Produk' icon={{left:'/icons/search.svg'}} />
+                    setAppBarTypeMobile('navbarMobileDefaultScreen',' Cari berdasarkan')}} classname={style.inputMobile} placeholder='Cari Produk' icon={{left:'/icons/search.svg'}} />
                 </div>
                 <div className='flex gap-4 items-start'>
                   <span className='gap-[2px] flex flex-col items-center'>
@@ -62,15 +61,15 @@ function HeaderContainerMobile({
 }
 export function HeaderMainSearchMobile({type,title,onBack}){
   const {searchPlaceholder, searchValue,setSearch} = headerProps()
-
+  const isBgSecondary = type==='titleSecondary'|type==='searchSecondary'|type==='navbarMobileDefaultScreen'
   return(
-    <div className='bg-neutral-50 relative w-full h-auto max-h-[88px] p-4 pb-3 flex gap-2 shadow-lg '>
+    <div className={`${isBgSecondary?'bg-neutral-50':'bg-[#c22716]'} relative w-full h-auto max-h-[88px] p-4 pb-3 flex gap-2 shadow-lg`}>
       <div className='flex gap-5 w-full items-center'>
-        <span onClick={onBack} className='w-6 h-6 bg-[#176cf7] rounded-full flex justify-center items-center cursor-pointer whitespace-nowrap'>
-          <IconComponent width={16} height={16} classname={style.iconBackWhite} src={'/icons/chevron-left.svg'} />
+        <span onClick={onBack} className={`w-6 h-6 ${isBgSecondary?'bg-[#176cf7]':'bg-neutral-50'} rounded-full flex justify-center items-center cursor-pointer whitespace-nowrap`}>
+          <IconComponent width={16} height={16} classname={`${isBgSecondary?style.iconBackWhite:style.iconBackRed}`} src={'/icons/chevron-left.svg'} />
         </span>
-        {type==='search'&&<Input classname={style.inputSearchMobile} placeholder={searchPlaceholder} value={searchValue} changeEvent={e=>setSearch('searchValue',e.target.value)} />}
-        {(type==='title' || type==='defaultTitleMain')&&<span className='font-bold text-base text-[#176cf7]'>{title}</span>}
+        {(type==='search' || type==='searchSecondary')&&<Input classname={style.inputSearchMobile} placeholder={searchPlaceholder} value={searchValue} changeEvent={e=>setSearch('searchValue',e.target.value)} />}
+        {(type==='title' || type==='titleSecondary')&&<span className='font-bold text-base text-[#176cf7]'>{title}</span>}
       </div>
     </div>
   )

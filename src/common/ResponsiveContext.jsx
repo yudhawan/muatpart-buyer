@@ -16,12 +16,16 @@ function ResponsiveProvider({children}) {
         appBarType:'',
     })
     const {isMobile}=viewport()
-    const {headerHeight}=headerProps()
+    const {headerHeight,setSearch}=headerProps()
     const renderAppBarMobile = (elm)=> setComponent(prev=>({...prev,appBar:elm}))
     const renderHeader = (elm)=> setComponent(prev=>({...prev,header:elm}))
-    const setAppBarTypeMobile = (val)=> setComponent(prev=>({...prev,appBarType:val}))
-    const onBack = (val,screen)=> {
-        if(!screen) setAppBarTypeMobile(val)
+    const setAppBarTypeMobile = (val,title)=> {
+        setSearch('searchTitle',title?title:'muatparts')
+        setComponent(prev=>({...prev,appBarType:val}))
+    }
+    const onBack = ({val,screen,title})=> {
+        console.log('ads')
+        setAppBarTypeMobile('')
     }
     return (
         <ResponsiveContext.Provider value={{

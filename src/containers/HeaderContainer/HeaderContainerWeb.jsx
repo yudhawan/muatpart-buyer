@@ -44,6 +44,7 @@ function HeaderContainerWeb({renderAppBar}) {
     const headerRef = useRef(null)
     const [getProfile,setProfile]=useState(ProfileHover)
     const [showCategory,setShowCategory]=useState(false)
+    const [showTips,setShowTips]=useState(false)
     const [showLocation,setShowLocation]=useState(false)
     const {setHeaderHeight} = headerProps()
     useEffect(()=>{
@@ -62,7 +63,25 @@ function HeaderContainerWeb({renderAppBar}) {
     },[])
   return (
     <header className={style.main} ref={headerRef}>
-        <ModalComponent hideHeader isOpen={showCategory} setClose={()=>setShowCategory(false)}>asds</ModalComponent>
+        <ModalComponent classname={'!items-start '} classnameContent={'mt-1 mx-auto w-[1088px] ml-[5%] p-2 flex gap-4'} hideHeader isOpen={showCategory} setClose={()=>setShowCategory(false)} showButtonClose={false}>
+            {/* group category */}
+            <div className='w-[270px]'>
+
+            </div>
+            {/* category */}
+            <div className='w-[578px]'></div>
+            {/* banner */}
+            <Image width={176} height={264} src='/img/ads_category.png' />
+            
+        </ModalComponent>
+        <ModalComponent hideHeader isOpen={showTips} setClose={()=>setShowTips(false)} >
+            <div className='mt-2 flex flex-col gap-4'>
+                <h1 className='text-base font-bold text-neutral-900 w-full text-center'>Tips Pencarian</h1>
+                <span className='font-medium text-neutral-600 text-xs'>Temukan suku cadang yang tepat dengan kendaraan Anda. Anda dapat menerapkan kombinasi pencarian dari tips di bawah ini : </span>
+                <div></div>
+            </div>            
+        </ModalComponent>
+        
         {
             <>
                 {!renderAppBar && (
