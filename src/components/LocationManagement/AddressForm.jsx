@@ -7,11 +7,15 @@ import SWRHandler from "@/services/useSWRHook";
 import MiniMap from "@/containers/MapContainer/MiniMap";
 import Modal from "../Modals/modal";
 import MapContainer from "@/containers/MapContainer/MapContainer";
+import ModalComponent from "../Modals/ModalComponent";
+import IconComponent from "../IconComponent/IconComponent";
+import Image from "next/image";
 
 const AddressForm = () => {
   const [addressInput, setAddressInput] = useState("");
   const swrHandler = new SWRHandler();
   const [isOpenMap,setOpenMap]=useState(false)
+  const [getSearchLokasi,setSearchLokasi]=useState('')
 
   const {
     address,
@@ -147,17 +151,18 @@ const AddressForm = () => {
       <div className="flex">
         <label className="w-1/3 text-neutral-600 font-medium">Titik Lokasi*</label>
         <div className="w-2/3">
-          <MiniMap onClick={()=>setOpenMap(true)} />
+          <MiniMap onClick={()=>setOpenMap(true)}  />
         </div>
       </div>
-      <Modal  isOpen={isOpenMap} setIsOpen={setOpenMap} isBig  >
-        <div className="flex item-start">
+      <ModalComponent isOpen={isOpenMap} setClose={()=>setOpenMap(false)} hideHeader>
+        <div className="flex item-start gap-4 pt-[14px] px-3">
           <MapContainer width={600} height={390} onPosition={(val)=>console.log(val.lat,val.lng)} />
           <div className="flex flex-col gap-[22px]">
-            <span>Atur Pin Lokasi</span>
+            <span className="text-base font-semibold text-neutral-900">Atur Pin Lokasi</span>
+            <Input classname={'w-[255px] max-w-none'} value={getSearchLokasi} changeEvent={e=>setSearchLokasi(e.target.value)} placeholder="Cari Lokasi" icon={{left:<IconComponent src={'/icons/marker.svg'} />,right:getSearchLokasi?<span className="flex items-center" onClick={()=>setSearchLokasi('')}><Image src={'/icons/closes.svg'} width={10} height={10} alt="closes" /></span>:''}} />
           </div>
         </div>
-      </Modal>
+      </ModalComponent>
     </div>
   );
 };
