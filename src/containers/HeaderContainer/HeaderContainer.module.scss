@@ -12,6 +12,13 @@
         height: 32px;
     }
 }
+.inputSearchMobile{
+    width: calc(100% - 16px - 16px);
+    div{
+        background-color: white;
+        height: 32px;
+    }
+}
 .iconnSearch{
     path{
         // stroke: var(--primary-300);

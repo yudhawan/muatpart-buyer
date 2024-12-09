@@ -2,9 +2,11 @@
 import React, { useEffect } from 'react'
 import ResponsiveProvider from './ResponsiveContext'
 import { viewport } from '@/store/viewport'
+import { headerProps } from '@/containers/HeaderContainer/headerProps'
 
 function App({children}) {
-    const {setIsmobile}=viewport()
+    const {setIsmobile,isMobile}=viewport()
+    const {headerHeight}=headerProps()
     useEffect(()=>{
         if(window.innerWidth<500) setIsmobile(true)
         else setIsmobile(false)
@@ -16,7 +18,7 @@ function App({children}) {
     },[])
   return (
     <ResponsiveProvider>
-        <div className={`w-full max-w-[1280px] mx-auto`}>
+        <div style={{marginTop:`${headerHeight+24}px`,paddingInline:isMobile?'16px':''}} className={`w-full max-w-[1280px] mx-auto`}>
             {children}
         </div>
     </ResponsiveProvider>

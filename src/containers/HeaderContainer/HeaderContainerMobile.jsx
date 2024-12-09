@@ -1,17 +1,23 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import style from './HeaderContainer.module.scss'
 import Image from 'next/image'
 import IconComponent from '@/components/IconComponent/IconComponent'
 import Input from '@/components/Input/Input'
+import { headerProps } from './headerProps'
 function HeaderContainerMobile({
     renderAppBarMobile,
     type
 }) {
-
-  if(!type) return <HeaderMainSearchMobile title={'Search berdasarkan '}/>
+  const {setHeaderHeight,searchTitle} = headerProps()
+  const headerRef = useRef(null)
+  useEffect(()=>{
+      if(headerRef?.current?.offsetHeight) setHeaderHeight(headerRef?.current?.offsetHeight)
+  },[])
   return (
-    <header className={style.main}>
-      <div className='bg-[#c22716] relative w-full h-auto max-h-[88px] p-4 pb-3'>
+    <header className={style.main} ref={headerRef}>
+      {
+      type=='search'?<HeaderMainSearchMobile type={type} title={'Search berdasarkan '}/>
+      :<div className='bg-[#c22716] relative w-full h-auto max-h-[88px] p-4 pb-3'>
         {
             renderAppBarMobile?
             renderAppBarMobile
@@ -45,23 +51,23 @@ function HeaderContainerMobile({
               <Image src='/img/fallinstartheader.png' width={153} height={62} alt='fallin' className='absolute right-0 bottom-0' />
             </div>
         }
-      </div>
+      </div>}
       
     </header>
   )
 }
 export function HeaderMainSearchMobile({type,title}){
+  const {searchPlaceholder, searchValue,setSearch} = headerProps()
+
   return(
-    <header className={style.main}>
-      <div className='bg-neutral-50 relative w-full h-auto max-h-[88px] p-4 pb-3'>
-        <div className='flex gap-5 w-full'>
-          <span className='w-6 h-6 bg-[#176cf7] rounded-full flex justify-center items-center cursor-pointer'>
-            <IconComponent classname={style.iconBackWhite} src={'/icons/chevron-left.svg'} />
-          </span>
-          <span className='font-bold text-base text-[#176cf7]'>{title}</span>
-        </div>
+    <div className='bg-neutral-50 relative w-full h-auto max-h-[88px] p-4 pb-3 flex gap-2 shadow-lg '>
+      <div className='flex gap-5 w-full items-center'>
+        <span className='w-7 h-6 bg-[#176cf7] rounded-full flex justify-center items-center cursor-pointer whitespace-nowrap'>
+          <IconComponent width={16} height={16} classname={style.iconBackWhite} src={'/icons/chevron-left.svg'} />
+        </span>
+        {type==='search'?<Input classname={style.inputSearchMobile} placeholder={searchPlaceholder} value={searchValue} changeEvent={e=>setSearch('searchValue',e.target.value)} />:<span className='font-bold text-base text-[#176cf7]'>{title}</span>}
       </div>
-    </header>
+    </div>
   )
 }
 export default HeaderContainerMobile
