@@ -1,11 +1,11 @@
 
-    'use client';
+'use client';
 
-    function OTPWeb() {
-        return (
-            <div>OTP Web</div>
-        );
-    }
+function OTPWeb() {
+    return (
+        <div>OTP Web</div>
+    );
+}
 
-    export default OTPWeb;
+export default OTPWeb;
   

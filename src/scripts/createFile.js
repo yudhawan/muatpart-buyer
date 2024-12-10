@@ -4,17 +4,17 @@ const path = require('path');
 
 function createPage(name) {
   return `
-    import ${name} from './${name}';
+import ${name} from './${name}';
 
-    function Page() {
-        return (
-            <div className='w-full'>
-                <${name} />
-            </div>
-        );
-    }
+function Page() {
+    return (
+        <div className='w-full'>
+            <${name} />
+        </div>
+    );
+}
 
-    export default Page;
+export default Page;
   `;
 }
 
@@ -42,15 +42,15 @@ export default ${name}
 
 function createNameWeb(name) {
   return `
-    'use client';
+'use client';
 
-    function ${name}Web() {
-        return (
-            <div>${name} Web</div>
-        );
-    }
+function ${name}Web() {
+    return (
+        <div>${name} Web</div>
+    );
+}
 
-    export default ${name}Web;
+export default ${name}Web;
   `;
 }
 
@@ -78,7 +78,14 @@ function ${name}Responsive() {
       setAppBar({
         title:'Example 2',
         appBarType:'search',
-        onBack:()=>setScreen('example')
+        onBack:()=>{
+        setScreen('example')
+          setAppBar({
+            title:'Example',
+            appBarType:'title',
+            onBack:()=>clearScreen()
+          })
+        }
       })
       setSearch({
         placeholder:'Pencarian Example 2'

@@ -22,7 +22,7 @@ function OTPResponsive() {
         title:'Example 2',
         appBarType:'search',
         onBack:()=>{
-          setScreen('example')
+        setScreen('example')
           setAppBar({
             title:'Example',
             appBarType:'title',
