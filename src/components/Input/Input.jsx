@@ -4,7 +4,7 @@ import style from './Input.module.scss'
 import PropTypes from 'prop-types'
 import IconComponent from "../IconComponent/IconComponent"
 
-const Input = forwardRef(({
+const Input = ({
   name, 
   type='text', 
   placeholder = 'Placeholder', 
@@ -15,30 +15,31 @@ const Input = forwardRef(({
   supportiveText = {title: '', desc: ''}, 
   width = {width: '', maxWidth: '', minWidth: ''},
   changeEvent = () => {},
+  classname,
   ...props
-},ref) => {
+}) => {
 
     return (
-      <div className={`flex flex-col gap-[4px] inputClassName`} style={{width: width.width, maxWidth: width.maxWidth, minWidth: width.minWidth}}>
+      <div className={`flex flex-col gap-[4px] inputClassName ${classname}`} style={{width: width.width, maxWidth: width.maxWidth, minWidth: width.minWidth}}>
         <div className={`flex w-full p-12 gap-[8px] ${disabled && style.input_disabled} ${style.input_style} 
         ${status == 'error' ? style.border_red :
         status == 'success' ? style.border_success :
         ''
         }`}>
-          {icon.left && <IconComponent loader={false} src={{src: icon.left}} height={16} width={16} 
+          { typeof icon.left==='string' ? <IconComponent loader={false} src={{src: icon.left}} height={16} width={16} 
           classname={status == 'error' ? style.icon_danger :
           status == 'success' ? style.icon_success :
           ''
           }
-          />}
+          />:icon.left}
           {text.left}
-          <input {...props} type={type} onChange={changeEvent} ref={ref} name={name} placeholder={placeholder} className={`grow ${style.input}`} disabled={disabled}/>
-          {icon.right && <IconComponent loader={false} src={{src: icon.right}} height={16} width={16} 
+          <input {...props} type={type} onChange={changeEvent} name={name} placeholder={placeholder} className={`grow ${style.input}`} disabled={disabled}/>
+          {typeof icon.right==='string' ? <IconComponent loader={false} src={{src: icon.right}} height={16} width={16} 
           classname={status == 'error' ? style.icon_danger :
           status == 'success' ? style.icon_success :
           ''
           }
-          />}
+          />:icon.right}
           {text.right}
         </div>
         {
@@ -54,7 +55,7 @@ const Input = forwardRef(({
         }
       </div>
     )
-})
+}
 
 export default Input
 

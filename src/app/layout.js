@@ -1,5 +1,6 @@
 import localFont from "next/font/local";
 import "./globals.scss";
+import App from "@/common/App";
 
 const AvenirNextLTPro = localFont({
   src: [
@@ -37,7 +38,9 @@ export default function RootLayout({ children }) {
       <body
         className={`${AvenirNextLTPro.className} antialiased`}
       >
-        {children}
+        <App>
+          {children}
+        </App>
       </body>
     </html>
   );

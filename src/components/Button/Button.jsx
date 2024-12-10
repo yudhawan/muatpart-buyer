@@ -29,9 +29,9 @@ const Button = ({color = 'primary', children = 'Button', name, onClick, Class = 
 
   return (
     <button name={name} onClick={onClick} disabled={disabled} className={`${style[`btn_${color}`]} ${disabledProp} ${style.btn} flex justify-center items-center gap-[4px] min-w-[112px] max-w-fit transition-colors leading-[16.8px] text-[14px] px-[24px] py-[11px] rounded-[24px] ${Class}`}>
-      {iconLeft && <IconComponent loader={false} src={iconLeft} height={16} width={16} classname={disabled ? style['fill_disabled'] : colorIcon }/>}
+      {typeof iconLeft==='string' ? <IconComponent loader={false} src={iconLeft} height={16} width={16} classname={disabled ? style['fill_disabled'] : colorIcon }/>:iconLeft}
         {children}
-      {iconRight && <IconComponent loader={false} src={iconRight} height={16} width={16} classname={disabled ? style['fill_disabled'] : colorIcon}/>}
+      {typeof iconRight==='string' ? <IconComponent loader={false} src={iconRight} height={16} width={16} classname={disabled ? style['fill_disabled'] : colorIcon}/>:iconRight}
     </button>
   )
 } 
