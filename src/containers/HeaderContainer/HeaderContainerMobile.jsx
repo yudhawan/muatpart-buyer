@@ -9,16 +9,16 @@ function HeaderContainerMobile({
     renderAppBarMobile,
     type
 }) {
-  const {setHeaderHeight,searchTitle,setSearch} = headerProps()
+  const {setHeaderHeight,searchTitle} = headerProps()
   const headerRef = useRef(null)
-  const {setAppBarTypeMobile,appBarType,onBack} = useContext(ResponsiveContext)
+  const {setAppBar,handleBack,appBar,appBarType,onBack,screen,search,setSearch} = useContext(ResponsiveContext)
   useEffect(()=>{
       if(headerRef?.current?.offsetHeight) setHeaderHeight?.(headerRef?.current?.offsetHeight)
-  },[appBarType])
+  },[appBarType,renderAppBarMobile,screen,appBar])
   return (
     <header className={style.main} ref={headerRef}>
       {
-      type?<HeaderMainSearchMobile type={type} title={searchTitle}/>
+      type?<HeaderMainSearchMobile appBar={appBar} type={type} title={appBar?.title} onBack={handleBack} setSearch={setSearch} searchPlaceholder={search?.placeholder} searchValue={search?.value} />
       :<div className='bg-[#c22716] relative w-full h-auto max-h-[88px] p-4 pb-3'>
         {
             renderAppBarMobile?
@@ -26,11 +26,16 @@ function HeaderContainerMobile({
             :<div className='flex flex-col'>
               <div className='flex items-start justify-between'>
                 <div className='flex items-center gap-2'>
-                  <span onClick={()=>onBack()} className='w-6 h-6 rounded-full bg-neutral-50 flex justify-center items-center cursor-pointer'>
+                  {appBar?.showBackButton&&<span onClick={()=>handleBack()} className='w-6 h-6 rounded-full bg-neutral-50 flex justify-center items-center cursor-pointer'>
                     <IconComponent src={'/icons/chevron-left.svg'} classname={style.iconBackRed} />
-                  </span>
+                  </span>}
                   <Input onFocus={()=>{
-                    setAppBarTypeMobile('navbarMobileDefaultScreen',' Cari berdasarkan')}} classname={style.inputMobile} placeholder='Cari Produk' icon={{left:'/icons/search.svg'}} />
+                    setAppBar({
+                      onBack:()=>setAppBar({appBarType:''}),
+                      title:'Cari berdasarkan',
+                      appBarType:'navbarMobileDefaultScreen'
+                    })
+                    }} classname={style.inputMobile} placeholder='Cari Produk' icon={{left:'/icons/search.svg'}} />
                 </div>
                 <div className='flex gap-4 items-start'>
                   <span className='gap-[2px] flex flex-col items-center'>
@@ -59,17 +64,17 @@ function HeaderContainerMobile({
     </header>
   )
 }
-export function HeaderMainSearchMobile({type,title,onBack}){
-  const {searchPlaceholder, searchValue,setSearch} = headerProps()
+export function HeaderMainSearchMobile({appBar,type,title,onBack,searchPlaceholder, searchValue,setSearch}){
+  // const {searchPlaceholder, searchValue,setSearch} = headerProps()
   const isBgSecondary = type==='titleSecondary'|type==='searchSecondary'|type==='navbarMobileDefaultScreen'
   return(
     <div className={`${isBgSecondary?'bg-neutral-50':'bg-[#c22716]'} relative w-full h-auto max-h-[88px] p-4 pb-3 flex gap-2 shadow-lg`}>
       <div className='flex gap-5 w-full items-center'>
-        <span onClick={onBack} className={`w-6 h-6 ${isBgSecondary?'bg-[#176cf7]':'bg-neutral-50'} rounded-full flex justify-center items-center cursor-pointer whitespace-nowrap`}>
+        {appBar.showBackButton&&<span onClick={onBack} className={`w-6 h-6 ${isBgSecondary?'bg-[#176cf7]':'bg-neutral-50'} rounded-full flex justify-center items-center cursor-pointer whitespace-nowrap`}>
           <IconComponent width={16} height={16} classname={`${isBgSecondary?style.iconBackWhite:style.iconBackRed}`} src={'/icons/chevron-left.svg'} />
-        </span>
-        {(type==='search' || type==='searchSecondary')&&<Input classname={style.inputSearchMobile} placeholder={searchPlaceholder} value={searchValue} changeEvent={e=>setSearch('searchValue',e.target.value)} />}
-        {(type==='title' || type==='titleSecondary')&&<span className='font-bold text-base text-[#176cf7]'>{title}</span>}
+        </span>}
+        {(type==='search' || type==='searchSecondary')&&<Input classname={style.inputSearchMobile} placeholder={searchPlaceholder} value={searchValue} changeEvent={e=>setSearch({value:e.target.value})} />}
+        {(type==='title' || type==='titleSecondary' || type==='navbarMobileDefaultScreen')&&<span className={`font-bold text-base ${type==='titleSecondary'?'text-[#176cf7]':'text-neutral-50'}`}>{title}</span>}
       </div>
     </div>
   )

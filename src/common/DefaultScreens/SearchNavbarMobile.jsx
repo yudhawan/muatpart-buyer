@@ -50,9 +50,9 @@ function SearchNavbarMobile() {
     // const {data} = useSWRHook(url)
   return (
     <div className='flex flex-col bg-neutral-50 relative'>
-        <div className={`bg-neutral-50 absolute -top-4  flex items-center z-[93] -left-4 ${style.tabMenu} shadow-lg`}>
+        <div className={`bg-neutral-50 absolute -top-4  flex items-center z-[93] -left-4 ${style.tabMenu} shadow-md`}>
             {
-                menus.map(val=><div key={val.id} onClick={()=>setActive(val.id)} className={`${val.id===getActive?'text-primary-700':'text-[#676767]'} font-bold text-sm pt-[10px] pb-[14px] px-10 border-b-2 ${val.id===getActive?'border-primary-700 border-b-2':'border-neutral-200'} w-full whitespace-nowrap`}>{val.name}</div>)
+                menus.map(val=><div key={val.id} onClick={()=>setActive(val.id)} className={`${val.id===getActive?'text-primary-700':'text-[#676767]'} font-bold text-sm pt-[10px] pb-[14px] px-10 border-b-2 ${val.id===getActive?'border-primary-700 border-b-2':'border-neutral-200'} w-[50%] whitespace-nowrap`}>{val.name}</div>)
             }
         </div>
         <div className='flex flex-col mt-12 gap-5'>
