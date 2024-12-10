@@ -1,4 +1,5 @@
 import { useHeader } from '@/common/ResponsiveContext'
+import Image from 'next/image'
 import React, { useEffect } from 'react'
 
 function HomePageResponsive() {
@@ -75,17 +76,25 @@ function HomePageResponsive() {
   )
   // main screen
   return (
-    <div>
-      <button className='bg-primary-600' onClick={()=>{
-        setScreen('example')
-        setAppBar({
-          title:'Example',
-          appBarType:'title',
-          onBack:()=>clearScreen()
-        })
-      }} >To example Screen</button>
-      <p>Home Page Responsive</p>
-
+    <div className="flex flex-col">
+      {/* Carousel */}
+      <section>carousel</section>
+      {/* Kategori */}
+      <section className='flex flex-col gap-4 py-4'>
+        <h1 className='text-base text-neutral-900 font-semibold'>Kategori</h1>
+        <div className='flex gap-[6px]'>
+          <div className='flex flex-col gap-1 justify-center'>
+            <div className='border border-[#d7d7d7] rounded-md overflow-hidden w-12 h-12'>
+              <Image src={'/img/gojek.png'} width={48} height={48} className='w-full h-full object-contain' />
+            </div>
+            <span className='text-[#1b1b1b] text-[10px] font-medium'>Tstin gojek</span>
+          </div>
+        </div>
+      </section>
+      {/* Terakhir Dilihat */}
+      <section className='flex gap-2'>
+        
+      </section>
     </div>
   )
 }
