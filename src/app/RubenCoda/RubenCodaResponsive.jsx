@@ -2,7 +2,7 @@
 import { useHeader } from '@/common/ResponsiveContext'
 import React, { useEffect } from 'react'
 
-function OTPResponsive() {
+function RubenCodaResponsive() {
   const {
     appBarType, //pilih salah satu : 'titleSecondary' || 'searchSecondary' || 'navbarMobileDefaultScreen' || 'search' || 'title'
     appBar, // muncul ini : {onBack:null,title:'',showBackButton:true,appBarType:'',appBar:null,header:null}
@@ -86,11 +86,11 @@ function OTPResponsive() {
           onBack:()=>clearScreen()
         })
       }} >To example Screen</button>
-      <p>OTP Responsive</p>
+      <p>RubenCoda Responsive</p>
 
     </div>
   )
 }
 
-export default OTPResponsive
+export default RubenCodaResponsive
   

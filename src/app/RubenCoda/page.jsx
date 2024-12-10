@@ -1,10 +1,10 @@
 
-import OTP from './OTP';
+import RubenCoda from './RubenCoda';
 
 function Page() {
     return (
         <div className='w-full'>
-            <OTP />
+            <RubenCoda />
         </div>
     );
 }

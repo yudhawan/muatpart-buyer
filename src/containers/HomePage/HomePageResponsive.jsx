@@ -20,7 +20,13 @@ function HomePageResponsive() {
       setAppBar({
         title:'Example 2',
         appBarType:'search',
-        onBack:()=>setScreen('example')
+        onBack:()=>{
+          setAppBar({
+            title:'Example 2',
+            appBarType:'search',
+            onBack:()=>clearScreen()
+          })
+        }
       })
       setSearch({
         placeholder:'Pencarian Example 2'

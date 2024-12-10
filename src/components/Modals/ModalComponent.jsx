@@ -44,7 +44,7 @@ function ModalComponent({children,full,hideHeader=false,headerSize='small',isOpe
         {!hideHeader?<div className='bg-white '></div>:''}
         {children?<div className={`bg-white rounded-[10px] p-2 z-40 relative min-w-[386px] min-h-[208px] overflow-hidden ${!hideHeader?'pt-[78px]':''} ${classnameContent}`} onClick={e=>e.stopPropagation()}>
           {!hideHeader&&<Image src={`/icons/header-${headerSize}.svg`} width={386} height={208} className='absolute left-0 top-0 z-40' alt='header' />}
-          {hideHeader&&showButtonClose?<span className='cursor-pointer' onClick={setClose}><IconComponent classname={'absolute z-50 right-2 top-2 '+style.closeBlue} src={'/icons/closes.svg'} width={18} height={18} /></span>:showButtonClose?<span onClick={setClose} className='cursor-pointer w-5 h-5 absolute z-[52] right-2 top-2 flex justify-center items-center bg-white rounded-full'><IconComponent classname={style.closeRed} width={8} height={8} src={'/icons/closes.svg'} /></span>:''
+          {hideHeader&&showButtonClose?<span className='cursor-pointer' onClick={setClose}><IconComponent classname={'absolute z-50 right-2 top-2 '+style.closeBlue} src={'/icons/closes.svg'} width={12} height={12} /></span>:showButtonClose?<span onClick={setClose} className='cursor-pointer w-5 h-5 absolute z-[52] right-2 top-2 flex justify-center items-center bg-white rounded-full'><IconComponent classname={style.closeRed} width={8} height={8} src={'/icons/closes.svg'} /></span>:''
           }
           {children}
           </div>:''}

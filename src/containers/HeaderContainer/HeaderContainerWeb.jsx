@@ -8,38 +8,8 @@ import Image from 'next/image'
 import { headerProps } from './headerProps'
 import ModalComponent from '@/components/Modals/ModalComponent'
 import { ResponsiveContext } from '@/common/ResponsiveContext'
-const ProfileHover = [
-    {
-        url:'/',
-        icon:'/icons/heart-outline.svg',
-        title:'Favorit',
-        badges:0
-    },
-    {
-        url:'/',
-        icon:'/icons/messages-outline.svg',
-        title:'Diskusi',
-        badges:0
-    },
-    {
-        url:'/',
-        icon:'/icons/voucher-outline.svg',
-        title:'Voucher Saya',
-        badges:3
-    },
-    {
-        url:'/',
-        icon:'/icons/list-outline.svg',
-        title:'Daftar Pesanan',
-        badges:0
-    },
-    {
-        url:'/',
-        icon:'/icons/product-reviews-outline.svg',
-        title:'Ulasan Produk',
-        badges:0
-    }
-]
+import { ProfileHover, tips } from './constanta'
+
 function HeaderContainerWeb({renderAppBar}) {
     const headerRef = useRef(null)
     const [getProfile,setProfile]=useState(ProfileHover)
@@ -75,10 +45,31 @@ function HeaderContainerWeb({renderAppBar}) {
             
         </ModalComponent>
         <ModalComponent hideHeader isOpen={showTips} setClose={()=>setShowTips(false)} >
-            <div className='mt-2 flex flex-col gap-4'>
+            <div className='mt-2 flex flex-col gap-4 w-[471px] h-fit py-6 px-5'>
                 <h1 className='text-base font-bold text-neutral-900 w-full text-center'>Tips Pencarian</h1>
                 <span className='font-medium text-neutral-600 text-xs'>Temukan suku cadang yang tepat dengan kendaraan Anda. Anda dapat menerapkan kombinasi pencarian dari tips di bawah ini : </span>
                 <div></div>
+                <div className={`flex flex-col`}>
+                    {
+                        tips.map((val,i)=>{
+                            if(i==0) return (<div className='w-full py-3 px-6 border-t border-neutral-400 flex '>
+                                <span className='text-primary-700 text-xs font-bold w-1/2'>{val.left}</span>
+                                <span className='text-primary-700 text-xs font-bold w-1/2'>{val.right}</span>
+                            </div>)
+                            if(i==(tips.length-1)) return(<div className='w-full py-3 px-6 border-y border-neutral-400 flex '>
+                                <span className='text-neutral-900 text-[10px] font-medium w-1/2'>{val.left}</span>
+                                <span className='text-neutral-900 text-[10px] font-medium w-1/2'>{val.right}</span>
+                            </div>)
+                            return (
+                                <div className='w-full py-3 px-6 border-t border-neutral-400 flex '>
+                                    <span className='text-neutral-900 text-[10px] font-medium w-1/2'>{val.left}</span>
+                                    <span className='text-neutral-900 text-[10px] font-medium w-1/2'>{val.right}</span>
+                                </div>
+                            )
+                        })
+                    }
+                    
+                </div>
             </div>            
         </ModalComponent>
         
@@ -167,10 +158,10 @@ function HeaderContainerWeb({renderAppBar}) {
                             </div>
                         </div>
                         
-                        <Link href="/tips" className="flex items-center gap-1">
+                        <span onClick={()=>setShowTips(true)} className="flex items-center gap-1 cursor-pointer">
                             <Image src="/icons/tips-white.svg" alt="" width={16} height={16}/>
                             <span className="text-neutral-50 text-[10px] font-medium">Tips</span>
-                        </Link>
+                        </span>
                         
                         <Link href="/garasi" className="flex items-center mr-4 bg-white p-2 rounded-md h-8">
                             <Image src="/icons/garasi.svg" alt="" width={16} height={16} />
