@@ -1,5 +1,11 @@
 import { useState, useEffect } from "react";
 import Input from "../Input/Input";
+import ModalComponent from "../Modals/ModalComponent";
+import Image from "next/image";
+import TextArea from "../TextArea/TextArea";
+import Dropdown from "../Dropdown/Dropdown";
+import Checkbox from "../Checkbox/Checkbox";
+import Button from "../Button/Button";
 
 const InputSearchLocation = ({
   searchResults,
@@ -15,6 +21,7 @@ const InputSearchLocation = ({
 }) => {
   const [location, setLocation] = useState(locationValue.title);
   const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const managedLocations = [
     {
       id: 1,
@@ -95,7 +102,7 @@ const InputSearchLocation = ({
   }, []);
 
   return (
-    <div>
+    <>
       <Input
         placeholder="Masukkan Lokasi Toko"
         value={location}
@@ -151,6 +158,7 @@ const InputSearchLocation = ({
                     }
                     alt=""
                     className="object-contain shrink-0 w-5 aspect-square cursor-pointer"
+                    onClick={() => setIsModalOpen(true)}
                   />
                 </div>
               ))}
@@ -210,7 +218,102 @@ const InputSearchLocation = ({
           </div>
         )}
       </div>
-    </div>
+
+      <ModalComponent
+        isOpen={isModalOpen}
+        setIsOpen={() => setIsModalOpen(false)}
+        classnameContent="w-[400px]"
+        hideHeader
+      >
+        <div className="">
+          <div className="text-base font-bold p-4">Detail Alamat</div>
+
+          <div className="max-h-96 overflow-auto space-y-3 p-4 pt-0">
+            <div className="">
+              <div className="text-[10px] text-neutral-600 font-semibold">
+                Label Alamat*
+              </div>
+              <Input placeholder="Masukkan Alamat" />
+            </div>
+            <div className="">
+              <div className="text-[10px] text-neutral-600 font-semibold">
+                Lokasi*
+              </div>
+              <div className="flex items-center gap-3">
+                <Image
+                  src={"/icons/marker.svg"}
+                  width={30}
+                  height={30}
+                  alt="marker"
+                />
+                <div className="font-semibold">
+                  Graha Airi, Jl. Kedung Doro No.101 A, RT.001/RW.06,
+                  Kedungdoro, Kec. Tegalsari, Surabaya, Jawa Timur 60261
+                </div>
+              </div>
+            </div>
+            <div className="">
+              <div className="text-[10px] text-neutral-600 font-semibold">
+                Alamat*
+              </div>
+              <TextArea
+                placeholder="Masukkan alamat lengkap dengan detail.Contoh : Nama Jalan (bila tidak ditemukan), Gedung, No. Rumah/Patokan, Blok/Unit"
+                maxLength={60}
+                resize="none"
+                hasCharCount={false}
+              />
+            </div>
+            <div className="">
+              <div className="text-[10px] text-neutral-600 font-semibold">
+                Kecamatan
+              </div>
+              <div className="font-semibold">Tegalsari</div>
+            </div>
+            <div className="">
+              <div className="text-[10px] text-neutral-600 font-semibold">
+                Kota
+              </div>
+              <div className="font-semibold">Surabaya</div>
+            </div>
+            <div className="">
+              <div className="text-[10px] text-neutral-600 font-semibold">
+                Provinsi
+              </div>
+              <div className="font-semibold">Jawa Timur</div>
+            </div>
+            <div className="">
+              <div className="text-[10px] text-neutral-600 font-semibold">
+                Kode Pos*
+              </div>
+              <Dropdown onSearchValue placeholder="Pilih Kode Pos" />
+            </div>
+            <div className="">
+              <div className="text-[10px] text-neutral-600 font-semibold">
+                Nama PIC*
+              </div>
+              <Input placeholder="Nama PIC Lokasi" />
+            </div>
+            <div className="">
+              <div className="text-[10px] text-neutral-600 font-semibold">
+                No. HP PIC*
+              </div>
+              <Input placeholder="Contoh : 08xxxxxxxxxx" />
+            </div>
+            <Checkbox label="Jadikan alamat sebagai alamat utama" />
+
+            <div className="flex gap-3 justify-center pt-[10px]">
+              <Button
+                color="primary_secondary"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Batalkan
+              </Button>
+              <Button onClick={() => setIsModalOpen(false)}>Simpan</Button>
+            </div>
+          </div>
+        </div>
+      </ModalComponent>
+    </>
   );
 };
 
