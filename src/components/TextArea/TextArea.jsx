@@ -15,9 +15,22 @@ const TextArea = ({
   width = { width: "", maxWidth: "", minWidth: "" },
   ref = null,
   resize = "",
-  classname,
   changeEvent = () => {},
+  blurEvent = () => {},
+  maxLength = null,
 }) => {
+  const [charCount, setCharCount] = useState(value.length);
+
+  const handleChange = (e) => {
+    setCharCount(e.target.value.length);
+    changeEvent(e);
+  };
+
+  const handleBlur = (e) => {
+    setCharCount(e.target.value.length);
+    blurEvent(e);
+  };
+
   return (
     <div
       className={"flex flex-col gap-[4px]"}
@@ -28,19 +41,20 @@ const TextArea = ({
       }}
     >
       <div
-        className={`${classname} flex w-full p-12 gap-[8px] ${
+        className={`flex w-full p-12 gap-[8px] ${
           disabled && style.input_disabled
         } ${style.input_style}
-        ${
-          status == "error"
-            ? style.border_red
-            : status == "success"
-            ? style.border_success
-            : ""
-        }`}
+            ${
+              status == "error"
+                ? style.border_red
+                : status == "success"
+                ? style.border_success
+                : ""
+            }`}
       >
         <textarea
-          onChange={changeEvent}
+          onChange={handleChange}
+          onBlur={handleBlur}
           ref={ref}
           type={type}
           name={name}
@@ -48,18 +62,19 @@ const TextArea = ({
           className={`grow ${style.input} min-h-[80px]`}
           disabled={disabled}
           style={{ resize: resize }}
+          maxLength={maxLength}
         />
       </div>
       {(supportiveText.title || supportiveText.desc) && (
         <div
           className={`flex justify-between ${style.supportive_text}
-            ${
-              status == "error"
-                ? style.text_danger
-                : status == "success"
-                ? style.text_success
-                : ""
-            }`}
+                ${
+                  status == "error"
+                    ? style.text_danger
+                    : status == "success"
+                    ? style.text_success
+                    : ""
+                }`}
         >
           <span>{supportiveText.title}</span>
           <span>{supportiveText.desc}</span>
