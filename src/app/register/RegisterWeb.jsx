@@ -1,22 +1,37 @@
+"use client";
 
-'use client';
-
+import { useEffect } from "react";
 import BreadCrumb from "@/components/Breadcrumb/Breadcrumb";
 import Button from "@/components/Button/Button";
 import IconComponent from "@/components/IconComponent/IconComponent";
 import InformasiPendaftarDanRekening from "@/containers/Register/InformasiPendaftarDanRekening";
 import InformasiTokoAkun from "@/containers/Register/InformasiTokoAkun";
 import { useRouter, useSearchParams } from "next/navigation";
+import registerForm from "@/store/registerForm";
 
 function RegisterWeb() {
-  const router = useRouter()
+  const router = useRouter();
   const step = useSearchParams().get("step") || "1";
 
-  const breadCrumbItems = ["Informasi Toko Akun", "Informasi Pendaftar dan Rekening", "Konfirmasi Data"]
+  const { currentStep, nextStep, prevStep, errors, formData } = registerForm();
 
-  const handleSubmit = () => router.push(`/register?step=${Number(step)+1}`)
+  useEffect(() => {
+    console.log(currentStep, nextStep, prevStep, " TERSUBMIT");
+  }, [currentStep, nextStep, prevStep]);
 
-  const handleGoBack = () => router.push(`/register?step=${Number(step)-1}`)
+  const breadCrumbItems = [
+    "Informasi Toko Akun",
+    "Informasi Pendaftar dan Rekening",
+    "Konfirmasi Data",
+  ];
+
+  const handleSubmit = () => {
+    console.log("awww ", errors, formData);
+    return nextStep;
+    router.push(`/register?step=${Number(step) + 1}`);
+  };
+
+  const handleGoBack = () => router.push(`/register?step=${Number(step) - 1}`);
 
   return (
     <div>
@@ -25,13 +40,13 @@ function RegisterWeb() {
           <div className="px-8 py-6">
             <div className="flex">
               <IconComponent
-                src='/icons/blue-arrow-left.svg'
-                size='medium'
+                src="/icons/blue-arrow-left.svg"
+                size="medium"
                 onclick={step !== "1" ? handleGoBack : null}
               />
               <div className="flex flex-col flex-1 gap-4 ml-8 items-center">
                 <span className="text-[20px] leading-[24px] font-bold">
-                  Daftar menjadi Penjual muatparts Martadfasasdf
+                  Daftar menjadi Penjual muatparts Mart
                 </span>
                 <BreadCrumb
                   data={breadCrumbItems.slice(0, step)}
@@ -45,11 +60,7 @@ function RegisterWeb() {
         </div>
 
         <div className="mt-6 flex justify-center">
-          <Button
-            name="next"
-            color="primary"
-            onClick={handleSubmit}
-          >
+          <Button name="next" color="primary" onClick={nextStep}>
             Selanjutnya
           </Button>
         </div>
@@ -59,4 +70,3 @@ function RegisterWeb() {
 }
 
 export default RegisterWeb;
-  

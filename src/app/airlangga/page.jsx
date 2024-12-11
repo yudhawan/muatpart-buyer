@@ -380,10 +380,10 @@ export const LaporkanMobile = () => {
   );
 };
 
-const DivParticleLaporkan = ({ title, optional, hr, children }) => {
+export const DivParticleLaporkan = ({ title, optional, hr, children, classname }) => {
   return (
     <>
-      <div className="flex flex-col gap-4">
+      <div className={`flex flex-col gap-4 ${classname}`}>
         <span className="font-medium text-xs text-neutral-900 sm:font-semibold sm:text-sm">
           {title}{" "}
           {optional && (
