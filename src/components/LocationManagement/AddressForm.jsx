@@ -10,9 +10,9 @@ import ModalComponent from "../Modals/ModalComponent";
 import IconComponent from "../IconComponent/IconComponent";
 import Image from "next/image";
 import Button from "../Button/Button";
-import InputSearch from "../InputSearch/InputSearch";
 import debounce from "@/libs/debounce";
-import InputSearchLocation from "../InputSearchLocation/InputSearchLocation";
+import InputSearchLocation from "./InputSearchLocation";
+import InputSearch from "./InputSearch";
 
 const AddressForm = ({ AddressData }) => {
   // Start State Management
