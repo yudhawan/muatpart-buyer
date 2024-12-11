@@ -2,18 +2,18 @@
 'use client'
 import { viewport } from '@/store/viewport'
 import React, { useState } from 'react'
-import RubenCodaResponsive from './RubenCodaResponsive'
-import RubenCodaWeb from './RubenCodaWeb'
+import ROPPResponsive from './ROPPResponsive'
+import ROPPWeb from './ROPPWeb'
 import SWRHandler from '@/services/useSWRHook'
 
-function RubenCoda() {
+function ROPP() {
   const [state,setState]=useState()
   const {useSWRHook,useSWRMutateHook}=new SWRHandler()
   const {isMobile} = viewport()
   if(typeof isMobile!=='boolean') return <></> //buat skeleton
-  if(isMobile) return <RubenCodaResponsive/>
-  return <RubenCodaWeb/>
+  if(isMobile) return < ROPPResponsive/>
+  return < ROPPWeb/>
 }
 
-export default RubenCoda
+export default ROPP
   
