@@ -6,7 +6,9 @@ import FileUpload from "@/components/FileUpload/FileUpload";
 import { useState } from "react";
 import IconComponent from "@/components/IconComponent/IconComponent";
 
-const InformasiPendaftarDanRekening = () => {
+const InformasiPendaftarDanRekening = ({
+  bankOptions
+}) => {
   const [formData, setFormData] = useState({
     ktpFile: null,
     ktpNumber: '',
@@ -122,7 +124,7 @@ const InformasiPendaftarDanRekening = () => {
       });
     }
   };
-
+console.log('form',formData)
 	return (
 		<div className="mt-8">
 			<span className="font-semibold text-[18px] leading-[21.6px]">Data Pendaftar</span>
@@ -206,6 +208,7 @@ const InformasiPendaftarDanRekening = () => {
 
 				{showBankInfo && (
 					<BankAccountSection
+            bankOptions={bankOptions}
 						formData={formData} 
 						setFormData={setFormData}
 						errors={errors}

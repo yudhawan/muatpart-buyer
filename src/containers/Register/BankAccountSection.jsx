@@ -2,15 +2,9 @@ import Dropdown from '@/components/Dropdown/Dropdown';
 import IconComponent from '@/components/IconComponent/IconComponent';
 import Input from '@/components/Input/Input';
 import React from 'react';
+import styles from "./BankAccountSection.module.scss"
 
-const BankAccountSection = ({ formData, setFormData, errors, touched }) => {
-  const bankOptions = [
-    { name: 'Bank BCA', value: 'bca' },
-    { name: 'Bank Mandiri', value: 'mandiri' },
-    { name: 'Bank BNI', value: 'bni' },
-    { name: 'Bank BRI', value: 'bri' }
-  ];
-
+const BankAccountSection = ({ bankOptions, formData, setFormData, errors, touched }) => {
   const handleBankSelect = (selected) => {
     setFormData(prev => ({ 
       ...prev, 
@@ -64,7 +58,13 @@ const BankAccountSection = ({ formData, setFormData, errors, touched }) => {
               changeEvent={handleInputChange('accountNumber')}
               status={touched.accountNumber && errors.accountNumber ? 'error' : null}
               supportiveText={{ title: errors.accountNumber }}
-              text={{ right: <span className="font-medium text-[12px] leading-[14.4px] text-neutral-500">Periksa</span> }}
+              text={{ right: (
+                <span
+                  className={`font-medium text-[12px] leading-[14.4px] ${(!bankNameValue || !formData.accountNumber) ? "text-neutral-500" : "text-primary-700 cursor-pointer"}`}
+                >
+                  Periksa
+                </span>
+              ) }}
               value={formData.accountNumber}
             />
           </div>
