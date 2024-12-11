@@ -26,6 +26,7 @@ function ResponsiveProvider({children}) {
     })
     
     const [screen,setScreen]=useState('')
+    const [getGlobalPadding,setGlobalPadding]=useState(true)
     const {isMobile}=viewport()
     const {headerHeight}=headerProps()
     const renderAppBarMobile = (elm)=> setHeader(prev=>({...prev,appBar:elm}))
@@ -62,14 +63,21 @@ function ResponsiveProvider({children}) {
             setScreen,
             screen,
             setSearch,
-            search
+            search,
+            setGlobalPadding
         }}>
             <HeaderContainer 
                 renderAppBarMobile={getHeader.appBar} 
                 renderAppBar={getHeader.header}
                 type={getHeader.appBarType}
             />
-            {DefaultScreen(getHeader.appBarType)?<div style={{marginTop:`${isMobile?headerHeight+16:headerHeight+24}px`,paddingInline:isMobile?'16px':''}} className={`w-full max-w-[1280px] mx-auto`}>{DefaultScreen(getHeader.appBarType)}</div>:children}
+            {
+                DefaultScreen(getHeader.appBarType)?
+                <div style={{marginTop:`${isMobile&&getGlobalPadding?headerHeight+16:!isMobile&&getGlobalPadding?headerHeight+24:0}px`,paddingInline:isMobile&&getGlobalPadding?'16px':''}} className={`w-full ${getGlobalPadding?'max-w-[1280px] mx-auto':''}`}>
+                    {DefaultScreen(getHeader.appBarType)}
+                </div>
+                :children
+            }
         </ResponsiveContext.Provider>
     )
 }

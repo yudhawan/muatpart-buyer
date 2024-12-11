@@ -1,7 +1,10 @@
 import { useHeader } from '@/common/ResponsiveContext'
 import Image from 'next/image'
 import React, { useEffect } from 'react'
-
+import { mockProductsData } from './mock'
+import ProductComponent from '@/components/ProductComponent/ProductComponent'
+import style from './HomePage.module.scss'
+import Bubble from '@/components/Bubble/Bubble'
 function HomePageResponsive() {
   const {
     appBarType, //pilih salah satu : 'titleSecondary' || 'searchSecondary' || 'navbarMobileDefaultScreen' || 'search' || 'title'
@@ -76,7 +79,7 @@ function HomePageResponsive() {
   )
   // main screen
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col pb-6">
       {/* Carousel */}
       <section>carousel</section>
       {/* Kategori */}
@@ -92,8 +95,31 @@ function HomePageResponsive() {
         </div>
       </section>
       {/* Terakhir Dilihat */}
-      <section className='flex gap-2'>
-        
+      <section className={`flex flex-col gap-4 w-full my-6`}>
+        <h1 className='text-neutral-900 font-semibold text-base'>Terakhir Dilihat</h1>
+        <div className={`${style.sectionHideScroll} w-full flex gap-2 overflow-x-auto`}>
+          {
+            mockProductsData.products.map(val=>{
+              return <ProductComponent key={val.id} {...val} />
+            })
+          }
+        </div>
+      </section>
+      {/* Carousel */}
+      <section>carousel</section>
+      {/* Buble */}
+      <section className={`${style.sectionHideScroll} flex gap-2 w-full overflow-x-auto py-4`}>
+        <Bubble classname={`py-2 px-3 text-sm font-medium bg-primary-50 !max-w-none whitespace-nowrap`}>Produk yang banyak dikunjungi</Bubble>
+        <Bubble classname={`py-2 px-3 text-sm font-medium !bg-neutral-200 !border-neutral-200 !text-neutral-900 !w-fit !max-w-none whitespace-nowrap`}>Mungkin kamu juga suka</Bubble>
+        <Bubble classname={`py-2 px-3 text-sm font-medium !bg-neutral-200 !border-neutral-200 !text-neutral-900 !w-fit !max-w-none whitespace-nowrap`}>Mungkin kamu juga suka</Bubble>
+      </section>
+      {/* list products */}
+      <section className={`py-4 h-fit ${style.listProducts}`}>
+        {
+          mockProductsData.products.map(val=>{
+            return <ProductComponent key={val.id} {...val} />
+          })
+        }
       </section>
     </div>
   )
