@@ -1,4 +1,5 @@
-import { modal } from "@/store/AI/modal";
+import { modal } from "@/store/modal";
+import { X } from "lucide-react";
 
 const Modal = ({ children }) => {
   const { modalOpen, setModalOpen, modalContent, modalConfig } = modal();
@@ -20,23 +21,44 @@ const Modal = ({ children }) => {
         <div
           onClick={handleOverlayClick}
           className={`
-          relative z-50 w-full max-w-lg mx-4 bg-white rounded-lg shadow-lg
-          !w-[${modalConfig.width}px] !h-[${modalConfig.height}px]
-        `}
+            relative z-50 w-full mx-4 bg-white rounded-lg shadow-lg
+            ${modalConfig.classname || ""}
+            ${modalConfig.width ? `w-[${modalConfig.width}px]` : "w-fit"}
+            ${modalConfig.height ? `h-[${modalConfig.height}px]` : "h-fit"}
+          `}
         >
-          {/* Header */}
+          {/* Header dengan background image */}
           {modalConfig.withHeader && (
-            <div className="flex items-center justify-between p-4 border-b">
+            <div
+              className="relative w-full h-[70px] rounded-t-lg overflow-hidden"
+              style={{
+                backgroundImage: "url(/img/headermodal386.svg)",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            >
+              {/* Tombol close di pojok kanan atas header */}
               {modalConfig.withClose && (
                 <button
                   onClick={() => setModalOpen(false)}
-                  className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+                  className="absolute right-2 top-2 p-1 w-fit bg-white rounded-full transition-colors"
                   aria-label="Close modal"
                 >
-                  {/* <X className="w-5 h-5 text-gray-500" /> */}x
+                  <X className="w-3 h-3 text-error-500" />
                 </button>
               )}
             </div>
+          )}
+
+          {!modalConfig.withHeader && modalConfig.withClose && (
+            <button
+              onClick={() => setModalOpen(false)}
+              className="p-1 rounded-full transition-colors absolute right-3 top-2"
+              aria-label="Close modal"
+            >
+              <X className="w-5 h-5 text-primary-700 " />
+            </button>
           )}
 
           {/* Body */}

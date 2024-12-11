@@ -3,15 +3,16 @@ module.exports = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/container/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
-      // colors: {
-      //   background: "var(--background)",
-      //   foreground: "var(--foreground)",
-      // },
+      screens: {
+        xs: { max: "360px" },
+        sm: { max: "600px" },
+        md: { max: "1023" },
+      },
       colors: {
         neutral: {
           50: "#ffffff",
