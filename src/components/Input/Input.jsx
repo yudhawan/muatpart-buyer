@@ -16,6 +16,8 @@ const Input = ({
   width = { width: "", maxWidth: "", minWidth: "" },
   classInput,
   changeEvent = () => {},
+  focusEvent = () => {},
+  blurEvent = () => {},
   classname,
   ...props
 }) => {
@@ -62,9 +64,11 @@ const Input = ({
           {...props}
           type={type}
           onChange={changeEvent}
+          onFocus={focusEvent}
+          onBlur={blurEvent}
           name={name}
           placeholder={placeholder}
-          className={`${classInput} grow ${style.input}`}
+          className={`grow ${style.input}`}
           disabled={disabled}
         />
         {typeof icon.right === "string" ? (

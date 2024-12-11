@@ -1,6 +1,6 @@
+"use client";
 
-'use client';
-
+import { useEffect } from "react";
 import BreadCrumb from "@/components/Breadcrumb/Breadcrumb";
 import Button from "@/components/Button/Button";
 import IconComponent from "@/components/IconComponent/IconComponent";
@@ -8,18 +8,33 @@ import InformasiPendaftarDanRekening from "@/containers/Register/InformasiPendaf
 import InformasiTokoAkun from "@/containers/Register/InformasiTokoAkun";
 import Otp from "@/containers/Register/Otp";
 import { useRouter, useSearchParams } from "next/navigation";
+import registerForm from "@/store/registerForm";
 
 function RegisterWeb({
   bankOptions
 }) {
-  const router = useRouter()
+  const router = useRouter();
   const step = useSearchParams().get("step") || "1";
 
-  const breadCrumbItems = ["Informasi Toko Akun", "Informasi Pendaftar dan Rekening", "Konfirmasi Data"]
+  const { currentStep, nextStep, prevStep, errors, formData } = registerForm();
 
-  const handleSubmit = () => router.push(`/register?step=${Number(step)+1}`)
+  useEffect(() => {
+    console.log(currentStep, nextStep, prevStep, " TERSUBMIT");
+  }, [currentStep, nextStep, prevStep]);
 
-  const handleGoBack = () => router.push(`/register?step=${Number(step)-1}`)
+  const breadCrumbItems = [
+    "Informasi Toko Akun",
+    "Informasi Pendaftar dan Rekening",
+    "Konfirmasi Data",
+  ];
+
+  const handleSubmit = () => {
+    console.log("awww ", errors, formData);
+    return nextStep;
+    router.push(`/register?step=${Number(step) + 1}`);
+  };
+
+  const handleGoBack = () => router.push(`/register?step=${Number(step) - 1}`);
 
   return (
     <div>
@@ -70,4 +85,3 @@ function RegisterWeb({
 }
 
 export default RegisterWeb;
-  

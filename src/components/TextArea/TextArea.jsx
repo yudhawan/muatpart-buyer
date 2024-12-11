@@ -18,6 +18,7 @@ const TextArea = ({
   changeEvent = () => {},
   blurEvent = () => {},
   maxLength = null,
+  hasCharCount = true,
 }) => {
   const [charCount, setCharCount] = useState(value.length);
 
@@ -77,7 +78,14 @@ const TextArea = ({
                 }`}
         >
           <span>{supportiveText.title}</span>
-          <span>{supportiveText.desc}</span>
+          {hasCharCount ? (
+            <span className={style.char_counter}>
+              {charCount}
+              {maxLength ? `/${maxLength}` : ""}
+            </span>
+          ) : (
+            <span>{supportiveText.desc}</span>
+          )}
         </div>
       )}
     </div>
@@ -97,4 +105,5 @@ TextArea.propTypes = {
   width: PropTypes.object,
   resize: PropTypes.string,
   maxLength: PropTypes.number,
+  hasCharCount: PropTypes.bool,
 };
