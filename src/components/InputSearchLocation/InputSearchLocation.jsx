@@ -103,26 +103,6 @@ const InputSearchLocation = ({
         focusEvent={handleInputFocus}
       />
 
-      {/* <LocationPicker
-        locationRef={locationRef}
-        searchResults={autocompleteData}
-        managedLocations={managedLocations}
-        isOpen={isOpenLocationPicker}
-        setIsOpen={setOpenLocationPicker}
-        onSelectLocation={(val) => {
-          setLocationLatLong({
-            lat: val.latitude,
-            long: val.longitude,
-          });
-        }}
-        onClickSearchResult={(val) => {
-          setLocation({
-            id: val.id,
-            title: val.title,
-          });
-        }}
-      /> */}
-
       <div className="absolute w-full flex">
         {isOpen && (
           <div className="flex z-10 flex-col items-start mt-1 pt-3 pb-5 w-full bg-white rounded-md border border-blue-600 border-solid">

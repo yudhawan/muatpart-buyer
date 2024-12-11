@@ -14,7 +14,7 @@ import InputSearch from "../InputSearch/InputSearch";
 import debounce from "@/libs/debounce";
 import InputSearchLocation from "../InputSearchLocation/InputSearchLocation";
 
-const AddressForm = () => {
+const AddressForm = ({ AddressData }) => {
   // Start State Management
   const swrHandler = new SWRHandler();
   const locationRef = useRef(null);
@@ -159,12 +159,12 @@ const AddressForm = () => {
   const handleAddressChange = debounce((e) => {
     const value = e.target.value;
     setAddress(value);
-  }, 500);
+  }, 1000);
 
   const handleManualSearch = debounce((e) => {
     const value = e.target.value;
     setManualInput(value);
-  }, 500);
+  }, 1000);
 
   const handleLocationChange = debounce((e) => {
     const value = e.target.value;
@@ -176,7 +176,7 @@ const AddressForm = () => {
     if (value.length === 0) {
       resetAllStates();
     }
-  }, 500);
+  }, 1000);
 
   const handleAutofillForm = () => {
     if (manualInput) {
@@ -238,47 +238,81 @@ const AddressForm = () => {
   }, [autocompleteData]);
 
   useEffect(() => {
-    if (districtData) {
-      if (districtData.Message.Code === 500) {
-        setIsOpenAddManual(true);
-      } else {
-        setDistrict({
-          name: districtData.Data.Districts[0].District,
-          value: districtData.Data.Districts[0].DistrictID,
-        });
-        setCity({
-          name: districtData.Data.CompleteLocation.city,
-          id: districtData.Data.CompleteLocation.cityid,
-        });
-        setProvince({
-          name: districtData.Data.CompleteLocation.province,
-          id: districtData.Data.CompleteLocation.provinceid,
-        });
+    if (!districtData) return;
 
-        setKecamatanList(
-          districtData.Data.Districts[0].DistrictList.map((i) => ({
-            value: i.DistrictID,
-            name: i.District,
-          }))
-        );
-        setPostalCodeList(
-          districtData.Data.Districts[0].PostalCodes.map((i) => ({
-            value: i.ID,
-            name: i.PostalCode,
-          }))
-        );
-
-        const findPostalCode = districtData.Data.Districts[0].PostalCodes.find(
-          (item) =>
-            item.PostalCode === districtData.Data.CompleteLocation.postal
-        );
-        setPostalCode({
-          name: findPostalCode.Description,
-          value: findPostalCode.ID,
-        });
-      }
+    if (districtData.Message.Code === 500) {
+      setCoordinates({
+        lat: districtData.Data.lat,
+        long: districtData.Data.lng,
+      });
+      setIsOpenAddManual(true);
+      return;
     }
-  }, [districtData]);
+
+    // Prepare all the new values first
+    const newDistrict = {
+      name: districtData.Data.Districts[0].District,
+      value: districtData.Data.Districts[0].DistrictID,
+    };
+
+    const newCity = {
+      name: districtData.Data.CompleteLocation.city,
+      id: districtData.Data.CompleteLocation.cityid,
+    };
+
+    const newProvince = {
+      name: districtData.Data.CompleteLocation.province,
+      id: districtData.Data.CompleteLocation.provinceid,
+    };
+
+    const newKecamatanList = districtData.Data.Districts[0].DistrictList.map(
+      (i) => ({
+        value: i.DistrictID,
+        name: i.District,
+      })
+    );
+
+    const newPostalCodeList = districtData.Data.Districts[0].PostalCodes.map(
+      (i) => ({
+        value: i.ID,
+        name: i.PostalCode,
+      })
+    );
+
+    const findPostalCode = districtData.Data.Districts[0].PostalCodes.find(
+      (item) => item.PostalCode === districtData.Data.CompleteLocation.postal
+    );
+
+    const newPostalCode = {
+      name: findPostalCode.Description,
+      value: findPostalCode.ID,
+    };
+
+    const newCoordinates = {
+      lat: districtData.Data.Lat,
+      long: districtData.Data.Long,
+    };
+
+    // Set all the states
+    setDistrict(newDistrict);
+    setCity(newCity);
+    setProvince(newProvince);
+    setKecamatanList(newKecamatanList);
+    setPostalCodeList(newPostalCodeList);
+    setPostalCode(newPostalCode);
+    setCoordinates(newCoordinates);
+
+    // Call AddressData with the new values
+    AddressData({
+      address,
+      location,
+      district: newDistrict,
+      city: newCity,
+      province: newProvince,
+      postalCode: newPostalCode,
+      coordinates: newCoordinates,
+    });
+  }, [districtData, address, location]); // Add other dependencies if needed
 
   useEffect(() => {
     if (manualSearchData) {
@@ -399,6 +433,8 @@ const AddressForm = () => {
           <MapContainer
             width={600}
             height={390}
+            lat={coordinates.lat ? coordinates.lat : -7.250445}
+            long={coordinates.long ? coordinates.long : 112.768845}
             onPosition={(val) => console.log(val.lat, val.lng)}
           />
           <div className="flex flex-col gap-[22px]">
