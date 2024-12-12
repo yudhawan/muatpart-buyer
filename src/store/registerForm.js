@@ -16,17 +16,17 @@ const registerForm = create((set, get) => ({
       email: "",
     },
     {
-      ktpFile: "",
+      ktpFile: null,
       ktpNo: null,
-      ktpNama: "",
+      namaKtpPendaftar: "",
       hasBankAccount: false,
       bankID: null,
-      accountNumber: null,
-      accountName: null,
+      rekeningNumber: null,
+      namaPemilik: null,
     },
   ],
 
-  currentStep: 0,
+  currentStep: 1, // nanti ganti 0
   errors: {},
 
   handleInputChange: (field, value) => {
@@ -40,6 +40,19 @@ const registerForm = create((set, get) => ({
       return {
         formData: newFormData,
         errors: {}, // Reset errors when input changes
+      };
+    });
+  },
+
+  setFormData: (step, field, value) => {
+    set((state) => {
+      const newFormData = [...state.formData];
+      newFormData[step] = {
+        ...newFormData[step],
+        [field]: value,
+      };
+      return {
+        formData: newFormData
       };
     });
   },
@@ -86,11 +99,61 @@ const registerForm = create((set, get) => ({
     return true;
   },
 
+  validateSecondStep: () => {
+    const { formData } = get();
+    const currentStepData = formData[1];
+    const errors = {};
+console.log('curr',currentStepData)
+    // Required KTP fields validation
+    if (!currentStepData.ktpFile) {
+      errors.ktpFile = "KTP Pendaftar wajib diisi";
+    }
+
+    if (!currentStepData.ktpNo) {
+      errors.ktpNo = "No. KTP Pendaftar wajib diisi";
+    } else if (currentStepData.ktpNo.toString().length !== 16) {
+      errors.ktpNo = "No. KTP Pendaftar harus 16 digit";
+    }
+
+    if (!currentStepData.namaKtpPendaftar) {
+      errors.namaKtpPendaftar = "Nama KTP Pendaftar wajib diisi";
+    }
+
+    // Bank account validation if hasBankAccount is true
+    if (currentStepData.hasBankAccount) {
+      if (!currentStepData.bankID) {
+        errors.bankName = "Nama Bank wajib dipilih";
+      }
+      
+      if (!currentStepData.rekeningNumber) {
+        errors.rekeningNumber = "Nomor Rekening wajib diisi";
+      }
+
+      // Validate that user has clicked 'Periksa' button by checking if namaPemilik exists
+      if (currentStepData.bankID && currentStepData.rekeningNumber && !currentStepData.namaPemilik) {
+        errors.rekeningNumber = "Nomor Rekening wajib diperiksa";
+      }
+    }
+
+    if (Object.keys(errors).length > 0) {
+      set({ errors });
+      return false;
+    }
+
+    // All validations passed
+    set({ errors: {} });
+    return true;
+  },
+
   nextStep: () => {
-    const { currentStep, validateFirstStep } = get();
+    const { currentStep, validateFirstStep, validateSecondStep } = get();
 
     if (currentStep === 0) {
       if (validateFirstStep()) {
+        set({ currentStep: currentStep + 1 });
+      }
+    } else if (currentStep === 1) {
+      if (validateSecondStep()) {
         set({ currentStep: currentStep + 1 });
       }
     } else {

@@ -1,13 +1,17 @@
-"use client"
 import { useState, useRef, useEffect } from 'react';
 
-const OtpInput = () => {
+const OtpInput = ({ onChange }) => {
 	const [otp, setOtp] = useState(new Array(6).fill(""));
 	const inputRefs = useRef([]);
 
 	useEffect(() => {
 		inputRefs.current = inputRefs.current.slice(0, 6);
 	}, []);
+
+	useEffect(() => {
+    const otpString = otp.join('');
+    onChange?.(otpString);
+  }, [otp, onChange]);
 
 	const handleChange = (element, index) => {
 		const value = element.value;
@@ -39,7 +43,7 @@ const OtpInput = () => {
 					value={otp[index]}
 					onChange={(e) => handleChange(e.target, index)}
 					onKeyDown={(e) => handleKeyDown(e, index)}
-					className="h-[30px] w-[30px] bg-white rounded-lg border border-solid border-zinc-500 text-center p-0"
+					className="h-[30px] w-[30px] bg-white rounded-lg border border-solid border-[#868686] text-center p-0 font-bold text-[14px] leading-[16.8px]"
 					style={{
 						minWidth: '30px',
 						maxWidth: '30px',
@@ -53,4 +57,4 @@ const OtpInput = () => {
 	);
 };
 
-export default OtpInput
+export default OtpInput;

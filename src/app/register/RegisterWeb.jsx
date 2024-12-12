@@ -11,7 +11,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import registerForm from "@/store/registerForm";
 
 function RegisterWeb({
-  bankOptions
+  bankOptions,
+  hasVerifiedLegality,
+  hasVerifiedRekening
 }) {
   const router = useRouter();
   const step = useSearchParams().get("step") || "1";
@@ -30,7 +32,7 @@ function RegisterWeb({
 
   const handleSubmit = () => {
     console.log("awww ", errors, formData);
-    return nextStep;
+    return nextStep();
     router.push(`/register?step=${Number(step) + 1}`);
   };
 
@@ -48,7 +50,7 @@ function RegisterWeb({
                   size='medium'
                   onclick={step !== "1" ? handleGoBack : null}
                 />
-                <div className="flex flex-col flex-1 gap-4 ml-8 items-center">
+                <div className="flex flex-col flex-1 gap-y-3 ml-8 items-center">
                   <span className="text-[20px] leading-[24px] font-bold">
                     Daftar menjadi Penjual muatparts
                   </span>
@@ -63,7 +65,13 @@ function RegisterWeb({
                 </div>
               </div>
               {step === "1" ? <InformasiTokoAkun /> : null}
-              {step === "2" ? <InformasiPendaftarDanRekening bankOptions={bankOptions} /> : null}
+              {step === "2" ? (
+                <InformasiPendaftarDanRekening
+                  bankOptions={bankOptions}
+                  hasVerifiedLegality={hasVerifiedLegality}
+                  hasVerifiedRekening={hasVerifiedRekening}
+                /> 
+              ) : null}
               
             </div>
           </div>

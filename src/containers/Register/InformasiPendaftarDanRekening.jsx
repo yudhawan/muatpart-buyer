@@ -5,90 +5,42 @@ import Checkbox from "@/components/Checkbox/Checkbox";
 import FileUpload from "@/components/FileUpload/FileUpload";
 import { useState } from "react";
 import IconComponent from "@/components/IconComponent/IconComponent";
+import registerForm from "@/store/registerForm";
 
 const InformasiPendaftarDanRekening = ({
-  bankOptions
+  bankOptions,
+  // hasVerifiedLegality,
+  // hasVerifiedRekening
 }) => {
-  const [formData, setFormData] = useState({
-    ktpFile: null,
-    ktpNumber: '',
-    ktpName: '',
-    bankName: '',
-    accountNumber: '',
-    accountName: ''
-  });
+  const {
+    formData,
+    // currentStep,
+    errors,
+    handleInputChange: handleFormDataChange,
+    // setFormData,
+    // validateStep,
+    // nextStep,
+    // prevStep,
+  } = registerForm();
+const currentStep = 1 // nanti dicomment
+const hasVerifiedLegality = false,
+hasVerifiedRekening = false
 
-  const [errors, setErrors] = useState({
-    ktpFile: '',
-    ktpNumber: '',
-    ktpName: '',
-    bankName: '',
-    accountNumber: '',
-    accountName: ''
-  });
-
-  const [showBankInfo, setShowBankInfo] = useState(false);
-  const [touched, setTouched] = useState({});
-
-  const validateForm = () => {
-    const newErrors = {};
-    
-    // KTP File validation
-    if (!formData.ktpFile) {
-      newErrors.ktpFile = "KTP Pendaftar wajib diisi";
-    }
-
-    // KTP Number validation
-    if (!formData.ktpNumber) {
-      newErrors.ktpNumber = "No. KTP Pendaftar wajib diisi";
-    } else if (formData.ktpNumber.length !== 16) {
-      newErrors.ktpNumber = "No. KTP harus 16 digit";
-    }
-
-    // KTP Name validation
-    if (!formData.ktpName) {
-      newErrors.ktpName = "Nama KTP Pendaftar wajib diisi";
-    }
-
-    // Bank account validations if checkbox is checked
-    if (showBankInfo) {
-      // if (!formData.accountName) {
-      //   newErrors.accountName = "Nama Rekening wajib diisi";
-      // }
-      if (!formData.accountNumber) {
-        newErrors.accountNumber = "Nomor Rekening wajib diisi";
-      }
-      if (!formData.bankName) {
-        newErrors.bankName = "Nama Bank wajib dipilih";
-      }
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  // const [touched, setTouched] = useState({});
+console.log('err',errors)
 
   const handleFileUpload = (fileData) => {
     if (fileData === null) {
       // Handle file deletion
-      setFormData(prev => ({
-        ...prev,
-        ktpFile: null
-      }));
+      handleFormDataChange("ktpFile", null)
     } else {
       // Handle successful file upload
-      setFormData(prev => ({
-        ...prev,
-        ktpFile: {
-          url: fileData.url,
-          name: fileData.name
-        }
-      }));
-      setErrors(prev => ({
-        ...prev,
-        ktpFile: ""
-      }));
+      handleFormDataChange("ktpFile", {
+        url: fileData.url,
+        name: fileData.name
+      })
     }
-    setTouched(prev => ({...prev, ktpFile: true}));
+    // setTouched(prev => ({...prev, ktpFile: true}));
   };
 
   const handleFileUploadError = (error) => {
@@ -96,35 +48,31 @@ const InformasiPendaftarDanRekening = ({
     //   ...prev,
     //   ktpFile: "Gagal mengunggah file. Silakan coba lagi."
     // }));
-    setTouched(prev => ({...prev, ktpFile: true}));
+    // setTouched(prev => ({...prev, ktpFile: true}));
   };
 
   const handleInputChange = (field) => (e) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: e.target.value
-    }));
-    setTouched(prev => ({...prev, [field]: true}));
+    handleFormDataChange(field, e.target.value)
   };
 
   const handleSubmit = () => {
-    const isValid = validateForm();
-    if (isValid) {
-      console.log('Form submitted:', formData);
-    } else {
-      setTouched({
-        ktpFile: true,
-        ktpNumber: true,
-        ktpName: true,
-        ...(showBankInfo && {
-          bankName: true,
-          accountNumber: true,
-          accountName: true
-        })
-      });
-    }
+    // const isValid = validateForm();
+    // if (isValid) {
+    //   console.log('Form submitted:', formData);
+    // } else {
+    //   setTouched({
+    //     ktpFile: true,
+    //     ktpNumber: true,
+    //     ktpName: true,
+    //     ...(showBankInfo && {
+    //       bankName: true,
+    //       accountNumber: true,
+    //       accountName: true
+    //     })
+    //   });
+    // }
   };
-console.log('form',formData)
+console.log('form',formData[currentStep])
 	return (
 		<div className="mt-8">
 			<span className="font-semibold text-[18px] leading-[21.6px]">Data Pendaftar</span>
@@ -134,21 +82,29 @@ console.log('form',formData)
 					<div className="w-[291px]">
 						<span className="font-medium text-[12px] leading-[14.4px] text-neutral-600">KTP Pendaftar*</span>
 					</div>
-					<div className="flex-1">
-						<div className="flex flex-col gap-2">
-							<FileUpload
-								className="w-[372px]"
-								label="Unggah"
-								acceptedFormats={['.jpg', '.jpeg', '.png']}
-								maxSize={5}
-								onSuccess={handleFileUpload}
-								onError={handleFileUploadError}
-								value={formData.ktpFile}
-							/>
-							{touched.ktpFile && errors.ktpFile && (
-								<span className="font-medium text-[12px] text-error-400">{errors.ktpFile}</span>
-							)}
-						</div>
+					<div className={`flex-1`}>
+						{hasVerifiedLegality ? (
+              <span
+                className="font-medium text-[12px] leading-[14.4px] text-success-400"
+              >
+                {/* {merchantCompany?.legalityFile[0].file.split("/").at(-1)} */}
+              </span>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <FileUpload
+                  className="w-[372px]"
+                  label="Unggah"
+                  acceptedFormats={['.jpg', '.jpeg', '.png']}
+                  maxSize={5}
+                  onSuccess={handleFileUpload}
+                  onError={handleFileUploadError}
+                  value={formData[currentStep].ktpFile}
+                />
+                {errors.ktpFile && (
+                  <span className="text-[12px] font-medium text-error-400">{errors.ktpFile}</span>
+                )}
+              </div>
+            )}
 					</div>
 				</div>
 
@@ -156,65 +112,78 @@ console.log('form',formData)
 					<div className="w-[291px] pt-[11px]">
 						<span className="font-medium text-[12px] leading-[14.4px] text-neutral-600">No. KTP Pendaftar*</span>
 					</div>
-					<div className="flex-1">
-						<Input
-							name="ktpNumber"
-							type="text"
-							placeholder="16 digit No. KTP Pendaftar"
-							width={{ width: "372px" }}
-							changeEvent={handleInputChange('ktpNumber')}
-							status={touched.ktpNumber && errors.ktpNumber ? 'error' : null}
-							supportiveText={{ title: errors.ktpNumber }}
-							value={formData.ktpNumber}
-						/>
-					</div>
+					<div className={`flex-1 ${hasVerifiedLegality ? "pt-[11px]" : ""}`}>
+            {hasVerifiedLegality ? (
+              <span className="font-medium text-[12px] leading-[14.4px]">
+                {formData[currentStep].ktpNo}
+              </span>
+            ) : (
+              <Input
+                name="ktpNo"
+                type="text"
+                placeholder="16 digit No. KTP Pendaftar"
+                width={{ width: "372px" }}
+                changeEvent={handleInputChange('ktpNo')}
+                status={errors.ktpNo ? 'error' : null}
+                supportiveText={{ title: errors.ktpNo }}
+                value={formData[currentStep].ktpNo}
+              />
+            )}
+          </div>
 				</div>
 
 				<div className="flex items-start">
 					<div className="w-[291px] pt-[11px]">
 						<span className="font-medium text-[12px] leading-[14.4px] text-neutral-600">Nama KTP Pendaftar*</span>
 					</div>
-					<div className="flex-1">
-						<Input
-							name="ktpName"
-							type="text"
-							placeholder="Masukkan Nama sesuai KTP"
-							width={{ width: "372px" }}
-							changeEvent={handleInputChange('ktpName')}
-							status={touched.ktpName && errors.ktpName ? 'error' : null}
-							supportiveText={{ title: errors.ktpName }}
-							value={formData.ktpName}
-						/>
+					<div className={`flex-1 ${hasVerifiedLegality ? "pt-[11px]" : ""}`}>
+            {hasVerifiedLegality ? (
+              <span className="font-medium text-[12px] leading-[14.4px]">
+                {formData[currentStep].namaKtpPendaftar}
+              </span>
+            ) : (
+              <Input
+                name="namaKtpPendaftar"
+                type="text"
+                placeholder="Masukkan Nama sesuai KTP"
+                width={{ width: "372px" }}
+                changeEvent={handleInputChange('namaKtpPendaftar')}
+                status={errors.namaKtpPendaftar ? 'error' : null}
+                supportiveText={{ title: errors.namaKtpPendaftar }}
+                value={formData[currentStep].namaKtpPendaftar}
+              />
+            )}
 					</div>
 				</div>
 
-				<div className="flex items-start">
-					<div className="flex items-center gap-2">
-						<Checkbox
-							label="Lengkapi Informasi Rekening Pencairan Dana"
-							onChange={({ checked }) => setShowBankInfo(checked)}
-							checked={showBankInfo}
-						/>
-						<Tooltip
-							text="Lengkapi info rekening saat registrasi untuk memudahkan pencairan dana."
-							position="right"
-						>
-							<IconComponent
-								src='/icons/Info.svg'
-							/>
-						</Tooltip>
-					</div>
-				</div>
+				{!hasVerifiedRekening ? (
+          <>
+            <div className="flex items-start">
+              <div className="flex items-center gap-2">
+                <Checkbox
+                  label="Lengkapi Informasi Rekening Pencairan Dana"
+                  onChange={({ checked }) => handleFormDataChange("hasBankAccount", checked)}
+                  checked={formData[currentStep].hasBankAccount}
+                />
+                <Tooltip
+                  text="Lengkapi info rekening saat registrasi untuk memudahkan pencairan dana."
+                  position="right"
+                >
+                  <IconComponent
+                    src='/icons/Info.svg'
+                  />
+                </Tooltip>
+              </div>
+            </div>
 
-				{showBankInfo && (
-					<BankAccountSection
-            bankOptions={bankOptions}
-						formData={formData} 
-						setFormData={setFormData}
-						errors={errors}
-						touched={touched}
-					/>
-				)}
+            {formData[currentStep].hasBankAccount && (
+              <BankAccountSection
+                bankOptions={bankOptions}
+                errors={errors}
+              />
+            )}
+          </>
+        ) : null}
 			</div>
 		</div>
 	)
