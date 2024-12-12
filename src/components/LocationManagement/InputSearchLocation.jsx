@@ -192,7 +192,11 @@ const InputSearchLocation = ({
      //       setIsOpen(true);
      //  });
 
-     const [locationTes, setLocationTes] = useState("");
+     const [locationTes, setLocationTes] = useState(addressValue);
+
+     useEffect(() => {
+          setLocationTes(addressValue);
+     }, [addressValue]);
 
      const handleInputChange = (e) => {
           const value = e.target.value;
