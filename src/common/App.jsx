@@ -26,7 +26,7 @@ function App({ children }) {
         }}
         className={`w-full`}
       >
-        <div className="">{children}</div>
+        {children}
       </div>
     </ResponsiveProvider>
   );
