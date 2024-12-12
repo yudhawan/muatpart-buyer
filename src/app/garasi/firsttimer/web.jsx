@@ -8,7 +8,13 @@ import { useFormProps as UFPberitahukami } from "@/app/garasi/beritahukami/page"
 import { BeritahuKamiWeb } from "../beritahukami/web";
 import { modal } from "@/store/modal";
 
-const Web = ({ formState, handleChange, handleSubmit, isSubmitted }) => {
+const Web = ({
+  formState,
+  handleChange,
+  handleSubmit,
+  isSubmitted,
+  setIsSubmitted,
+}) => {
   // State untuk menyimpan dropdown mana yang error dan pesannya
   const [currentError, setCurrentError] = useState({ field: "", message: "" });
 
@@ -90,15 +96,43 @@ const Web = ({ formState, handleChange, handleSubmit, isSubmitted }) => {
     },
   ];
 
-  // Tambah fungsi untuk handle onClick dropdown
   const handleDropdownClick = (config) => {
-    const dependencyMessage = getDependencyMessage(config);
-    if (dependencyMessage) {
-      setCurrentError({ field: config.key, message: dependencyMessage });
-      return false; // Return false untuk mencegah dropdown terbuka
+    const fieldOrder = ["vehicle", "brand", "year", "model", "type"];
+    const fieldNames = {
+      vehicle: "Kendaraan",
+      brand: "Brand",
+      year: "Tahun",
+      model: "Model",
+      type: "Tipe",
+    };
+
+    const currentIndex = fieldOrder.indexOf(config.key);
+    let errorField = "";
+    let errorMessage = "";
+
+    // Reset submit state to clear previous submit errors
+    setIsSubmitted(false);
+
+    // Check prerequisites in sequence
+    for (let i = 0; i < currentIndex; i++) {
+      const prerequisiteField = fieldOrder[i];
+      if (!formState[prerequisiteField].value) {
+       errorField = config.key;
+        errorMessage = `Pilih ${fieldNames[prerequisiteField]} terlebih dahulu`;
+        break;
+      }
     }
+
+    // Reset current error state
     setCurrentError({ field: "", message: "" });
-    return true; // Return true jika boleh dibuka
+
+    // Set new error if found
+    if (errorMessage) {
+      setCurrentError({ field: errorField, message: errorMessage });
+      return false;
+    }
+
+    return true;
   };
 
   useEffect(() => {
@@ -128,23 +162,23 @@ const Web = ({ formState, handleChange, handleSubmit, isSubmitted }) => {
                     onChange={(value) => handleChange(config.key, value)}
                     options={config.options}
                     error={
-                      (isSubmitted && !formState[config.key].value) ||
+                      (formState[config.key].error && !currentError.field) ||
                       currentError.field === config.key
                     }
                     onBeforeOpen={() => handleDropdownClick(config)}
                   />
+                  {/* Show dependency error (from dropdown click) */}
                   {currentError.field === config.key && (
                     <span className="text-xs font-medium text-error-400 mt-0">
                       {currentError.message}
                     </span>
                   )}
-                  {isSubmitted &&
-                    !formState[config.key].value &&
-                    !currentError.message && (
-                      <span className="text-xs font-medium text-error-400 mt-0">
-                        {config.label.split(" ")[1]} wajib diisi
-                      </span>
-                    )}
+                  {/* Show validation error (from submit) */}
+                  {formState[config.key].error && !currentError.field && (
+                    <span className="text-xs font-medium text-error-400 mt-0">
+                      {`${config.label.split(" ")[1]} harus diisi`}
+                    </span>
+                  )}
                 </div>
               ))}
 
@@ -320,7 +354,7 @@ export const WebModal = ({ mode = "add", initialData = null }) => {
               onChange={(value) => handleChange(config.key, value)}
               options={config.options}
               error={
-                (isSubmitted && !formState[config.key].value) ||
+                (formState[config.key].error && !currentError.field) ||
                 currentError.field === config.key
               }
               onBeforeOpen={() => handleDropdownClick(config)}
@@ -332,13 +366,12 @@ export const WebModal = ({ mode = "add", initialData = null }) => {
                 {currentError.message}
               </span>
             )}
-            {isSubmitted &&
-              !formState[config.key].value &&
-              !currentError.message && (
-                <span className="text-xs font-medium text-error-400 mt-0">
-                  {config.label.split(" ")[1]} wajib dipilih
-                </span>
-              )}
+            {/* Show validation error (from submit) */}
+            {formState[config.key].error && !currentError.field && (
+              <span className="text-xs font-medium text-error-400 mt-0">
+                {`${config.label.split(" ")[1]} harus diisi`}
+              </span>
+            )}
           </div>
         ))}
 
@@ -347,7 +380,7 @@ export const WebModal = ({ mode = "add", initialData = null }) => {
           {halfWidthDropdowns.map((config, index) => (
             <div key={config.key}>
               <Dropdown
-                withSearch={config.key === 'year' ? false : true}
+                withSearch={config.key === "year" ? false : true}
                 customLabel={renderLabel(
                   config,
                   fullWidthDropdowns.length + index
@@ -356,7 +389,7 @@ export const WebModal = ({ mode = "add", initialData = null }) => {
                 onChange={(value) => handleChange(config.key, value)}
                 options={config.options}
                 error={
-                  (isSubmitted && !formState[config.key].value) ||
+                  (formState[config.key].error && !currentError.field) ||
                   currentError.field === config.key
                 }
                 onBeforeOpen={() => handleDropdownClick(config)}
@@ -368,13 +401,12 @@ export const WebModal = ({ mode = "add", initialData = null }) => {
                   {currentError.message}
                 </span>
               )}
-              {isSubmitted &&
-                !formState[config.key].value &&
-                !currentError.message && (
-                  <span className="text-xs font-medium text-error-400 mt-0">
-                    {config.label.split(" ")[1]} wajib dipilih
-                  </span>
-                )}
+              {/* Show validation error (from submit) */}
+              {formState[config.key].error && !currentError.field && (
+                <span className="text-xs font-medium text-error-400 mt-0">
+                  {`${config.label.split(" ")[1]} harus diisi`}
+                </span>
+              )}
             </div>
           ))}
         </div>

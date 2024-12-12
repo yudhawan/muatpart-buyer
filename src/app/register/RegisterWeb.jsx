@@ -1,16 +1,17 @@
 "use client";
 
-import { useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import BreadCrumb from "@/components/Breadcrumb/Breadcrumb";
 import Button from "@/components/Button/Button";
 import IconComponent from "@/components/IconComponent/IconComponent";
-import InformasiPendaftarDanRekening from "@/containers/Register/InformasiPendaftarDanRekening";
 import InformasiTokoAkun from "@/containers/Register/InformasiTokoAkun";
 import Otp from "@/containers/Register/Otp";
 import { useRouter, useSearchParams } from "next/navigation";
-import registerForm from "@/store/registerForm";
+import InformasiPendaftarDanRekening from "@/containers/Register/InformasiPendaftarDanRekening";
 
 function RegisterWeb({
+  handleNext,
+  isSubmitting,
   bankOptions,
   hasVerifiedLegality,
   hasVerifiedRekening
@@ -18,25 +19,14 @@ function RegisterWeb({
   const router = useRouter();
   const step = useSearchParams().get("step") || "1";
 
-  const { currentStep, nextStep, prevStep, errors, formData } = registerForm();
-
-  useEffect(() => {
-    console.log(currentStep, nextStep, prevStep, " TERSUBMIT");
-  }, [currentStep, nextStep, prevStep]);
-
-  const breadCrumbItems = [
+  const BREADCRUMB_ITEMS = [
     "Informasi Toko Akun",
     "Informasi Pendaftar dan Rekening",
     "Konfirmasi Data",
   ];
 
-  const handleSubmit = () => {
-    console.log("awww ", errors, formData);
-    return nextStep();
-    router.push(`/register?step=${Number(step) + 1}`);
-  };
-
-  const handleGoBack = () => router.push(`/register?step=${Number(step) - 1}`);
+  const handleGoBack = () =>
+    step !== "1" && router.push(`/register?step=${Number(step) - 1}`);
 
   return (
     <div>
@@ -55,10 +45,10 @@ function RegisterWeb({
                     Daftar menjadi Penjual muatparts
                   </span>
                   <BreadCrumb
-                    data={breadCrumbItems.slice(0, step)}
+                    data={BREADCRUMB_ITEMS.slice(0, step)}
                     maxWidth="188"
                     onclick={(val) => {
-                      const index = breadCrumbItems.findIndex(item => item === val)
+                      const index = BREADCRUMB_ITEMS.findIndex(item => item === val)
                       router.push(`/register?step=${Number(index)+1}`)
                     }}
                   />
@@ -80,9 +70,10 @@ function RegisterWeb({
             <Button
               name="next"
               color="primary"
-              onClick={handleSubmit}
+              onClick={handleNext}
+              disabled={isSubmitting}
             >
-              Selanjutnya
+              {isSubmitting ? "Loading..." : "Selanjutnya"}
             </Button>
           </div>
         </div>

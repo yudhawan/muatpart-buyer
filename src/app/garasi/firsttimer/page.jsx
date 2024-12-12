@@ -22,7 +22,6 @@ export const useFormProps = () => {
   const { setModalOpen } = modal();
   const isAdd = useSearchParams().get("isAdd");
 
-
   // Fungsi handleChange normal untuk interaksi user
   const handleChange = (key, value) => {
     const updatedState = { ...formState };
@@ -55,7 +54,6 @@ export const useFormProps = () => {
   const handleSubmit = (submitData) => {
     setIsSubmitted(true);
     if (validateForm()) {
-
       const newVehicle = {
         type: formState.vehicle.value,
         brand: formState.brand.value,
@@ -65,7 +63,6 @@ export const useFormProps = () => {
       };
 
       if (submitData.type === "edit") {
-
         // Validasi untuk edit
         const existingVehicles = [
           {
@@ -99,7 +96,6 @@ export const useFormProps = () => {
           type: "success",
         });
       } else {
-
         // Validasi untuk tambah
         const existingVehicles = [
           {
@@ -128,7 +124,9 @@ export const useFormProps = () => {
 
         // Sukses tambah
         setDataToast({
-          message: `Berhasil menyimpan data kendaraan ${isAdd && ' BKN FIRSTTIMER'}`, // Pesan untuk tambah
+          message: `Berhasil menyimpan data kendaraan ${
+            isAdd && " BKN FIRSTTIMER"
+          }`, // Pesan untuk tambah
           type: "success",
         });
       }
@@ -145,22 +143,33 @@ export const useFormProps = () => {
   };
 
   const validateForm = () => {
+    // Reset all errors first
     const updatedState = { ...formState };
-    let isValid = true;
-
-    Object.entries(formState).forEach(([key, field]) => {
-      if (!field.value) {
-        updatedState[key] = {
-          // ...field,
-          field,
-          error: `${key} harus diisi`,
-        };
-        isValid = false;
-      }
+    Object.keys(formState).forEach((key) => {
+      updatedState[key] = {
+        value: formState[key].value,
+        error: "",
+      };
     });
 
+    // Check fields in order
+    const fieldOrder = ["vehicle", "brand", "year", "model", "type"];
+
+    // Find first empty field
+    const firstEmptyField = fieldOrder.find((key) => !formState[key].value);
+
+    if (firstEmptyField) {
+      // Set error only for the first empty field
+      updatedState[firstEmptyField] = {
+        value: formState[firstEmptyField].value,
+        error: true, // Just use boolean instead of string
+      };
+      setFormState(updatedState);
+      return false;
+    }
+
     setFormState(updatedState);
-    return isValid;
+    return true;
   };
 
   return {
@@ -192,7 +201,7 @@ const MainGarasiFirstTime = () => {
   return isMobile ? (
     <>
       <Bottomsheet>{dataBottomsheet}</Bottomsheet>
-      <Toast/>
+      <Toast />
       <MobileForm {...formProps} />
     </>
   ) : (

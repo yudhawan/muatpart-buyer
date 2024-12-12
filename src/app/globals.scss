@@ -176,3 +176,21 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--neutral-700);
 }
+
+.scrollbar-custombadanusaha {
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.scrollbar-custombadanusaha::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar-custombadanusaha::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-custombadanusaha::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 2px;
+}

@@ -1,3 +1,5 @@
+"use client";
+
 import { modal } from "@/store/modal";
 import { X } from "lucide-react";
 

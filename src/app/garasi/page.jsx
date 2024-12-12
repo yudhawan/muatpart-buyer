@@ -74,7 +74,7 @@ export const Dropdown = ({
     }
   }, [isOpen]);
 
-  const filteredOptions = options.filter((option) =>
+  const filteredOptions = options?.filter((option) =>
     option.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -130,7 +130,10 @@ export const Dropdown = ({
           {withSearch && (
             <div className="p-2">
               <div className="relative">
-                <Search className="absolute left-3 top-2  text-neutral-600" size={16} />
+                <Search
+                  className="absolute left-3 top-2  text-neutral-600"
+                  size={16}
+                />
                 <input
                   ref={searchInputRef}
                   type="text"
@@ -144,8 +147,8 @@ export const Dropdown = ({
           )}
 
           {/* Options list */}
-          <div className="max-h-60 overflow-y-auto">
-            {filteredOptions.map((option) => (
+          <div className="max-h-[160px] scrollbar-custombadanusaha overflow-y-auto">
+            {filteredOptions?.map((option) => (
               <button
                 key={option}
                 className="w-full px-4 py-2 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 truncate"
@@ -154,7 +157,7 @@ export const Dropdown = ({
                 {option}
               </button>
             ))}
-            {filteredOptions.length === 0 && (
+            {filteredOptions?.length === 0 && (
               <div className="px-4 py-2 text-neutral-900 text-sm text-center">
                 Data Tidak Ditemukan
               </div>
@@ -399,7 +402,7 @@ export const vehicleData = {
 
 export const ButtonSubmitMobileNav = ({ title, onclick }) => {
   return (
-    <div className="fixed bottom-0 left-0 w-full py-3 px-4 shadow-muat rounded-t-[10px] z-50">
+    <div className="fixed bottom-0 left-0 w-full py-3 px-4 shadow-muat rounded-t-[10px] z-30 bg-white">
       <Button onClick={onclick} Class="!min-w-full !w-full !font-semibold">
         {title}
       </Button>

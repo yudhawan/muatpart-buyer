@@ -20,8 +20,8 @@ class SWRHandler {
   }
 
   useSWRHook(url, customFetch, cbError, option, ...props) {
-    const fetcher = customFetch 
-    ? (url) => customFetch(url, option) 
+    const fetcher = customFetch
+    ? (url) => customFetch(url, option)
     : (url) => SWRHandler.defaultFetcher(url, option);
     const result = useSWR(url, fetcher, {
       onError: (err) => {
