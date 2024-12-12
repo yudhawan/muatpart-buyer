@@ -80,7 +80,7 @@ function HeaderContainerMobile({
 }
 export function HeaderTitleSearchMobile({appBar,type,title,onBack,searchPlaceholder, searchValue,setSearch,shadow}){
   const RenderBack=appBar?.renderBack||null
-  const ActionButton = appBar?.ActionButton||null
+  const ActionButton = appBar?.renderActionButton||null
   const isBgSecondary = type==='titleSecondary'|type==='searchSecondary'|type==='navbarMobileDefaultScreen'
   return(
     <div className={`${isBgSecondary?'bg-neutral-50':'bg-[#c22716]'} relative w-full h-auto max-h-[88px] p-4 pb-3 flex gap-2 ${shadow? 'shadow-lg':''}`}>
@@ -97,7 +97,7 @@ export function HeaderTitleSearchMobile({appBar,type,title,onBack,searchPlacehol
         {(type==='search' || type==='searchSecondary')&&<Input classname={style.inputSearchMobile} placeholder={searchPlaceholder} value={searchValue} changeEvent={e=>setSearch({value:e.target.value})} />}
         {(type==='title' || type==='titleSecondary' || type==='navbarMobileDefaultScreen')&&<span className={`font-bold text-base ${isBgSecondary?'text-[#176cf7]':'text-neutral-50'}`}>{title}</span>}
         {
-          ActionButton?<ActionButton/>:''
+          ActionButton?ActionButton:''
         }
       </div>
     </div>
@@ -109,7 +109,6 @@ export function HeaderModalMobile({appBar,handleAction,type,title,onBack,searchP
   const RenderBack=appBar?.renderBack||null
   const ActionButton = appBar?.renderActionButton||null
   const isType = type==='titleModal'|type==='titleModalSecondary'|type==='searchModal'|type==='searchModalSecondary'
-
   return(
     <div className={`${type.includes('Secondary')?'bg-neutral-50':'bg-[#c22716]'} relative w-full h-auto max-h-[88px] p-4 pb-3 ${shadow? 'shadow-lg':''}`}>
         <div className='flex flex-col'>
@@ -126,7 +125,7 @@ export function HeaderModalMobile({appBar,handleAction,type,title,onBack,searchP
             <span className={`font-semibold text-sm ${type.includes('Secondary')?'text-neutral-900':'text-neutral-50'}`}>{title}</span>
             :<Input changeEvent={e=>setSearch({value:e.target.value})} classname={style.inputMobile} placeholder={searchPlaceholder?searchPlaceholder:'Cari Produk'} icon={{left:'/icons/search.svg'}} />}
             {
-              ActionButton?<ActionButton/>:<span onClick={handleAction} className={`font-semibold text-sm cursor-pointer ${type.includes('Secondary')?'text-primary-700':'text-neutral-50'}`}>Reset</span>
+              ActionButton?ActionButton:<span onClick={handleAction} className={`font-semibold text-sm cursor-pointer ${type.includes('Secondary')?'text-primary-700':'text-neutral-50'}`}>Reset</span>
             }
           </div>
           <Image src='/img/fallinstartheader.png' width={153} height={62} alt='fallin' className='absolute right-0 bottom-0' />

@@ -1,9 +1,11 @@
 import { useHeader } from '@/common/ResponsiveContext'
 import Image from 'next/image'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import ProductComponent from '@/components/ProductComponent/ProductComponent'
 import style from './HomePage.module.scss'
 import Bubble from '@/components/Bubble/Bubble'
+import categories from './mock'
+import ScreenSubCategories from './ScreenSubCategories'
 function HomePageResponsive({lastSeenProducts}) {
   const {
     appBarType, //pilih salah satu : 'titleSecondary' || 'searchSecondary' || 'navbarMobileDefaultScreen' || 'search' || 'title'
@@ -18,64 +20,19 @@ function HomePageResponsive({lastSeenProducts}) {
     setSearch, // tambahkan payload seperti ini {placeholder:'Pencarian',value:'',type:'text'}
   }=useHeader()
   useEffect(()=>{
-      
-    if(screen==='example2'){
-      setAppBar({
-        title:'Example 2',
-        appBarType:'search',
-        onBack:()=>{
-          setAppBar({
-            title:'Example 2',
-            appBarType:'search',
-            onBack:()=>clearScreen()
-          })
-        }
-      })
-      setSearch({
-        placeholder:'Pencarian Example 2'
-      })
-    }
-    if(screen==='example3'){
-      setAppBar({
-        title:'Example 3',
-        appBarType:'titleSecondary',
-        onBack:()=>setScreen('example2')
-      })
-    }
-    if(screen==='example4'){
-      setAppBar({
-        title:'Example 4',
-        appBarType:'searchSecondary',
-        onBack:()=>setScreen('example3')
-      })
-      setSearch({
-        placeholder:'Pencarian Example 4'
-      })
-    }
+    // if(screen==='screenSubCategories'){
+    //   setAppBar({
+    //     title:'Example 4',
+    //     appBarType:'searchSecondary',
+    //     onBack:()=>setScreen('example3')
+    //   })
+    //   setSearch({
+    //     placeholder:'Pencarian Example 4'
+    //   })
+    // }
   },[screen])
-  if (screen==='example') return (
-    <div className=' flex flex-col'>
-      <p>Example</p>
-      <button className='bg-primary-600' onClick={()=>{setScreen('example2')}}>Go to Example 2</button>
-    </div>
-  )
-  if (screen==='example2') return (
-    <div className=' flex flex-col'>
-      <p>Example 2</p>
-      <button className='bg-primary-600' onClick={()=>setScreen('example3')}>Go to Example 3</button>
-    </div>
-  )
-  if (screen==='example3') return (
-    <div className=' flex flex-col'>
-      <p>Example 3</p>
-      <button className='bg-primary-600' onClick={()=>setScreen('example4')}>Go to Example 4</button>
-    </div>
-  )
-  if (screen==='example4') return (
-    <div className=' flex flex-col'>
-      <p>Example 4</p>
-    </div>
-  )
+  const [getCategory,setCategory]=useState(null)
+  if (screen==='screenSubCategories') return <ScreenSubCategories data={getCategory} />
   // main screen
   return (
     <div className="flex flex-col pb-6">
@@ -85,12 +42,21 @@ function HomePageResponsive({lastSeenProducts}) {
       <section className='flex flex-col gap-4 py-4'>
         <h1 className='text-base text-neutral-900 font-semibold'>Kategori</h1>
         <div className='flex gap-[6px]'>
-          <div className='flex flex-col gap-1 justify-center'>
+          {categories.map(val=><div key={val.id} className='flex w-[46px] flex-col gap-1 justify-center' onClick={()=>{
+            setCategory(val)
+            setScreen('screenSubCategories')
+            setAppBar({
+              appBarType:'titleModalSecondary',
+              title:'Kategori '+val.name,
+              onBack:()=>clearScreen(),
+              renderActionButton:<span className='w-4 bg-transparent'></span>
+            })
+          }}>
             <div className='border border-[#d7d7d7] rounded-md overflow-hidden w-12 h-12'>
-              <Image src={'/img/gojek.png'} width={48} height={48} className='w-full h-full object-contain' />
+              <Image src={'/img/gojek.png'} width={48} height={48} className='w-full h-full object-contain' alt={val.name} />
             </div>
-            <span className='text-[#1b1b1b] text-[10px] font-medium'>Tstin gojek</span>
-          </div>
+            <span className='text-[#1b1b1b] h-7 text-[10px] font-medium line-clamp-2 text-center'>{val.name}</span>
+          </div>)}
         </div>
       </section>
       {/* Terakhir Dilihat */}

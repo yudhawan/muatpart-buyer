@@ -8,6 +8,7 @@ import DefaultScreen from "./DefaultScreen";
 import { viewport } from "@/store/viewport";
 import { headerProps } from "@/containers/HeaderContainer/headerProps";
 import { useRouter } from "next/navigation";
+import BottomTabNavigation from "@/containers/BottomTabNavigation/BottomTabNavigation";
 
 function ResponsiveProvider({children}) {
     const router = useRouter()
@@ -94,6 +95,7 @@ function ResponsiveProvider({children}) {
                 </div>
                 :children
             }
+            {/* <BottomTabNavigation/> */}
         </ResponsiveContext.Provider>
     )
 }
