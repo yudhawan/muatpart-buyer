@@ -1,10 +1,10 @@
 
-import ROPP from './ROPP';
+import RubenCoda from './RubenCoda';
 
 function Page() {
     return (
         <div className='w-full'>
-            <ROPP />
+            <RubenCoda />
         </div>
     );
 }
