@@ -1,20 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import AddressForm from "./AddressForm";
 
 // ***NOTE
-// list msg error pada location management dikirim berupa object, bentuknya seperti di bawah ini:
+// list msg errors pada location management dikirim berupa object, bentuknya seperti di bawah ini:
 // {
 //     "storeName": "Wajib diisi",
-//     "email": "Wajib diisi"
+//     "email": "Wajib diisi",
 // }
 // ***NOTE
 
-
-const LocationManagement = ({ errors }) => {
+const LocationManagement = ({ errors, value }) => {
   const [addressData, setAddressData] = useState({});
+  useEffect(() => {
+    value(addressData);
+  }, [addressData]);
 
   return (
     <div>

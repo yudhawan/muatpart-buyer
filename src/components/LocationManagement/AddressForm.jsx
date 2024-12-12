@@ -15,7 +15,7 @@ import InputSearchLocation from "./InputSearchLocation";
 import InputSearch from "./InputSearch";
 
 const AddressForm = ({ AddressData, errors }) => {
-  useEffect(() => console.log(errors, " CHAKRAUI"), [errors]);
+  // useEffect(() => console.log(errors, " CHAKRAUI"), [errors]);
   // Start State Management
   const swrHandler = new SWRHandler();
   const locationRef = useRef(null);
@@ -336,9 +336,9 @@ const AddressForm = ({ AddressData, errors }) => {
         <label className="w-1/3 text-neutral-600 font-medium">Alamat*</label>
         <div className="w-2/3">
           <TextArea
-            status={`${errors?.email && "error"}`}
+            status={`${errors?.address && "error"}`}
             supportiveText={{
-              title: `${errors?.email ? errors?.email : ""}`,
+              title: `${errors?.address ? errors?.address : ""}`,
             }}
             maxLength={60}
             resize="none"
