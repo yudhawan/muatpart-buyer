@@ -140,7 +140,6 @@ const InputSearchLocation = ({
   };
 
   const handleSelectLocation = (result) => {
-    console.log("Selected Location:", result);
     onClickSearchResult(result);
     setLocation({
       id: result.ID,
@@ -169,55 +168,6 @@ const InputSearchLocation = ({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  useEffect(() => {
-    if (!districtData) return;
-
-    // Prepare all the new values first
-    const newDistrict = {
-      name: districtData.Data.Districts[0].District,
-      value: districtData.Data.Districts[0].DistrictID,
-    };
-
-    const newCity = {
-      name: districtData.Data.CompleteLocation.city,
-      id: districtData.Data.CompleteLocation.cityid,
-    };
-
-    const newProvince = {
-      name: districtData.Data.CompleteLocation.province,
-      id: districtData.Data.CompleteLocation.provinceid,
-    };
-
-    const newPostalCodeList = districtData.Data.Districts[0].PostalCodes.map(
-      (i) => ({
-        value: i.ID,
-        name: i.PostalCode,
-      })
-    );
-
-    const findPostalCode = districtData.Data.Districts[0].PostalCodes.find(
-      (item) => item.PostalCode === districtData.Data.CompleteLocation.postal
-    );
-
-    const newPostalCode = {
-      name: findPostalCode.Description,
-      value: findPostalCode.ID,
-    };
-
-    const newCoordinates = {
-      lat: districtData.Data.Lat,
-      long: districtData.Data.Long,
-    };
-
-    // Set all the states
-    setDistrict(newDistrict);
-    setCity(newCity);
-    setProvince(newProvince);
-    setPostalCodeList(newPostalCodeList);
-    setPostalCode(newPostalCode);
-    setCoordinates(newCoordinates);
-  }, [districtData]);
 
   return (
     <>
