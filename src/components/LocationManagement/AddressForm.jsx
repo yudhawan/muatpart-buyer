@@ -12,22 +12,17 @@ import Image from "next/image";
 import Button from "../Button/Button";
 import debounce from "@/libs/debounce";
 import InputSearchLocation from "./InputSearchLocation";
-import InputSearch from "./InputSearch";
 
 const AddressForm = ({ AddressData, errors }) => {
-  const AUTOCOMPLETE_ENDPOINT = `${process.env.NEXT_PUBLIC_INTERNAL_API}/autocompleteStreet`;
-  const DISTRICT_ENDPOINT = `${process.env.NEXT_PUBLIC_INTERNAL_API}/district_by_token`;
-
   // Start State Management
   const swrHandler = new SWRHandler();
   const locationRef = useRef(null);
 
-  const [manualInput, setManualInput] = useState("");
   const [kecamatanList, setKecamatanList] = useState([]);
   const [postalCodeList, setPostalCodeList] = useState([]);
 
   const [isOpenMap, setOpenMap] = useState(false);
-  const [isOpenAddManual, setIsOpenAddManual] = useState(false);
+  const [isOpenAddManual, setOpenAddManual] = useState(false);
   const [isOpenConfirmChangeLocation, setIsOpenConfirmChangeLocation] =
     useState(false);
 
@@ -67,42 +62,24 @@ const AddressForm = ({ AddressData, errors }) => {
   latLongFormData.append("Lat", coordinates.lat);
   latLongFormData.append("Long", coordinates.long);
 
-  const manualSearchFormData = new FormData();
-  manualSearchFormData.append("phrase", manualInput);
-
   // End Form Data
 
   // Start Fetchers
 
-  const autoCompleteFetcher = async (url) => {
-    const formData = new URLSearchParams();
-    formData.append("phrase", location.title || address);
+  // const districtFetcher = async (url) => {
+  //   const formData = new URLSearchParams();
+  //   formData.append("placeId", location.id);
 
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: formData.toString(),
-    });
+  //   const response = await fetch(url, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/x-www-form-urlencoded",
+  //     },
+  //     body: formData.toString(),
+  //   });
 
-    return response.json();
-  };
-
-  const districtFetcher = async (url) => {
-    const formData = new URLSearchParams();
-    formData.append("placeId", location.id);
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: formData.toString(),
-    });
-
-    return response.json();
-  };
+  //   return response.json();
+  // };
 
   const latLongFetcher = (url) => {
     return fetch(url, {
@@ -111,35 +88,28 @@ const AddressForm = ({ AddressData, errors }) => {
     }).then((res) => res.json());
   };
 
-  const manualSearchFetcher = (url) => {
-    return fetch(url, {
-      method: "POST",
-      body: manualSearchFormData,
-    }).then((res) => res.json());
-  };
-
   // End Fetchers
 
   // Start SWR Hooks
 
-  const { data: autocompleteData, error: autocompleteError } =
-    swrHandler.useSWRHook(
-      location.title.length > 2 || address.length > 2
-        ? AUTOCOMPLETE_ENDPOINT
-        : null,
-      autoCompleteFetcher,
-      (error) => {
-        // console.error("Autocomplete error:", error);
-      }
-    );
+  // const { data: autocompleteData, error: autocompleteError } =
+  //   swrHandler.useSWRHook(
+  //     location.title.length > 2 || address.length > 2
+  //       ? AUTOCOMPLETE_ENDPOINT
+  //       : null,
+  //     autoCompleteFetcher,
+  //     (error) => {
+  //       // console.error("Autocomplete error:", error);
+  //     }
+  //   );
 
-  const { data: districtData, error: districtError } = swrHandler.useSWRHook(
-    location.id ? DISTRICT_ENDPOINT : null,
-    districtFetcher,
-    (error) => {
-      // console.error("District fetch error:", error);
-    }
-  );
+  // const { data: districtData, error: districtError } = swrHandler.useSWRHook(
+  //   location.id ? DISTRICT_ENDPOINT : null,
+  //   districtFetcher,
+  //   (error) => {
+  //     // console.error("District fetch error:", error);
+  //   }
+  // );
 
   const { data: latLongData, error: latLongError } = swrHandler.useSWRHook(
     coordinates.lat && coordinates.long
@@ -151,17 +121,6 @@ const AddressForm = ({ AddressData, errors }) => {
     }
   );
 
-  const { data: manualSearchData, error: manualSearchError } =
-    swrHandler.useSWRHook(
-      manualInput.length > 2
-        ? `${process.env.NEXT_PUBLIC_INTERNAL_API}/get_autocomplete_street_local`
-        : null,
-      manualSearchFetcher,
-      (error) => {
-        // console.error("Manual search error:", error);
-      }
-    );
-
   // End SWR Hooks
 
   // Start Handlers
@@ -169,46 +128,19 @@ const AddressForm = ({ AddressData, errors }) => {
   const handleAddressChange = debounce((e) => {
     const value = e.target.value;
     setAddress(value);
-  }, 1000);
+  }, 500);
 
-  const handleManualSearch = debounce((e) => {
-    const value = e.target.value;
-    setManualInput(value);
-  }, 1000);
+  // const handleLocationChange = debounce((e) => {
+  //   const value = e.target.value;
+  //   setLocation({
+  //     id: "",
+  //     title: value,
+  //   });
 
-  const handleLocationChange = debounce((e) => {
-    const value = e.target.value;
-    setLocation({
-      id: "",
-      title: value,
-    });
-
-    if (value.length === 0) {
-      resetAllStates();
-    }
-  }, 1000);
-
-  const handleAutofillForm = () => {
-    if (manualInput) {
-      setDistrict({
-        name: manualInput.DistrictName,
-        value: manualInput.DistrictID,
-      });
-      setCity({
-        name: manualInput.CityName,
-        id: manualInput.CityID,
-      });
-      setProvince({
-        name: manualInput.ProvinceName,
-        id: manualInput.ProvinceID,
-      });
-      setPostalCode({
-        name: manualInput.PostalCode,
-        value: null,
-      });
-      setIsOpenAddManual(false);
-    }
-  };
+  //   if (value.length === 0) {
+  //     resetAllStates();
+  //   }
+  // }, 500);
 
   const resetAllStates = () => {
     setAddress("");
@@ -238,101 +170,110 @@ const AddressForm = ({ AddressData, errors }) => {
     });
   };
 
+  const handleAutoFillForm = (val) => {
+    console.log("Auto Fill Form", val);
+
+    setDistrict({
+      name: val.DistrictName,
+      value: val.DistrictID,
+    });
+    setCity({
+      name: val.CityName,
+      id: val.CityID,
+    });
+    setProvince({
+      name: val.ProvinceName,
+      id: val.ProvinceID,
+    });
+    setPostalCode({
+      name: val.PostalCode,
+      value: null,
+    });
+    setOpenAddManual(false);
+  };
+
   // End Handlers
 
-  useEffect(() => {
-    if (autocompleteData) {
-      // Handle the autocomplete data here
-      // Update other fields based on selected address
-    }
-  }, [autocompleteData]);
+  // useEffect(() => {
+  //   if (!districtData) return;
 
-  useEffect(() => {
-    if (!districtData) return;
+  //   if (districtData.Message.Code === 400) {
+  //     setCoordinates({
+  //       lat: districtData.Data.lat,
+  //       long: districtData.Data.lng,
+  //     });
+  //     setOpenAddManual(true);
+  //     return;
+  //   }
 
-    if (districtData.Message.Code === 400) {
-      setCoordinates({
-        lat: districtData.Data.lat,
-        long: districtData.Data.lng,
-      });
-      setIsOpenAddManual(true);
-      return;
-    }
+  //   if (districtData.Message.Code === 200) {
+  //     // Prepare all the new values first
+  //     const newDistrict = {
+  //       name: districtData.Data.Districts[0].District,
+  //       value: districtData.Data.Districts[0].DistrictID,
+  //     };
 
-    if (districtData.Message.Code === 200) {
-      // Prepare all the new values first
-      const newDistrict = {
-        name: districtData.Data.Districts[0].District,
-        value: districtData.Data.Districts[0].DistrictID,
-      };
+  //     const newCity = {
+  //       name: districtData.Data.CompleteLocation.city,
+  //       id: districtData.Data.CompleteLocation.cityid,
+  //     };
 
-      const newCity = {
-        name: districtData.Data.CompleteLocation.city,
-        id: districtData.Data.CompleteLocation.cityid,
-      };
+  //     const newProvince = {
+  //       name: districtData.Data.CompleteLocation.province,
+  //       id: districtData.Data.CompleteLocation.provinceid,
+  //     };
 
-      const newProvince = {
-        name: districtData.Data.CompleteLocation.province,
-        id: districtData.Data.CompleteLocation.provinceid,
-      };
+  //     const newKecamatanList = districtData.Data.Districts[0].DistrictList.map(
+  //       (i) => ({
+  //         value: i.DistrictID,
+  //         name: i.District,
+  //       })
+  //     );
 
-      const newKecamatanList = districtData.Data.Districts[0].DistrictList.map(
-        (i) => ({
-          value: i.DistrictID,
-          name: i.District,
-        })
-      );
+  //     const newPostalCodeList = districtData.Data.Districts[0].PostalCodes.map(
+  //       (i) => ({
+  //         value: i.ID,
+  //         name: i.PostalCode,
+  //       })
+  //     );
 
-      const newPostalCodeList = districtData.Data.Districts[0].PostalCodes.map(
-        (i) => ({
-          value: i.ID,
-          name: i.PostalCode,
-        })
-      );
+  //     const findPostalCode = districtData.Data.Districts[0].PostalCodes.find(
+  //       (item) => item.PostalCode === districtData.Data.CompleteLocation.postal
+  //     );
 
-      const findPostalCode = districtData.Data.Districts[0].PostalCodes.find(
-        (item) => item.PostalCode === districtData.Data.CompleteLocation.postal
-      );
+  //     const newPostalCode = {
+  //       name: findPostalCode.Description,
+  //       value: findPostalCode.ID,
+  //     };
 
-      const newPostalCode = {
-        name: findPostalCode.Description,
-        value: findPostalCode.ID,
-      };
+  //     const newCoordinates = {
+  //       lat: districtData.Data.Lat,
+  //       long: districtData.Data.Long,
+  //     };
 
-      const newCoordinates = {
-        lat: districtData.Data.Lat,
-        long: districtData.Data.Long,
-      };
+  //     // Set all the states
+  //     setDistrict(newDistrict);
+  //     setCity(newCity);
+  //     setProvince(newProvince);
+  //     setKecamatanList(newKecamatanList);
+  //     setPostalCodeList(newPostalCodeList);
+  //     setPostalCode(newPostalCode);
+  //     setCoordinates(newCoordinates);
 
-      // Set all the states
-      setDistrict(newDistrict);
-      setCity(newCity);
-      setProvince(newProvince);
-      setKecamatanList(newKecamatanList);
-      setPostalCodeList(newPostalCodeList);
-      setPostalCode(newPostalCode);
-      setCoordinates(newCoordinates);
+  //     // Call AddressData with the new values
+  //     AddressData({
+  //       address,
+  //       location,
+  //       district: newDistrict,
+  //       city: newCity,
+  //       province: newProvince,
+  //       postalCode: newPostalCode,
+  //       coordinates: newCoordinates,
+  //     });
 
-      // Call AddressData with the new values
-      AddressData({
-        address,
-        location,
-        district: newDistrict,
-        city: newCity,
-        province: newProvince,
-        postalCode: newPostalCode,
-        coordinates: newCoordinates,
-      });
-
-      return;
-    }
-  }, [districtData, address, location]);
-
-  useEffect(() => {
-    if (manualSearchData) {
-      // Handle the manual search data here
-    }
-  }, [manualSearchData]);
+  //     return;
+  //   }
+  // }, [districtData, address, location]);
 
   useEffect(() => {
     if (latLongData) {
@@ -390,11 +331,12 @@ const AddressForm = ({ AddressData, errors }) => {
               });
             }}
             onSelectLocation={(val) => {}}
-            searchResults={autocompleteData?.slice(0, 3)}
             changeEvent={handleLocationChange}
             locationRef={locationRef}
             addressValue={address}
             locationValue={location}
+            openAddManual={isOpenAddManual}
+            autoFillForm={(val) => handleAutoFillForm(val)}
           />
         </div>
       </div>
@@ -500,42 +442,6 @@ const AddressForm = ({ AddressData, errors }) => {
                 ),
               }}
             />
-          </div>
-        </div>
-      </ModalComponent>
-
-      <ModalComponent
-        isOpen={isOpenAddManual}
-        showButtonClose={false}
-        full={true}
-        hideHeader
-        preventAreaClose={true}
-        classname="w-[472px] overflow-visible"
-      >
-        <div className="p-6 relative space-y-6">
-          <div className="text-center font-bold text-sm">
-            Isi Kelurahan/Kecamatan/Kode Pos
-          </div>
-
-          <div className="w-full border border-solid bg-stone-300 border-stone-300 min-h-[1px]" />
-
-          <InputSearch
-            name="search"
-            placeholder="Cari Kelurahan/Kecamatan/Kode Pos"
-            options={manualSearchData?.Data}
-            changeEvent={handleManualSearch}
-            icon={{ left: "/icons/search.svg" }}
-            getOptionLabel={(option) => option.Description}
-          />
-
-          <div className="flex items-center justify-center gap-3">
-            <Button
-              onClick={() => setIsOpenAddManual(false)}
-              color="primary_secondary"
-            >
-              Batalkan
-            </Button>
-            <Button onClick={() => handleAutofillForm()}>Simpan</Button>
           </div>
         </div>
       </ModalComponent>

@@ -57,7 +57,7 @@ function ModalComponent({
         {!hideHeader ? <div className="bg-white "></div> : ""}
         {children ? (
           <div
-            className={`bg-white rounded-[10px] p-2 z-40 relative min-w-[386px] min-h-[208px] overflow-hidden ${
+            className={`bg-white rounded-[10px] p-2 z-40 relative min-w-[386px] min-h-[208px] ${
               !hideHeader ? "pt-[78px]" : ""
             } ${classnameContent}`}
             onClick={(e) => e.stopPropagation()}

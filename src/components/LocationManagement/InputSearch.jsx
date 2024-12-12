@@ -16,10 +16,10 @@ const FilterableMenu = ({
   );
 
   return (
-    <div className="absolute w-full">
+    <div className="relative w-full">
       <div
-        className={`block z-50 mt-1 bg-white rounded-md border border-blue-600 border-solid ${
-          filteredOptions.length > 0 ? "overflow-y-scroll max-h-32" : ""
+        className={`absolute z-50 mt-1 bg-white rounded-md border border-blue-600 border-solid ${
+          filteredOptions.length > 0 ? "overflow-y-scroll max-h-36" : ""
         } w-full`}
       >
         {filteredOptions.length > 0 ? (

@@ -7,9 +7,10 @@ import TextArea from "../TextArea/TextArea";
 import Dropdown from "../Dropdown/Dropdown";
 import Checkbox from "../Checkbox/Checkbox";
 import Button from "../Button/Button";
+import InputSearch from "./InputSearch";
+import debounce from "@/libs/debounce";
 
 const InputSearchLocation = ({
-  searchResults,
   changeEvent,
   locationRef,
   onClickSearchResult,
@@ -19,10 +20,30 @@ const InputSearchLocation = ({
     id: null,
     title: "",
   },
+  openAddManual,
+  autoFillForm,
 }) => {
+  const AUTOCOMPLETE_ENDPOINT = `${process.env.NEXT_PUBLIC_INTERNAL_API}/autocompleteStreet`;
   const DISTRICT_ENDPOINT = `${process.env.NEXT_PUBLIC_INTERNAL_API}/district_by_token`;
+  const MANUALSEARCH_ENDPOINT = `${process.env.NEXT_PUBLIC_INTERNAL_API}/autocompleteStreetLocal`;
 
   const swrHandler = new SWRHandler();
+
+  const [isOpenAddManual, setIsOpenAddManual] = useState(false);
+
+  const [manualInput, setManualInput] = useState({
+    DistrictID: "",
+    DistrictName: "",
+    CityID: "",
+    CityName: "",
+    ProvinceID: "",
+    ProvinceName: "",
+    PostalCode: "",
+  });
+
+  const [searchResults, setSearchResults] = useState([]);
+  const [manualSearchResponse, setManualSearchResponse] = useState([]);
+
   const [address, setAddress] = useState(addressValue);
   const [location, setLocation] = useState({
     id: locationValue.id,
@@ -84,9 +105,9 @@ const InputSearchLocation = ({
     },
   ];
 
-  const districtFetcher = async (url) => {
+  const autoCompleteFetcher = async (url, body) => {
     const formData = new URLSearchParams();
-    formData.append("placeId", location.id);
+    formData.append("phrase", body);
 
     const response = await fetch(url, {
       method: "POST",
@@ -99,26 +120,70 @@ const InputSearchLocation = ({
     return response.json();
   };
 
-  const { data: districtData, error: districtError } = swrHandler.useSWRHook(
-    location.id ? DISTRICT_ENDPOINT : null,
-    districtFetcher,
-    (error) => {
-      // console.error("District fetch error:", error);
-    }
-  );
+  const districtFetcher = async (url, body) => {
+    const formData = new URLSearchParams();
+    formData.append("placeId", body);
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: formData.toString(),
+    });
+
+    return response.json();
+  };
+
+  const manualSearchFetcher = async (url, body) => {
+    const formData = new URLSearchParams();
+    formData.append("phrase", body);
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: formData.toString(),
+    });
+
+    return response.json();
+  };
+
+  // const { data: districtData, error: districtError } = swrHandler.useSWRHook(
+  //   location.id ? DISTRICT_ENDPOINT : null,
+  //   districtFetcher,
+  //   (error) => {
+  //     // console.error("District fetch error:", error);
+  //   }
+  // );
+
+  // const { data: manualSearchData, error: manualSearchError } =
+  //   swrHandler.useSWRHook(
+  //     manualInput.length > 2 ? MANUALSEARCH_ENDPOINT : null,
+  //     manualSearchFetcher,
+  //     (error) => {
+  //       // console.error("Manual search error:", error);
+  //     }
+  //   );
 
   const handleInputFocus = () => {
     setIsOpen(true);
     if (!location.title && addressValue) {
-      setLocation(addressValue);
+      setLocation({
+        id: null,
+        title: addressValue,
+      });
     }
   };
 
   const handleInputChange = (e) => {
     const value = e.target.value;
-    setLocation(value);
+    setLocation({
+      id: null,
+      title: value,
+    });
     setIsOpen(true);
-    changeEvent(e);
   };
 
   const handleGetCurrentLocation = () => {
@@ -148,13 +213,164 @@ const InputSearchLocation = ({
     setIsOpen(false);
   };
 
-  const handleSaveLocation = (result) => {
-    setIsModalOpen(true);
+  const handleSaveLocation = async (result) => {
+    setIsOpen(false);
     setLocation({
-      id: result.id,
-      title: result.title,
+      id: result.ID,
+      title: result.Title,
     });
-    console.log("addressValue:", addressValue);
+
+    try {
+      const districtData = await districtFetcher(DISTRICT_ENDPOINT, result.ID);
+
+      console.log("District data: ", districtData);
+
+      if (districtData && districtData.Message.Code === 200) {
+        setIsModalOpen(true);
+        handleAutofillForm(districtData);
+      } else {
+        console.log("b");
+        setIsOpenAddManual(true);
+      }
+    } catch (error) {
+      console.error("Error fetching district data:", error);
+    }
+  };
+
+  const fetchAutoCompleteData = async () => {
+    try {
+      const setAutoCompleteResponse = await autoCompleteFetcher(
+        AUTOCOMPLETE_ENDPOINT,
+        location.title
+      );
+      console.log("Auto complete data: ", setAutoCompleteResponse);
+      setAutoCompleteResponse(setAutoCompleteResponse.Data.data.Data);
+    } catch (error) {
+      console.error("Error fetching auto complete data:", error);
+    }
+  };
+
+  const fetchDistrictData = async () => {
+    try {
+      const districtData = await districtFetcher(
+        DISTRICT_ENDPOINT,
+        location.id
+      );
+      console.log("District data: ", districtData);
+    } catch (error) {
+      console.error("Error fetching district data:", error);
+    }
+  };
+
+  const fetchManualSearchData = async () => {
+    try {
+      const manualData = await manualSearchFetcher(
+        MANUALSEARCH_ENDPOINT,
+        manualInput
+      );
+      setManualSearchResponse(manualData.Data.data.Data);
+    } catch (error) {
+      console.error("Error fetching manual search data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (location.title) {
+      fetchAutoCompleteData();
+    }
+  }, [location.title]);
+
+  useEffect(() => {
+    if (location.id) {
+      fetchDistrictData();
+    }
+  }, [location.id]);
+
+  useEffect(() => {
+    if (openAddManual) {
+      setIsOpenAddManual(true);
+    }
+  }, [openAddManual]);
+
+  useEffect(() => {
+    if (manualInput.length > 2) {
+      fetchManualSearchData();
+    }
+  }, [manualInput]);
+
+  const handleManualSearch = debounce((e) => {
+    const value = e.target.value;
+    setManualInput(value);
+  }, 500);
+
+  const handleAutofillForm = (districtData) => {
+    console.log("District data: ", districtData);
+
+    const newDistrict = {
+      name: districtData.Data.Districts[0].District,
+      value: districtData.Data.Districts[0].DistrictID,
+    };
+
+    const newCity = {
+      name: districtData.Data.CompleteLocation.city,
+      id: districtData.Data.CompleteLocation.cityid,
+    };
+
+    const newProvince = {
+      name: districtData.Data.CompleteLocation.province,
+      id: districtData.Data.CompleteLocation.provinceid,
+    };
+
+    const newPostalCodeList = districtData.Data.Districts[0].PostalCodes.map(
+      (i) => ({
+        value: i.ID,
+        name: i.PostalCode,
+      })
+    );
+
+    const findPostalCode = districtData.Data.Districts[0].PostalCodes.find(
+      (item) => item.PostalCode === districtData.Data.CompleteLocation.postal
+    );
+
+    const newPostalCode = {
+      name: findPostalCode.Description,
+      value: findPostalCode.ID,
+    };
+
+    const newCoordinates = {
+      lat: districtData.Data.Lat,
+      long: districtData.Data.Long,
+    };
+
+    // Set all the states
+    setDistrict(newDistrict);
+    setCity(newCity);
+    setProvince(newProvince);
+    setPostalCodeList(newPostalCodeList);
+    setPostalCode(newPostalCode);
+    setCoordinates(newCoordinates);
+  };
+
+  const handleAutofillFormManual = () => {
+    setDistrict({
+      name: manualInput.DistrictName,
+      value: manualInput.DistrictID,
+    });
+    setCity({
+      name: manualInput.CityName,
+      id: manualInput.CityID,
+    });
+    setProvince({
+      name: manualInput.ProvinceName,
+      id: manualInput.ProvinceID,
+    });
+    setPostalCode({
+      name: manualInput.PostalCode,
+      value: null,
+    });
+    setIsOpenAddManual(false);
+    autoFillForm(manualInput);
+    // setIsModalOpen(true);
   };
 
   useEffect(() => {
@@ -169,17 +385,32 @@ const InputSearchLocation = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // useEffect(() => {
+  //   if (!districtData) return;
+
+  //   if (districtData.Message.Code === 400) {
+  //     setCoordinates({
+  //       lat: districtData.Data.lat,
+  //       long: districtData.Data.lng,
+  //     });
+  //     setIsOpenAddManual(true);
+  //     return;
+  //   }
+  // }, [districtData]);
+
   return (
     <>
       {/* <pre>
         {JSON.stringify(
           {
-            location,
-            district,
-            city,
-            province,
-            postalCode,
-            coordinates,
+            // address,
+            // addressValue,
+            // location,
+            // district,
+            // city,
+            // province,
+            // postalCode,
+            // coordinates,
           },
           null,
           2
@@ -303,6 +534,42 @@ const InputSearchLocation = ({
           </div>
         )}
       </div>
+
+      <ModalComponent
+        isOpen={isOpenAddManual}
+        showButtonClose={false}
+        full={true}
+        hideHeader
+        preventAreaClose={true}
+        classname="w-[472px] overflow-visible"
+      >
+        <div className="p-6 relative space-y-6">
+          <div className="text-center font-bold text-sm">
+            Isi Kelurahan/Kecamatan/Kode Pos
+          </div>
+
+          <div className="w-full border border-solid bg-stone-300 border-stone-300 min-h-[1px]" />
+
+          <InputSearch
+            name="search"
+            placeholder="Cari Kelurahan/Kecamatan/Kode Pos"
+            options={manualSearchResponse}
+            changeEvent={handleManualSearch}
+            icon={{ left: "/icons/search.svg" }}
+            getOptionLabel={(option) => option.Description}
+          />
+
+          <div className="flex items-center justify-center gap-3">
+            <Button
+              onClick={() => setIsOpenAddManual(false)}
+              color="primary_secondary"
+            >
+              Batalkan
+            </Button>
+            <Button onClick={() => handleAutofillFormManual()}>Simpan</Button>
+          </div>
+        </div>
+      </ModalComponent>
 
       <ModalComponent
         isOpen={isModalOpen}
