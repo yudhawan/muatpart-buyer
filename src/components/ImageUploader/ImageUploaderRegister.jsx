@@ -16,12 +16,16 @@ const api = process.env.NEXT_PUBLIC_API_HASYIM_DEVLINUX;
 const ImageUploaderRegister = ({ value, defaultValue }) => {
   const { setModalOpen, setModalConfig, setModalContent } = modal();
   const [resultCrops, setResultCrops] = useState(
-    defaultValue !== "" ? defaultValue : ""
+    defaultValue !== null ? defaultValue : ""
   );
 
   useEffect(() => {
     resultCrops !== "" && value(resultCrops);
   }, [resultCrops]);
+
+  useEffect(() => {
+    defaultValue !== null && setResultCrops(defaultValue);
+  }, [defaultValue]);
 
   const handleUbah = () => {
     setModalContent(<UnggahFoto resultCrop={setResultCrops} />);

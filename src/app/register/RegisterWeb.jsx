@@ -6,6 +6,7 @@ import Button from "@/components/Button/Button";
 import IconComponent from "@/components/IconComponent/IconComponent";
 import InformasiTokoAkun from "@/containers/Register/InformasiTokoAkun";
 import InformasiPendaftarDanRekening from "@/containers/Register/InformasiPendaftarDanRekening";
+import KonfirmasiData from "@/containers/Register/KonfirmasiData";
 
 const BREADCRUMB_ITEMS = [
   "Informasi Toko Akun",
@@ -43,6 +44,7 @@ function RegisterWeb({ handleNext, isSubmitting }) {
 
           {step === "1" && <InformasiTokoAkun />}
           {step === "2" && <InformasiPendaftarDanRekening />}
+          {step === "3" && <KonfirmasiData />}
         </div>
       </div>
 

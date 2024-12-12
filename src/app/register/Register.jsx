@@ -25,6 +25,7 @@ function Register() {
     setIsSubmitting,
     setFormData,
   } = registerForm();
+  const {setDataToast, setShowToast} = toast()
 
   const { data: merchantData } = useSWRHook(
     formData[0].tipeToko === 0
@@ -33,7 +34,7 @@ function Register() {
     "GET"
   );
 
-  const { trigger: submitData } = useSWRMutateHook(
+  const { trigger: submitData, error: errorSubmitData } = useSWRMutateHook(
     formData[0].tipeToko === 0
       ? `${api}v1/register/merchant_personal`
       : `${api}v1/register/merchant_company`,
@@ -68,18 +69,17 @@ function Register() {
                 formData[0].tipeToko === 0 ? "personal" : "company"
               }`
             );
-            toast
-              .getState()
-              .setDataToast({
-                type: "success",
-                message: "Data berhasil disimpan",
-              });
+            setShowToast(true);
+            setDataToast({
+              type: "success",
+              message: "Data berhasil disimpan",
+            });
             router.push(`/register?step=${currentStep + 1}`);
           })
-          .catch(() => {
-            toast
-              .getState()
-              .setDataToast({ type: "error", message: "Gagal menyimpan data" });
+          .catch((err) => {
+            console.log(err,errorSubmitData, " erddio");
+            setShowToast(true);
+            setDataToast({ type: "error", message: "Gagal menyimpan data" });
           });
       } finally {
         setIsSubmitting(false);
