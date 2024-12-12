@@ -57,7 +57,13 @@ const BottomsheetContent = ({ options, onSelect, label }) => {
   );
 };
 
-const Mobile = ({ formState, handleChange, handleSubmit, isSubmitted }) => {
+const Mobile = ({
+  formState,
+  handleChange,
+  handleSubmit,
+  isSubmitted,
+  setIsSubmitted,
+}) => {
   const {
     setShowToast,
     setDataToast,
@@ -71,50 +77,43 @@ const Mobile = ({ formState, handleChange, handleSubmit, isSubmitted }) => {
 
   const [currentError, setCurrentError] = useState({ field: "", message: "" });
 
-  const getDependencyMessage = (config) => {
-    switch (config.key) {
-      case "brand":
-        return !formState.vehicle.value
-          ? "Pilih kendaraan terlebih dahulu"
-          : "";
-      case "year":
-        return !formState.vehicle.value
-          ? "Pilih kendaraan terlebih dahulu"
-          : !formState.brand.value
-          ? "Pilih brand terlebih dahulu"
-          : "";
-      case "model":
-        return !formState.vehicle.value
-          ? "Pilih kendaraan terlebih dahulu"
-          : !formState.brand.value
-          ? "Pilih brand terlebih dahulu"
-          : !formState.year.value
-          ? "Pilih tahun terlebih dahulu"
-          : "";
-      case "type":
-        return !formState.vehicle.value
-          ? "Pilih kendaraan terlebih dahulu"
-          : !formState.brand.value
-          ? "Pilih brand terlebih dahulu"
-          : !formState.year.value
-          ? "Pilih tahun terlebih dahulu"
-          : !formState.model.value
-          ? "Pilih model terlebih dahulu"
-          : "";
-      default:
-        return "";
-    }
-  };
-
+  // Update handleOpenBottomsheet function
   const handleOpenBottomsheet = (config) => {
-    const dependencyMessage = getDependencyMessage(config);
+    const fieldOrder = ["vehicle", "brand", "year", "model", "type"];
+    const fieldNames = {
+      vehicle: "Kendaraan",
+      brand: "Brand",
+      year: "Tahun",
+      model: "Model",
+      type: "Tipe",
+    };
 
-    if (dependencyMessage) {
-      setCurrentError({ field: config.key, message: dependencyMessage });
+    const currentIndex = fieldOrder.indexOf(config.key);
+    let errorField = "";
+    let errorMessage = "";
+
+    // Reset isSubmitted to clear previous submit errors
+    setIsSubmitted(false);
+
+    // Check prerequisites in sequence
+    for (let i = 0; i < currentIndex; i++) {
+      const prerequisiteField = fieldOrder[i];
+      if (!formState[prerequisiteField].value) {
+        errorField = config.key;
+        errorMessage = `Pilih ${fieldNames[prerequisiteField]} terlebih dahulu`;
+        break;
+      }
+    }
+
+    // Reset current error state
+    setCurrentError({ field: "", message: "" });
+
+    // Set new error if found
+    if (errorMessage) {
+      setCurrentError({ field: errorField, message: errorMessage });
       return;
     }
 
-    setCurrentError({ field: "", message: "" });
     setTitleBottomsheet(config.label);
     setDataBottomsheet(
       <BottomsheetContent
@@ -234,24 +233,27 @@ const Mobile = ({ formState, handleChange, handleSubmit, isSubmitted }) => {
             <button
               onClick={() => handleOpenBottomsheet(config)}
               className={`w-full p-3 bg-white flex items-center border rounded-lg text-sm font-medium cursor-pointer justify-between
-                ${
-                  currentError.field === config.key ||
-                  (isSubmitted && !formState[config.key].value)
-                    ? "border-error-400"
-                    : "border-neutral-600"
-                }`}
+        ${
+          (formState[config.key].error && !currentError.field) ||
+          currentError.field === config.key
+            ? "border-error-400"
+            : "border-neutral-600"
+        }`}
             >
               {renderLabel(config)}
               <ChevronDown className="h-5 w-5 text-gray-400 ml-2" />
             </button>
 
-            {/* Error messages */}
-            {(currentError.field === config.key ||
-              (isSubmitted && !formState[config.key].value)) && (
+            {/* Show dependency error (from dropdown click) */}
+            {currentError.field === config.key && (
               <p className="mt-1 text-xs font-medium text-error-400">
-                {currentError.field === config.key
-                  ? currentError.message
-                  : `${config.label.split(" ")[1]} wajib dipilih`}
+                {currentError.message}
+              </p>
+            )}
+            {/* Show validation error (from submit) */}
+            {formState[config.key].error && !currentError.field && (
+              <p className="mt-1 text-xs font-medium text-error-400">
+                {`${config.label.split(" ")[1]} wajib diisi`}
               </p>
             )}
           </div>

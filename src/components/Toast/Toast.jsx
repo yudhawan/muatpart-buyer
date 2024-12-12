@@ -15,7 +15,6 @@ const Toast = ({
   const { showToast, setShowToast, dataToast } = toast();
 
   useEffect(() => {
-    console.log(type, dataToast.type);
     if (showToast) {
       const timer = setTimeout(() => {
         setShowToast(false);
@@ -57,7 +56,7 @@ const Toast = ({
           </div>
 
           {/* Message */}
-          <span className="flex-1 sm:text-xs sm:font-semibold">
+          <span className="flex-1 text-xs font-semibold">
             {dataToast.message || children}
           </span>
         </div>

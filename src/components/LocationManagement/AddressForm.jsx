@@ -14,8 +14,8 @@ import debounce from "@/libs/debounce";
 import InputSearchLocation from "./InputSearchLocation";
 import InputSearch from "./InputSearch";
 
-const AddressForm = ({ AddressData, errors }) => {
-  // useEffect(() => console.log(errors, " CHAKRAUI"), [errors]);
+const AddressForm = ({ AddressData, errors, defaultValue }) => {
+  useEffect(() => console.log(defaultValue, " CHAKRAUI"), [defaultValue]);
   // Start State Management
   const swrHandler = new SWRHandler();
   const locationRef = useRef(null);
@@ -387,7 +387,13 @@ const AddressForm = ({ AddressData, errors }) => {
             }
             classname={`${errors.districtID ? "!border-error-500" : ""}`}
           />
-          {errors.districtID ? <span className="font-medium text-error-400 text-xs block mt-2">{errors.districtID}</span> : ''}
+          {errors.districtID ? (
+            <span className="font-medium text-error-400 text-xs block mt-2">
+              {errors.districtID}
+            </span>
+          ) : (
+            ""
+          )}
         </div>
       </div>
 
