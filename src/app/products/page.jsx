@@ -1,8 +1,7 @@
-import React from 'react'
-import ProductContainer from './ProductContainer'
+import LocationManagement from "@/components/LocationManagement/LocationManagement";
 
 function page() {
-  return <ProductContainer/>
+  return <LocationManagement />;
 }
 
-export default page
+export default page;
