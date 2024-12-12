@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import SWRHandler from "@/services/useSWRHook";
 import Input from "../Input/Input";
 import ModalComponent from "../Modals/ModalComponent";
 import Image from "next/image";
@@ -19,9 +20,41 @@ const InputSearchLocation = ({
     title: "",
   },
 }) => {
-  const [location, setLocation] = useState(locationValue.title);
+  const DISTRICT_ENDPOINT = `${process.env.NEXT_PUBLIC_INTERNAL_API}/district_by_token`;
+
+  const swrHandler = new SWRHandler();
+  const [address, setAddress] = useState(addressValue);
+  const [location, setLocation] = useState({
+    id: locationValue.id,
+    title: locationValue.title,
+  });
+
+  const [district, setDistrict] = useState({
+    name: "",
+    value: "",
+  });
+  const [city, setCity] = useState({
+    name: "",
+    id: null,
+  });
+  const [province, setProvince] = useState({
+    name: "",
+    id: null,
+  });
+  const [postalCode, setPostalCode] = useState({
+    name: "",
+    value: "",
+  });
+  const [coordinates, setCoordinates] = useState({
+    lat: null,
+    long: null,
+  });
+
+  const [postalCodeList, setPostalCodeList] = useState([]);
+
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const managedLocations = [
     {
       id: 1,
@@ -51,9 +84,32 @@ const InputSearchLocation = ({
     },
   ];
 
+  const districtFetcher = async (url) => {
+    const formData = new URLSearchParams();
+    formData.append("placeId", location.id);
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: formData.toString(),
+    });
+
+    return response.json();
+  };
+
+  const { data: districtData, error: districtError } = swrHandler.useSWRHook(
+    location.id ? DISTRICT_ENDPOINT : null,
+    districtFetcher,
+    (error) => {
+      // console.error("District fetch error:", error);
+    }
+  );
+
   const handleInputFocus = () => {
     setIsOpen(true);
-    if (!location && addressValue) {
+    if (!location.title && addressValue) {
       setLocation(addressValue);
     }
   };
@@ -84,9 +140,22 @@ const InputSearchLocation = ({
   };
 
   const handleSelectLocation = (result) => {
+    console.log("Selected Location:", result);
     onClickSearchResult(result);
-    setLocation(result.title);
+    setLocation({
+      id: result.ID,
+      title: result.Title,
+    });
     setIsOpen(false);
+  };
+
+  const handleSaveLocation = (result) => {
+    setIsModalOpen(true);
+    setLocation({
+      id: result.id,
+      title: result.title,
+    });
+    console.log("addressValue:", addressValue);
   };
 
   useEffect(() => {
@@ -101,11 +170,75 @@ const InputSearchLocation = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (!districtData) return;
+
+    // Prepare all the new values first
+    const newDistrict = {
+      name: districtData.Data.Districts[0].District,
+      value: districtData.Data.Districts[0].DistrictID,
+    };
+
+    const newCity = {
+      name: districtData.Data.CompleteLocation.city,
+      id: districtData.Data.CompleteLocation.cityid,
+    };
+
+    const newProvince = {
+      name: districtData.Data.CompleteLocation.province,
+      id: districtData.Data.CompleteLocation.provinceid,
+    };
+
+    const newPostalCodeList = districtData.Data.Districts[0].PostalCodes.map(
+      (i) => ({
+        value: i.ID,
+        name: i.PostalCode,
+      })
+    );
+
+    const findPostalCode = districtData.Data.Districts[0].PostalCodes.find(
+      (item) => item.PostalCode === districtData.Data.CompleteLocation.postal
+    );
+
+    const newPostalCode = {
+      name: findPostalCode.Description,
+      value: findPostalCode.ID,
+    };
+
+    const newCoordinates = {
+      lat: districtData.Data.Lat,
+      long: districtData.Data.Long,
+    };
+
+    // Set all the states
+    setDistrict(newDistrict);
+    setCity(newCity);
+    setProvince(newProvince);
+    setPostalCodeList(newPostalCodeList);
+    setPostalCode(newPostalCode);
+    setCoordinates(newCoordinates);
+  }, [districtData]);
+
   return (
     <>
+      {/* <pre>
+        {JSON.stringify(
+          {
+            location,
+            district,
+            city,
+            province,
+            postalCode,
+            coordinates,
+          },
+          null,
+          2
+        )}
+      </pre> */}
+
       <Input
         placeholder="Masukkan Lokasi Toko"
-        value={location}
+        value={location.title}
         changeEvent={handleInputChange}
         focusEvent={handleInputFocus}
       />
@@ -134,7 +267,7 @@ const InputSearchLocation = ({
 
               {searchResults?.map((result) => (
                 <div
-                  key={result.id}
+                  key={result.ID}
                   className="flex gap-3 justify-between items-start w-full mt-3"
                 >
                   <button
@@ -149,7 +282,7 @@ const InputSearchLocation = ({
                       className="object-contain shrink-0 w-5 aspect-square"
                     />
                     <div className="flex-1 shrink gap-2.5 self-stretch">
-                      {result.title}
+                      {result.Title}
                     </div>
                   </button>
                   <img
@@ -158,7 +291,7 @@ const InputSearchLocation = ({
                     }
                     alt=""
                     className="object-contain shrink-0 w-5 aspect-square cursor-pointer"
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => handleSaveLocation(result)}
                   />
                 </div>
               ))}
@@ -212,7 +345,9 @@ const InputSearchLocation = ({
               ))}
 
               <div className="mt-3 text-xs font-medium leading-tight text-right text-blue-600">
-                <button>Lihat Manajemen Lokasi</button>
+                <button onClick={() => setIsModalOpen(true)}>
+                  Lihat Manajemen Lokasi
+                </button>
               </div>
             </div>
           </div>
@@ -221,7 +356,8 @@ const InputSearchLocation = ({
 
       <ModalComponent
         isOpen={isModalOpen}
-        setIsOpen={() => setIsModalOpen(false)}
+        preventAreaClose
+        setClose={() => setIsModalOpen(false)}
         classnameContent="w-[400px]"
         hideHeader
       >
@@ -247,8 +383,7 @@ const InputSearchLocation = ({
                   alt="marker"
                 />
                 <div className="font-semibold">
-                  Graha Airi, Jl. Kedung Doro No.101 A, RT.001/RW.06,
-                  Kedungdoro, Kec. Tegalsari, Surabaya, Jawa Timur 60261
+                  {location.title || "Lokasi Toko"}
                 </div>
               </div>
             </div>
@@ -261,31 +396,46 @@ const InputSearchLocation = ({
                 maxLength={60}
                 resize="none"
                 hasCharCount={false}
+                value={address}
+                changeEvent={(e) => setAddress(e.target.value)}
               />
             </div>
             <div className="">
               <div className="text-[10px] text-neutral-600 font-semibold">
                 Kecamatan
               </div>
-              <div className="font-semibold">Tegalsari</div>
+              <div className="font-semibold">{district.name}</div>
             </div>
             <div className="">
               <div className="text-[10px] text-neutral-600 font-semibold">
                 Kota
               </div>
-              <div className="font-semibold">Surabaya</div>
+              <div className="font-semibold">{city.name}</div>
             </div>
             <div className="">
               <div className="text-[10px] text-neutral-600 font-semibold">
                 Provinsi
               </div>
-              <div className="font-semibold">Jawa Timur</div>
+              <div className="font-semibold">{province.name}</div>
             </div>
             <div className="">
               <div className="text-[10px] text-neutral-600 font-semibold">
                 Kode Pos*
               </div>
-              <Dropdown onSearchValue placeholder="Pilih Kode Pos" />
+              <Dropdown
+                options={postalCodeList}
+                onSearchValue
+                placeholder="Pilih Kode Pos"
+                searchPlaceholder="Cari Kode Pos"
+                defaultValue={postalCode}
+                onSelected={(val) =>
+                  setPostalCode({
+                    name: val[0].name,
+                    value: val[0].value,
+                  })
+                }
+                classname="!w-full"
+              />
             </div>
             <div className="">
               <div className="text-[10px] text-neutral-600 font-semibold">

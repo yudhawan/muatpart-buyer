@@ -15,6 +15,9 @@ import InputSearchLocation from "./InputSearchLocation";
 import InputSearch from "./InputSearch";
 
 const AddressForm = ({ AddressData }) => {
+  const AUTOCOMPLETE_ENDPOINT = `${process.env.NEXT_PUBLIC_INTERNAL_API}/autocompleteStreet`;
+  const DISTRICT_ENDPOINT = `${process.env.NEXT_PUBLIC_INTERNAL_API}/district_by_token`;
+
   // Start State Management
   const swrHandler = new SWRHandler();
   const locationRef = useRef(null);
@@ -60,13 +63,6 @@ const AddressForm = ({ AddressData }) => {
 
   // Start Form Data
 
-  const autocompleteFormData = new FormData();
-  autocompleteFormData.append("phrase", location.title || address);
-  autocompleteFormData.append("dataType", "json");
-
-  const districtFormData = new FormData();
-  districtFormData.append("place_id", location.id);
-
   const latLongFormData = new FormData();
   latLongFormData.append("Lat", coordinates.lat);
   latLongFormData.append("Long", coordinates.long);
@@ -78,18 +74,34 @@ const AddressForm = ({ AddressData }) => {
 
   // Start Fetchers
 
-  const autoCompleteFetcher = (url) => {
-    return fetch(url, {
+  const autoCompleteFetcher = async (url) => {
+    const formData = new URLSearchParams();
+    formData.append("phrase", location.title || address);
+
+    const response = await fetch(url, {
       method: "POST",
-      body: autocompleteFormData,
-    }).then((res) => res.json());
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: formData.toString(),
+    });
+
+    return response.json();
   };
 
-  const districtFetcher = (url) => {
-    return fetch(url, {
+  const districtFetcher = async (url) => {
+    const formData = new URLSearchParams();
+    formData.append("placeId", location.id);
+
+    const response = await fetch(url, {
       method: "POST",
-      body: districtFormData,
-    }).then((res) => res.json());
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: formData.toString(),
+    });
+
+    return response.json();
   };
 
   const latLongFetcher = (url) => {
@@ -112,9 +124,7 @@ const AddressForm = ({ AddressData }) => {
 
   const { data: autocompleteData, error: autocompleteError } =
     swrHandler.useSWRHook(
-      location.title.length > 2 || address.length > 2
-        ? `${process.env.NEXT_PUBLIC_INTERNAL_API}/get_autocomplete_street`
-        : null,
+      address.length > 2 ? AUTOCOMPLETE_ENDPOINT : null,
       autoCompleteFetcher,
       (error) => {
         // console.error("Autocomplete error:", error);
@@ -122,9 +132,7 @@ const AddressForm = ({ AddressData }) => {
     );
 
   const { data: districtData, error: districtError } = swrHandler.useSWRHook(
-    location.id
-      ? `${process.env.NEXT_PUBLIC_INTERNAL_API}/get_districts_by_token`
-      : null,
+    location.id ? DISTRICT_ENDPOINT : null,
     districtFetcher,
     (error) => {
       // console.error("District fetch error:", error);
@@ -322,15 +330,32 @@ const AddressForm = ({ AddressData }) => {
 
   useEffect(() => {
     if (latLongData) {
+      console.log("Lat Long Data", latLongData);
       // Handle the lat long data here
-      if (latLongData.Message.Code === 200) {
-        // Additional logic here
-      }
+      // if (latLongData.Message.Code === 200) {
+      //   // Additional logic here
+      // }
     }
   }, [latLongData]);
 
   return (
     <div className="space-y-4 my-4 mx-12 text-xs">
+      <pre>
+        {JSON.stringify(
+          {
+            address,
+            location,
+            district,
+            city,
+            province,
+            postalCode,
+            coordinates,
+          },
+          null,
+          2
+        )}
+      </pre>
+
       <div className="flex">
         <label className="w-1/3 text-neutral-600 font-medium">Alamat*</label>
         <div className="w-2/3">
@@ -349,9 +374,10 @@ const AddressForm = ({ AddressData }) => {
         <div className="w-2/3 relative" ref={locationRef}>
           <InputSearchLocation
             onClickSearchResult={(val) => {
+              console.log("Value:", val);
               setLocation({
-                id: val.id,
-                title: val.title,
+                id: val.ID,
+                title: val.Title,
               });
             }}
             onSelectLocation={(val) => {}}
