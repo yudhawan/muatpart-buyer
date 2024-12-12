@@ -39,14 +39,21 @@ function ${name}() {
 export default ${name}
   `;
 }
+function createStyle(name) {
+  return `
+.main{
+    display:'flex'
+}
+`;
+}
 
 function createNameWeb(name) {
   return `
 'use client';
-
+import style from './${name}.module.scss'
 function ${name}Web() {
     return (
-        <div>${name} Web</div>
+        <div className={style.main}>${name} Web</div>
     );
 }
 
@@ -58,7 +65,7 @@ function createNameResponsive(name) {
   return `
 import { useHeader } from '@/common/ResponsiveContext'
 import React, { useEffect } from 'react'
-
+import style from './${name}.module.scss'
 function ${name}Responsive() {
   const {
     appBarType, //pilih salah satu : 'titleSecondary' || 'searchSecondary' || 'navbarMobileDefaultScreen' || 'search' || 'title'
@@ -134,7 +141,7 @@ function ${name}Responsive() {
   )
   // main screen
   return (
-    <div>
+    <div className={style.main}>
       <button className='bg-primary-600' onClick={()=>{
         setScreen('example')
         setAppBar({
@@ -191,22 +198,33 @@ async function scanDir(pathDir) {
         const fileWeb = path.join(dirPath, `${name}Web.jsx`);
         const fileMobile = path.join(dirPath, `${name}Responsive.jsx`);
         const fileName = path.join(dirPath, `${name}.jsx`);
+        const fileStyle = path.join(dirPath, `${name}.module.scss`);
         const filePage = path.join(dirPath, `page.jsx`);
+        const fileIndex = path.join(dirPath, `index.jsx`);
 
         try {
-          await fs.mkdir(dirPath, { recursive: true });
-          console.log(`Directory ${dirPath} created.`);
+            await fs.mkdir(dirPath, { recursive: true });
+            console.log(`Directory ${dirPath} created.`);
+            if(chosenDir==='app'){
+                await Promise.all([
+                    fs.writeFile(filePage, createPage(name), 'utf8'),
+                    fs.writeFile(fileName, createName(name), 'utf8'),
+                    fs.writeFile(fileWeb, createNameWeb(name), 'utf8'),
+                    fs.writeFile(fileStyle, createStyle(name), 'utf8'),
+                    fs.writeFile(fileMobile, createNameResponsive(name), 'utf8'),
+                ]);
+            }else{
+                await Promise.all([
+                    fs.writeFile(fileIndex, createName(name), 'utf8'),
+                    fs.writeFile(fileStyle, createStyle(name), 'utf8'),
+                    fs.writeFile(fileWeb, createNameWeb(name), 'utf8'),
+                    fs.writeFile(fileMobile, createNameResponsive(name), 'utf8'),
+                ]);
+            }
 
-          await Promise.all([
-            fs.writeFile(filePage, createPage(name), 'utf8'),
-            fs.writeFile(fileName, createName(name), 'utf8'),
-            fs.writeFile(fileWeb, createNameWeb(name), 'utf8'),
-            fs.writeFile(fileMobile, createNameResponsive(name), 'utf8'),
-          ]);
-
-          console.log('Files created successfully!');
+            console.log('Files created successfully!');
         } catch (err) {
-          console.error('Error creating files:', err.message);
+            console.error('Error creating files:', err.message);
         }
 
         rl.close();

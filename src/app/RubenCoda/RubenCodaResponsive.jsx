@@ -1,10 +1,10 @@
 
 import { useHeader } from '@/common/ResponsiveContext'
 import React, { useEffect } from 'react'
-
+import style from './RubenCoda.module.scss'
 function RubenCodaResponsive() {
   const {
-    appBarType, //pilih salah satu : 'titleSecondary' || 'searchSecondary' || 'navbarMobileDefaultScreen' || 'search' || 'title'
+    appBarType, //pilih salah satu : titleSecondary || searchSecondary || navbarMobileDefaultScreen || search || title || titleModal || titleModalSecondary || searchModalSecondary || secondaryModal
     appBar, // muncul ini : {onBack:null,title:'',showBackButton:true,appBarType:'',appBar:null,header:null}
     renderAppBarMobile, // untuk render komponen header mobile dengan memasukkanya ke useEffect atau by trigger function / closer
     setAppBar, // tambahkan payload seperti ini setAppBar({onBack:()=>setScreen('namaScreen'),title:'Title header',appBarType:'type'})
@@ -19,13 +19,13 @@ function RubenCodaResponsive() {
       
     if(screen==='example2'){
       setAppBar({
-        title:'Example 2',
-        appBarType:'search',
+        title:'Title Modal',
+        appBarType:'titleModal',
         onBack:()=>{
         setScreen('example')
           setAppBar({
             title:'Example',
-            appBarType:'title',
+            appBarType:'titleModal',
             onBack:()=>clearScreen()
           })
         }
@@ -36,8 +36,8 @@ function RubenCodaResponsive() {
     }
     if(screen==='example3'){
       setAppBar({
-        title:'Example 3',
-        appBarType:'titleSecondary',
+        title:'Secondary',
+        appBarType:'searchModalSecondary',
         onBack:()=>setScreen('example2')
       })
     }
@@ -77,7 +77,7 @@ function RubenCodaResponsive() {
   )
   // main screen
   return (
-    <div>
+    <div className={style.main}>
       <button className='bg-primary-600' onClick={()=>{
         setScreen('example')
         setAppBar({

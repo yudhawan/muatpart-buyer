@@ -1,11 +1,12 @@
 'use client'
 import { ResponsiveContext } from '@/common/ResponsiveContext'
+import DynamicLanguageTable from '@/components/DynamicLanguageTable'
 import React, { useContext } from 'react'
 
 function HomePageWeb() {
   return (
     <div>
-      home page web cuy
+      <DynamicLanguageTable/>
     </div>
   )
 }
