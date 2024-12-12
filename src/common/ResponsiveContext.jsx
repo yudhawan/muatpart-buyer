@@ -65,7 +65,6 @@ function ResponsiveProvider({children}) {
             console.log('do something')
         }
     }
-
     return (
         <ResponsiveContext.Provider value={{
             appBarType:getHeader.appBarType,
@@ -79,6 +78,7 @@ function ResponsiveProvider({children}) {
             screen,
             setSearch,
             handleAction,
+            setGlobalPadding,
             search,
             shadow:getHeader.shadow
         }}>

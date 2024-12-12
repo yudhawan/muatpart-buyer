@@ -38,12 +38,12 @@ function HeaderContainerMobile({
             renderAppBarMobile?
             renderAppBarMobile
             :<div className='flex flex-col'>
-              <div className='flex items-start justify-between'>
-                <div className='flex items-center gap-2'>
+              <div className='flex items-start justify-between gap-4'>
+                <div className='flex items-center gap-2 w-full'>
                   {appBar?.showBackButton&&<span onClick={()=>handleBack()} className='w-6 h-6 rounded-full bg-neutral-50 flex justify-center items-center cursor-pointer'>
-                    <IconComponent src={'/icons/chevron-left.svg'} classname={style.iconBackRed} />
+                    <IconComponent src={'/icons/chevron-left.svg'} classname={style.iconBackRed} width={24} />
                   </span>}
-                  <Input onFocus={()=>{
+                  <Input focusEvent={()=>{
                     setAppBar({
                       onBack:()=>setAppBar({appBarType:''}),
                       title:'Cari berdasarkan',
@@ -95,7 +95,7 @@ export function HeaderTitleSearchMobile({appBar,type,title,onBack,searchPlacehol
         </span>:''
         }
         {(type==='search' || type==='searchSecondary')&&<Input classname={style.inputSearchMobile} placeholder={searchPlaceholder} value={searchValue} changeEvent={e=>setSearch({value:e.target.value})} />}
-        {(type==='title' || type==='titleSecondary' || type==='navbarMobileDefaultScreen')&&<span className={`font-bold text-base ${type==='titleSecondary'?'text-[#176cf7]':'text-neutral-50'}`}>{title}</span>}
+        {(type==='title' || type==='titleSecondary' || type==='navbarMobileDefaultScreen')&&<span className={`font-bold text-base ${isBgSecondary?'text-[#176cf7]':'text-neutral-50'}`}>{title}</span>}
         {
           ActionButton?<ActionButton/>:''
         }

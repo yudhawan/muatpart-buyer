@@ -1,11 +1,10 @@
 import { useHeader } from '@/common/ResponsiveContext'
 import Image from 'next/image'
 import React, { useEffect } from 'react'
-import { mockProductsData } from './mock'
 import ProductComponent from '@/components/ProductComponent/ProductComponent'
 import style from './HomePage.module.scss'
 import Bubble from '@/components/Bubble/Bubble'
-function HomePageResponsive() {
+function HomePageResponsive({lastSeenProducts}) {
   const {
     appBarType, //pilih salah satu : 'titleSecondary' || 'searchSecondary' || 'navbarMobileDefaultScreen' || 'search' || 'title'
     appBar, // muncul ini : {onBack:null,title:'',showBackButton:true,appBarType:'',appBar:null,header:null}
@@ -99,7 +98,7 @@ function HomePageResponsive() {
         <h1 className='text-neutral-900 font-semibold text-base'>Terakhir Dilihat</h1>
         <div className={`${style.sectionHideScroll} w-full flex gap-2 overflow-x-auto`}>
           {
-            mockProductsData.products.map(val=>{
+            lastSeenProducts.products.map(val=>{
               return <ProductComponent key={val.id} {...val} />
             })
           }
@@ -116,7 +115,7 @@ function HomePageResponsive() {
       {/* list products */}
       <section className={`py-4 h-fit ${style.listProducts}`}>
         {
-          mockProductsData.products.map(val=>{
+          lastSeenProducts.products.map(val=>{
             return <ProductComponent key={val.id} {...val} />
           })
         }

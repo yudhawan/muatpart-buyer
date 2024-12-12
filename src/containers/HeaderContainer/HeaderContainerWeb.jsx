@@ -9,13 +9,41 @@ import { headerProps } from './headerProps'
 import ModalComponent from '@/components/Modals/ModalComponent'
 import { ResponsiveContext } from '@/common/ResponsiveContext'
 import { ProfileHover, tips } from './constanta'
-
+import Bubble from '@/components/Bubble/Bubble'
+const categories = [
+    {
+        icon:'/img/chopper.png',
+        id:'939129dad',
+        name:'One Piece',
+        data:[
+            {id:'ajd9dsa8jj',name:'Luffy'},
+            {id:'ajd98eqwejj',name:'Zoro'},
+            {id:'ajd98dasdjj',name:'Sanji'},
+            {id:'ajd9das8jj',name:'Jinbe'},
+        ]
+    },
+    {
+        icon:'/img/facebook.png',
+        id:'939134eqw29dad',
+        name:'Company',
+        data:[
+            {id:'ajdy56y98jj',name:'Facebook'},
+            {id:'ajd76u98jj',name:'Apple'},
+            {id:'ajdg98rejj',name:'Samsung'},
+            {id:'ajdrgegert98jj',name:'BYD'},
+        ]
+    },
+    
+]
 function HeaderContainerWeb({renderAppBar}) {
     const headerRef = useRef(null)
+    const inputRef = useRef(null)
     const [getProfile,setProfile]=useState(ProfileHover)
     const [showCategory,setShowCategory]=useState(false)
     const [showTips,setShowTips]=useState(false)
     const [showLocation,setShowLocation]=useState(false)
+    const [showSearch,setShowSearch]=useState(false)
+    const [getCategory,setCategory]=useState()
     const {setHeaderHeight} = headerProps()
     useEffect(()=>{
         if(getProfile.length) {
@@ -29,17 +57,47 @@ function HeaderContainerWeb({renderAppBar}) {
     },[])
     useEffect(()=>{
         if(headerRef?.current?.offsetHeight) setHeaderHeight?.(headerRef?.current?.offsetHeight)
-
     },[])
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+          if (
+            inputRef.current &&
+            !inputRef.current.contains(event.target)
+          ) {
+            setShowSearch(false);
+          }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () =>
+          document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
   return (
     <header className={style.main} ref={headerRef}>
-        <ModalComponent classname={'!items-start '} classnameContent={'mt-1 mx-auto w-[1088px] ml-[5%] p-2 flex gap-4'} hideHeader isOpen={showCategory} setClose={()=>setShowCategory(false)} showButtonClose={false}>
+        <ModalComponent classname={'!items-start '} classnameContent={'mt-1 mx-auto w-[1088px] ml-[5%] p-4 flex gap-4 h-full max-h-[296px]'} hideHeader isOpen={showCategory} setClose={()=>setShowCategory(false)} showButtonClose={false}>
             {/* group category */}
-            <div className='w-[270px]'>
-
-            </div>
+            <ul className='w-[270px] list-none h-full '>
+                {categories.map((val,i)=><li key={i}>
+                    <div 
+                    onClick={()=>setCategory(val)}
+                    className={`${getCategory?.id===val.id?'bg-neutral-200':''} flex w-full justify-between items-center hover:bg-neutral-200 py-1 px-[10px] rounded-md cursor-pointer`}>
+                        <div className='flex items-center gap-3'>
+                            <Image width={24} height={24} src={val.icon} alt='chopper' />
+                            <span className='font-medium text-xs text-neutral-900'>{val.name}</span>
+                        </div>
+                        <IconComponent src={'/icons/chevron-right.svg'} />
+                    </div>
+                </li>)}
+            </ul>
             {/* category */}
-            <div className='w-[578px]'></div>
+            <div className='pl-3 w-[578px] flex flex-col gap-3 h-full border-l border-neutral-400'>
+                {getCategory?.name&&<span className='font-bold text-sm text-neutral-900'>Kategori {getCategory.name}</span>}
+                {getCategory?.name&&<span className='h-[1px] w-full bg-neutral-400'></span>}
+                <div className='grid grid-cols-2 gap-2 w-full pl-[10px] h-fit'>
+                    {
+                        getCategory?.data?.map(val=><span className='w-50% font-medium text-xs text-neutral-900 cursor-pointer' key={val.id}>{val.name}</span>)
+                    }
+                </div>
+            </div>
             {/* banner */}
             <Image width={176} height={264} src='/img/ads_category.png' />
             
@@ -148,14 +206,34 @@ function HeaderContainerWeb({renderAppBar}) {
 
                         </div>
                         <Dropdown classname={'!w-[164px]'} options={[{value:'all',name:'Semua Kategori'}]} />
-                        <div className='relative'>
-                            <Input classname={style.inputSearch} width={391} icon={{right:<IconComponent src={'/icons/search.svg'} classname={style.iconnSearch} />}} />
+                        <div className='relative' ref={inputRef}>
+                            <Input placeholder='Cari Sparepart' classname={style.inputSearch} width={391} icon={{right:<IconComponent src={'/icons/search.svg'} classname={style.iconnSearch} />}} focusEvent={()=>setShowSearch(true)} />
                             <div className='absolute flex gap-4 -bottom-5 left-0'>
                                 <Link href={'/'} className='text-neutral-50 text-xs font-medium'>Ban Engkel</Link>
                                 <Link href={'/'} className='text-neutral-50 text-xs font-medium'>ACCU CDD</Link>
                                 <Link href={'/'} className='text-neutral-50 text-xs font-medium'>Tali</Link>
                                 <Link href={'/'} className='text-neutral-50 text-xs font-medium'>Spare Part Colt Diesel Double</Link>
                             </div>
+                            {/* yasha */}
+                            {showSearch&&<div onBlur={()=>setShowSearch(false)} className='absolute w-full p-4 rounded-md h-auto max-h-[284px] bg-neutral-50 shadow-md'>
+                                <div className='flex flex-col gap-6 w-full h-full overflow-y-auto'>
+                                    <div className='flex flex-col gap-3'>
+                                        <div className='flex w-full justify-between items-center'>
+                                            <p className='font-bold text-sm text-neutral-900'>Terakhir Dicari</p>
+                                            <span className='font-bold text-[10px] text-error-400 cursor-pointer'>Hapus semua</span>
+                                        </div>
+                                        <div className='flex flex-wrap gap-2'>
+                                            <Bubble iconRight={<span className='cursor-pointer' onClick={()=>{}}>
+                                                <IconComponent src={'/icons/closes.svg'} width={12} height={12} classname={style.iconCloseBlack} />
+                                            </span>} classname="bg-warning-100 text-warning-900 border-none py-[6px] px-3 gap-1 font-semibold">Test</Bubble>
+                                        </div>
+                                    </div>
+                                    <div className='w-full flex flex-col gap-3'>
+                                        <p className='font-bold text-sm text-neutral-900'>Promo yang paling banyak dicari</p>
+                                        <Image src={'/img/iklansearchnavbar.png'} width={353} height={140} alt='banner' className='rounded-lg' />
+                                    </div>
+                                </div>
+                            </div>}
                         </div>
                         
                         <span onClick={()=>setShowTips(true)} className="flex items-center gap-1 cursor-pointer">

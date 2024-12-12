@@ -5,6 +5,7 @@ export const RegisterDefaultScreen = {
 }
 
 function DefaultScreen(type) {
+  console.log(type)
   return RegisterDefaultScreen?.[type]
 }
 
