@@ -14,7 +14,7 @@ import debounce from "@/libs/debounce";
 import InputSearchLocation from "./InputSearchLocation";
 import InputSearch from "./InputSearch";
 
-const AddressForm = ({ AddressData }) => {
+const AddressForm = ({ AddressData, errors }) => {
   const AUTOCOMPLETE_ENDPOINT = `${process.env.NEXT_PUBLIC_INTERNAL_API}/autocompleteStreet`;
   const DISTRICT_ENDPOINT = `${process.env.NEXT_PUBLIC_INTERNAL_API}/district_by_token`;
 
@@ -366,6 +366,10 @@ const AddressForm = ({ AddressData }) => {
         <label className="w-1/3 text-neutral-600 font-medium">Alamat*</label>
         <div className="w-2/3">
           <TextArea
+            status={`${errors?.address && "error"}`}
+            supportiveText={{
+              title: `${errors?.address ? errors?.address : ""}`,
+            }}
             maxLength={60}
             resize="none"
             placeholder="Masukkan alamat lengkap dengan detail. Contoh : Nama Jalan (bila tidak ditemukan), Gedung, No. Rumah/Patokan, Blok/Unit"
