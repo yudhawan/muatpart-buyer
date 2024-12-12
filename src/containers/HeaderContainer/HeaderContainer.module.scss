@@ -35,8 +35,13 @@
         stroke:var(--neutral-50)
     }
 }
+.iconBackBlue{
+    path{
+        stroke:var(--primary-700)
+    }
+}
 .inputMobile{
-    width: 150px;
+    width: 100%;
     div{
         height: 32px;
         background-color: var(--neutral-50);

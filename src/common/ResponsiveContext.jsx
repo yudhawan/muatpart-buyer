@@ -13,11 +13,15 @@ function ResponsiveProvider({children}) {
     const router = useRouter()
     const [getHeader,setHeader] = useState({
         onBack:null,
+        onAction:null,
         title:'',
         showBackButton:true,
         appBarType:'',
-        appBar:null,
-        header:null
+        renderBack:null,
+        renderActionButton:null,
+        renderAppBar:null,
+        renderHeader:null,
+        shadow:true
     })
     const [search,editSearch] = useState({
         placeholder:'muatparts',
@@ -29,8 +33,8 @@ function ResponsiveProvider({children}) {
     const [getGlobalPadding,setGlobalPadding]=useState(true)
     const {isMobile}=viewport()
     const {headerHeight}=headerProps()
-    const renderAppBarMobile = (elm)=> setHeader(prev=>({...prev,appBar:elm}))
-    const renderHeader = (elm)=> setHeader(prev=>({...prev,header:elm}))
+    const renderAppBarMobile = (elm)=> setHeader(prev=>({...prev,renderAppBar:elm}))
+    const renderHeader = (elm)=> setHeader(prev=>({...prev,renderHeader:elm}))
     const setAppBar = (val)=> setHeader(prev=>({...prev,...val}))
     const setSearch = (val)=> editSearch(prev=>({...prev,...val}))
     const clearScreen = ()=>{
@@ -40,8 +44,11 @@ function ResponsiveProvider({children}) {
             title:'',
             showBackButton:true,
             appBarType:'',
-            appBar:null,
-            header:null
+            renderAppBar:null,
+            renderHeader:null,
+            renderBack:null,
+            renderActionButton:null,
+            shadow:true
         })
     }
     const handleBack = ()=> {
@@ -51,6 +58,14 @@ function ResponsiveProvider({children}) {
             router.back()
         }
     }
+    const handleAction = ()=> {
+        if (getHeader.onAction) {
+            getHeader.onAction()
+        } else {
+            console.log('do something')
+        }
+    }
+
     return (
         <ResponsiveContext.Provider value={{
             appBarType:getHeader.appBarType,
@@ -63,12 +78,13 @@ function ResponsiveProvider({children}) {
             setScreen,
             screen,
             setSearch,
+            handleAction,
             search,
-            setGlobalPadding
+            shadow:getHeader.shadow
         }}>
             <HeaderContainer 
-                renderAppBarMobile={getHeader.appBar} 
-                renderAppBar={getHeader.header}
+                renderAppBarMobile={getHeader.renderAppBar} 
+                renderAppBar={getHeader.renderHeader}
                 type={getHeader.appBarType}
             />
             {
