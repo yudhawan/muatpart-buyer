@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, forwardRef } from "react";
 import PropTypes from "prop-types";
 import IconComponent from "../IconComponent/IconComponent";
 import style from "./Dropdown.module.scss";
+
 const Dropdown = forwardRef(
   (
     {
@@ -10,6 +11,7 @@ const Dropdown = forwardRef(
       onSearchValue,
       onSelected = () => {},
       selectedIconElement,
+      leftIconElement,
       placeholder = "Select value",
       searchPlaceholder = "Search...",
       showDropdown = false,
@@ -93,18 +95,23 @@ const Dropdown = forwardRef(
             !selected.length && "!text-neutral-600"
           } select-none`}
         >
-          {isMultipleSelected && selected.length > 1 ? (
-            <span className="flex gap-[2px]">
-              {selected[0]?.name}
-              <span className="bg-neutral-600 rounded-full text-neutral-50 px-1">
-                {selected.length - 1}+
+          <div className="flex gap-2 items-center">
+            {leftIconElement && leftIconElement}
+            {isMultipleSelected && selected.length > 1 ? (
+              <span className="flex gap-[2px]">
+                {selected[0]?.name}
+                <span className="bg-neutral-600 rounded-full text-neutral-50 px-1">
+                  {selected.length - 1}+
+                </span>
               </span>
-            </span>
-          ) : labelName?.length ? (
-            labelName
-          ) : (
-            <span className="text-[12px] text-neutral-600">{placeholder}</span>
-          )}
+            ) : labelName?.length ? (
+              labelName
+            ) : (
+              <span className="text-[12px] text-neutral-600">
+                {placeholder}
+              </span>
+            )}
+          </div>
           <IconComponent
             src={selectedIconElement ?? "/icons/chevron-down.svg"}
             color="default"
@@ -182,16 +189,20 @@ const Dropdown = forwardRef(
 );
 
 export default Dropdown;
+
 Dropdown.propTypes = {
   options: PropTypes.arrayOf(
     PropTypes.shape({
-      name: PropTypes.oneOf([PropTypes.string, PropTypes.number]).isRequired,
-      value: PropTypes.oneOf([PropTypes.string, PropTypes.number]).isRequired,
+      name: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
     })
   ).isRequired,
   children: PropTypes.element,
   onSearchValue: PropTypes.func,
   selectedIconElement: PropTypes.element,
+  leftIconElement: PropTypes.element,
   searchPlaceholder: PropTypes.string,
   showDropdown: PropTypes.bool,
   getShowIndicator: PropTypes.func,
