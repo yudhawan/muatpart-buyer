@@ -60,6 +60,19 @@ function ${name}Web() {
 export default ${name}Web;
   `;
 }
+function createNameOther(name) {
+  return `
+'use client';
+import style from './${name}.module.scss'
+function ${name}() {
+    return (
+        <div className={style.main}>${name} </div>
+    );
+}
+
+export default ${name};
+  `;
+}
 
 function createNameResponsive(name) {
   return `
@@ -200,7 +213,7 @@ async function scanDir(pathDir) {
         const fileName = path.join(dirPath, `${name}.jsx`);
         const fileStyle = path.join(dirPath, `${name}.module.scss`);
         const filePage = path.join(dirPath, `page.jsx`);
-        const fileIndex = path.join(dirPath, `index.jsx`);
+        const fileIndex = path.join(dirPath, `${name}.jsx`);
 
         try {
             await fs.mkdir(dirPath, { recursive: true });
@@ -215,10 +228,8 @@ async function scanDir(pathDir) {
                 ]);
             }else{
                 await Promise.all([
-                    fs.writeFile(fileIndex, createName(name), 'utf8'),
                     fs.writeFile(fileStyle, createStyle(name), 'utf8'),
-                    fs.writeFile(fileWeb, createNameWeb(name), 'utf8'),
-                    fs.writeFile(fileMobile, createNameResponsive(name), 'utf8'),
+                    fs.writeFile(fileIndex, createNameOther(name), 'utf8'),
                 ]);
             }
 
