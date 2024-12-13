@@ -100,7 +100,7 @@ function HeaderContainerWeb({renderAppBar}) {
             </div>
             {/* banner */}
             <Image width={176} height={264} src='/img/ads_category.png' />
-            
+
         </ModalComponent>
         <ModalComponent hideHeader isOpen={showTips} setClose={()=>setShowTips(false)} >
             <div className='mt-2 flex flex-col gap-4 w-[471px] h-fit py-6 px-5'>
@@ -126,11 +126,11 @@ function HeaderContainerWeb({renderAppBar}) {
                             )
                         })
                     }
-                    
+
                 </div>
-            </div>            
+            </div>
         </ModalComponent>
-        
+
         {
             <>
                 {!renderAppBar && (
@@ -235,12 +235,12 @@ function HeaderContainerWeb({renderAppBar}) {
                                 </div>
                             </div>}
                         </div>
-                        
+
                         <span onClick={()=>setShowTips(true)} className="flex items-center gap-1 cursor-pointer">
                             <Image src="/icons/tips-white.svg" alt="" width={16} height={16}/>
                             <span className="text-neutral-50 text-[10px] font-medium">Tips</span>
                         </span>
-                        
+
                         <Link href="/garasi" className="flex items-center mr-4 bg-white p-2 rounded-md h-8">
                             <Image src="/icons/garasi.svg" alt="" width={16} height={16} />
                             <span className="ml-2 text-neutral-900 text-xs font-medium">Garasi Saya</span>
@@ -249,19 +249,19 @@ function HeaderContainerWeb({renderAppBar}) {
                             <span className='relative cursor-pointer'>
                                 <Image src={'/icons/cart.svg'} width={24} height={24} alt='cart' />
                                 <span className='bg-error-500 border border-neutral-50 rounded-[30px] font-medium text-[8px] text-neutral-50 p-[2px] px-[6px] flex text-center absolute -top-[9px] -right-3 w-fit'>23</span>
-                            </span> 
+                            </span>
                             <span className='relative cursor-pointer'>
                                 <Image src={'/icons/messages-header.svg'} width={24} height={24} alt='cart' />
                                 <span className='bg-error-500 border border-neutral-50 rounded-[30px] font-medium text-[8px] text-neutral-50 p-[2px] px-[6px] flex text-center absolute -top-[9px] -right-3 w-fit'>23</span>
-                            </span> 
+                            </span>
                             <span className='relative cursor-pointer'>
                                 <Image src={'/icons/notification-header.svg'} width={24} height={24} alt='cart' />
                                 <span className='bg-error-500 border border-neutral-50 rounded-[30px] font-medium text-[8px] text-neutral-50 p-[2px] px-[6px] flex text-center absolute -top-[9px] -right-3 w-fit'>23</span>
-                            </span> 
+                            </span>
                         </div>
                         <div className="w-px h-8 bg-white mx-4" />
-                        
-                        <Link 
+
+                        <Link
                         href="/login"
                         className="px-6 py-2 bg-[#002C84] rounded-3xl text-neutral-50 text-sm font-semibold flex gap-1 whitespace-nowrap"
                         >

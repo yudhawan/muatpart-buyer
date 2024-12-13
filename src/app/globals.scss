@@ -145,7 +145,7 @@ input::-webkit-inner-spin-button {
 }
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: var(--neutral-100);
   font-family: Arial, Helvetica, sans-serif;
 }
 .main {
@@ -159,7 +159,10 @@ body {
     text-wrap: balance;
   }
 }
-
+.containerMobile{
+  padding-top: 24px;
+  padding-inline: 16px;
+}
 .shadow-muat {
   box-shadow: 0 4px 11px 0 #41414140;
 }

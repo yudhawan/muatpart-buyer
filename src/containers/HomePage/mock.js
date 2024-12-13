@@ -215,8 +215,151 @@ export const mockProductsData = {
       }
     };
   };
+
+export const categories = [
+    {
+      id: 1,
+      name: "Electronics",
+      icon: "📱",
+      subCategories: [
+        {
+          id: 101,
+          name: "Smartphones",
+          items: ["iPhones", "Android Phones", "Feature Phones"]
+        },
+        {
+          id: 102,
+          name: "Laptops",
+          items: ["Gaming Laptops", "Ultrabooks", "Chromebooks"]
+        },
+        {
+          id: 103,
+          name: "Audio",
+          items: ["Headphones", "Speakers", "Microphones"]
+        }
+      ]
+    },
+    {
+      id: 2,
+      name: "Fashion",
+      icon: "👕",
+      subCategories: [
+        {
+          id: 201,
+          name: "Men's Wear",
+          items: ["Shirts", "Pants", "Suits"]
+        },
+        {
+          id: 202,
+          name: "Women's Wear",
+          items: ["Dresses", "Tops", "Skirts"]
+        },
+        {
+          id: 203,
+          name: "Accessories",
+          items: ["Watches", "Bags", "Jewelry"]
+        }
+      ]
+    },
+    {
+      id: 3,
+      name: "Home & Living",
+      icon: "🏠",
+      subCategories: [
+        {
+          id: 301,
+          name: "Furniture",
+          items: ["Sofas", "Tables", "Beds"]
+        },
+        {
+          id: 302,
+          name: "Kitchen",
+          items: ["Cookware", "Appliances", "Utensils"]
+        },
+        {
+          id: 303,
+          name: "Decor",
+          items: ["Wall Art", "Lighting", "Rugs"]
+        }
+      ]
+    },
+    {
+      id: 4,
+      name: "Sports",
+      icon: "⚽",
+      subCategories: [
+        {
+          id: 401,
+          name: "Equipment",
+          items: ["Balls", "Rackets", "Training Gear"]
+        },
+        {
+          id: 402,
+          name: "Clothing",
+          items: ["Jerseys", "Shoes", "Activewear"]
+        },
+        {
+          id: 403,
+          name: "Accessories",
+          items: ["Water Bottles", "Bags", "Protective Gear"]
+        }
+      ]
+    },
+    {
+      id: 5,
+      name: "Beauty & Health",
+      icon: "💄",
+      subCategories: [
+        {
+          id: 501,
+          name: "Skincare",
+          items: ["Cleansers", "Moisturizers", "Sunscreen"]
+        },
+        {
+          id: 502,
+          name: "Makeup",
+          items: ["Face", "Eyes", "Lips"]
+        },
+        {
+          id: 503,
+          name: "Personal Care",
+          items: ["Hair Care", "Body Care", "Oral Care"]
+        }
+      ]
+    }
+  ];
   
-  // Example usage:
-  // const allProducts = getProducts();
-  // const singleProduct = getProductById("P001");
-  // const favorites = getFavoriteProducts();
+  // Example of how to use:
+  console.log(categories[0].name); // "Electronics"
+  console.log(categories[0].subCategories[0].name); // "Smartphones"
+  console.log(categories[0].subCategories[0].items[0]); // "iPhones"
+  
+  // Example of finding a subcategory by ID
+  const findSubCategory = (id) => {
+    for (let category of categories) {
+      const found = category.subCategories.find(sub => sub.id === id);
+      if (found) return found;
+    }
+    return null;
+  };
+  
+  // Example of getting all items in a category
+  const getAllItemsInCategory = (categoryId) => {
+    const category = categories.find(cat => cat.id === categoryId);
+    if (!category) return [];
+    return category.subCategories.flatMap(sub => sub.items);
+  };
+  
+  export default categories;
+
+
+
+  // selected category
+  const selectedCategory = {
+    "id": 5,
+    "category": "Beauty & Health",
+    "sub": {
+        "id": 503,
+        "name": "Personal Care"
+    }
+  }

@@ -1,11 +1,12 @@
-import SearchNavbarMobile from "./DefaultScreens/SearchNavbarMobile";
+import LocationNavbarMobile from "@/containers/LocationNavbarMobile/LocationNavbarMobile";
+import SearchNavbarMobile from "../containers/SearchNavbarMobile/SearchNavbarMobile";
 
 export const RegisterDefaultScreen = {
-    "navbarMobileDefaultScreen":<SearchNavbarMobile/>
+    "defaultSearchNavbarMobile":<SearchNavbarMobile/>,
+    "defaultLocationNavbarMobile":<LocationNavbarMobile/>,
 }
 
 function DefaultScreen(type) {
-  console.log(type)
   return RegisterDefaultScreen?.[type]
 }
 

@@ -8,6 +8,7 @@ import DefaultScreen from "./DefaultScreen";
 import { viewport } from "@/store/viewport";
 import { headerProps } from "@/containers/HeaderContainer/headerProps";
 import { useRouter } from "next/navigation";
+import BottomTabNavigation from "@/containers/BottomTabNavigation/BottomTabNavigation";
 
 function ResponsiveProvider({children}) {
     const router = useRouter()
@@ -21,14 +22,15 @@ function ResponsiveProvider({children}) {
         renderActionButton:null,
         renderAppBar:null,
         renderHeader:null,
-        shadow:true
+        shadow:true,
+        defaultType:''
     })
     const [search,editSearch] = useState({
         placeholder:'muatparts',
         value:'',
-        type:'text'        
+        type:'text'
     })
-    
+
     const [screen,setScreen]=useState('')
     const [getGlobalPadding,setGlobalPadding]=useState(true)
     const {isMobile}=viewport()
@@ -48,7 +50,8 @@ function ResponsiveProvider({children}) {
             renderHeader:null,
             renderBack:null,
             renderActionButton:null,
-            shadow:true
+            shadow:true,
+            defaultType:''
         })
     }
     const handleBack = ()=> {
@@ -88,12 +91,13 @@ function ResponsiveProvider({children}) {
                 type={getHeader.appBarType}
             />
             {
-                DefaultScreen(getHeader.appBarType)?
-                <div style={{marginTop:`${isMobile&&getGlobalPadding?headerHeight+16:!isMobile&&getGlobalPadding?headerHeight+24:0}px`,paddingInline:isMobile&&getGlobalPadding?'16px':''}} className={`w-full ${getGlobalPadding?'max-w-[1280px] mx-auto':''}`}>
-                    {DefaultScreen(getHeader.appBarType)}
+                DefaultScreen(getHeader.defaultType)?
+                <div style={{marginTop:`${headerHeight}px`,}} className={`w-full ${getGlobalPadding?'max-w-[1280px] mx-auto':''}`}>
+                    {DefaultScreen(getHeader.defaultType)}
                 </div>
                 :children
             }
+            {/* <BottomTabNavigation/> */}
         </ResponsiveContext.Provider>
     )
 }

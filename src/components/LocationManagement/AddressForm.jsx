@@ -55,6 +55,14 @@ const AddressForm = ({ AddressData, errors }) => {
 
      // End State Management
 
+  // Start Form Data
+
+  const autocompleteFormData = new FormData();
+  autocompleteFormData.append("phrase", location.title || address);
+  autocompleteFormData.append("dataType", "json");
+
+  const districtFormData = new FormData();
+  districtFormData.append("place_id", location.id);
      // Start Form Data
 
      const latLongFormData = new FormData();
@@ -65,6 +73,19 @@ const AddressForm = ({ AddressData, errors }) => {
 
      // Start Fetchers
 
+  const autoCompleteFetcher = (url) => {
+    return fetch(url, {
+      method: "POST",
+      body: autocompleteFormData,
+    }).then((res) => res.json());
+  };
+
+  const districtFetcher = (url) => {
+    return fetch(url, {
+      method: "POST",
+      body: districtFormData,
+    }).then((res) => res.json());
+  };
      // const districtFetcher = async (url) => {
      //   const formData = new URLSearchParams();
      //   formData.append("placeId", location.id);
@@ -91,6 +112,16 @@ const AddressForm = ({ AddressData, errors }) => {
 
      // Start SWR Hooks
 
+  const { data: autocompleteData, error: autocompleteError } =
+    swrHandler.useSWRHook(
+      location.title.length > 2 || address.length > 2
+        ? `${process.env.NEXT_PUBLIC_INTERNAL_API}/get_autocomplete_street`
+        : null,
+      autoCompleteFetcher,
+      (error) => {
+        // console.error("Autocomplete error:", error);
+      }
+    );
      // const { data: autocompleteData, error: autocompleteError } =
      //   swrHandler.useSWRHook(
      //     location.title.length > 2 || address.length > 2
@@ -102,6 +133,15 @@ const AddressForm = ({ AddressData, errors }) => {
      //     }
      //   );
 
+  const { data: districtData, error: districtError } = swrHandler.useSWRHook(
+    location.id
+      ? `${process.env.NEXT_PUBLIC_INTERNAL_API}/get_districts_by_token`
+      : null,
+    districtFetcher,
+    (error) => {
+      // console.error("District fetch error:", error);
+    }
+  );
      // const { data: districtData, error: districtError } = swrHandler.useSWRHook(
      //   location.id ? DISTRICT_ENDPOINT : null,
      //   districtFetcher,
@@ -190,6 +230,14 @@ const AddressForm = ({ AddressData, errors }) => {
      // useEffect(() => {
      //   if (!districtData) return;
 
+    if (districtData.Message.Code === 500) {
+      setCoordinates({
+        lat: districtData.Data.lat,
+        long: districtData.Data.lng,
+      });
+      setIsOpenAddManual(true);
+      return;
+    }
      //   if (districtData.Message.Code === 400) {
      //     setCoordinates({
      //       lat: districtData.Data.lat,
@@ -199,6 +247,11 @@ const AddressForm = ({ AddressData, errors }) => {
      //     return;
      //   }
 
+    // Prepare all the new values first
+    const newDistrict = {
+      name: districtData.Data.Districts[0].District,
+      value: districtData.Data.Districts[0].DistrictID,
+    };
      //   if (districtData.Message.Code === 200) {
      //     // Prepare all the new values first
      //     const newDistrict = {
@@ -206,16 +259,30 @@ const AddressForm = ({ AddressData, errors }) => {
      //       value: districtData.Data.Districts[0].DistrictID,
      //     };
 
+    const newCity = {
+      name: districtData.Data.CompleteLocation.city,
+      id: districtData.Data.CompleteLocation.cityid,
+    };
      //     const newCity = {
      //       name: districtData.Data.CompleteLocation.city,
      //       id: districtData.Data.CompleteLocation.cityid,
      //     };
 
+    const newProvince = {
+      name: districtData.Data.CompleteLocation.province,
+      id: districtData.Data.CompleteLocation.provinceid,
+    };
      //     const newProvince = {
      //       name: districtData.Data.CompleteLocation.province,
      //       id: districtData.Data.CompleteLocation.provinceid,
      //     };
 
+    const newKecamatanList = districtData.Data.Districts[0].DistrictList.map(
+      (i) => ({
+        value: i.DistrictID,
+        name: i.District,
+      })
+    );
      //     const newKecamatanList = districtData.Data.Districts[0].DistrictList.map(
      //       (i) => ({
      //         value: i.DistrictID,
@@ -223,6 +290,12 @@ const AddressForm = ({ AddressData, errors }) => {
      //       })
      //     );
 
+    const newPostalCodeList = districtData.Data.Districts[0].PostalCodes.map(
+      (i) => ({
+        value: i.ID,
+        name: i.PostalCode,
+      })
+    );
      //     const newPostalCodeList = districtData.Data.Districts[0].PostalCodes.map(
      //       (i) => ({
      //         value: i.ID,
@@ -230,20 +303,39 @@ const AddressForm = ({ AddressData, errors }) => {
      //       })
      //     );
 
+    const findPostalCode = districtData.Data.Districts[0].PostalCodes.find(
+      (item) => item.PostalCode === districtData.Data.CompleteLocation.postal
+    );
      //     const findPostalCode = districtData.Data.Districts[0].PostalCodes.find(
      //       (item) => item.PostalCode === districtData.Data.CompleteLocation.postal
      //     );
 
+    const newPostalCode = {
+      name: findPostalCode.Description,
+      value: findPostalCode.ID,
+    };
      //     const newPostalCode = {
      //       name: findPostalCode.Description,
      //       value: findPostalCode.ID,
      //     };
 
+    const newCoordinates = {
+      lat: districtData.Data.Lat,
+      long: districtData.Data.Long,
+    };
      //     const newCoordinates = {
      //       lat: districtData.Data.Lat,
      //       long: districtData.Data.Long,
      //     };
 
+    // Set all the states
+    setDistrict(newDistrict);
+    setCity(newCity);
+    setProvince(newProvince);
+    setKecamatanList(newKecamatanList);
+    setPostalCodeList(newPostalCodeList);
+    setPostalCode(newPostalCode);
+    setCoordinates(newCoordinates);
      //     // Set all the states
      //     setDistrict(newDistrict);
      //     setCity(newCity);
@@ -253,6 +345,23 @@ const AddressForm = ({ AddressData, errors }) => {
      //     setPostalCode(newPostalCode);
      //     setCoordinates(newCoordinates);
 
+    // Call AddressData with the new values
+    AddressData({
+      address,
+      location,
+      district: newDistrict,
+      city: newCity,
+      province: newProvince,
+      postalCode: newPostalCode,
+      coordinates: newCoordinates,
+    });
+  }, [districtData, address, location]); // Add other dependencies if needed
+
+  useEffect(() => {
+    if (manualSearchData) {
+      // Handle the manual search data here
+    }
+  }, [manualSearchData]);
      //     // Call AddressData with the new values
      //     AddressData({
      //       address,
@@ -268,6 +377,14 @@ const AddressForm = ({ AddressData, errors }) => {
      //   }
      // }, [districtData, address, location]);
 
+  useEffect(() => {
+    if (latLongData) {
+      // Handle the lat long data here
+      if (latLongData.Message.Code === 200) {
+        // Additional logic here
+      }
+    }
+  }, [latLongData]);
      useEffect(() => {
           if (latLongData) {
                console.log("Lat Long Data", latLongData);
@@ -278,6 +395,24 @@ const AddressForm = ({ AddressData, errors }) => {
           }
      }, [latLongData]);
 
+  return (
+    <div className="space-y-4 my-4 mx-12 text-xs">
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Alamat*</label>
+        <div className="w-2/3">
+          <TextArea
+            status={`${errors?.email && "error"}`}
+            supportiveText={{
+              title: `${errors?.email ? errors?.email : ""}`,
+            }}
+            maxLength={60}
+            resize="none"
+            placeholder="Masukkan alamat lengkap dengan detail. Contoh : Nama Jalan (bila tidak ditemukan), Gedung, No. Rumah/Patokan, Blok/Unit"
+            value={address}
+            changeEvent={handleAddressChange}
+          />
+        </div>
+      </div>
      return (
           <div className="space-y-4 my-4 mx-12 text-xs">
                <pre>
@@ -313,6 +448,26 @@ const AddressForm = ({ AddressData, errors }) => {
                     </div>
                </div>
 
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Lokasi*</label>
+        <div className="w-2/3 relative" ref={locationRef}>
+          <InputSearchLocation
+            onClickSearchResult={(val) => {
+              setLocation({
+                id: val.id,
+                title: val.title,
+              });
+            }}
+            errors={errors}
+            onSelectLocation={(val) => {}}
+            searchResults={autocompleteData?.slice(0, 3)}
+            changeEvent={handleLocationChange}
+            locationRef={locationRef}
+            addressValue={address}
+            locationValue={location}
+          />
+        </div>
+      </div>
                <div className="flex">
                     <label className="w-1/3 text-neutral-600 font-medium">Lokasi*</label>
                     <div className="w-2/3 relative" ref={locationRef}>
@@ -334,6 +489,26 @@ const AddressForm = ({ AddressData, errors }) => {
                     </div>
                </div>
 
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Kecamatan*</label>
+        <div className="w-2/3">
+          <Dropdown
+            options={kecamatanList}
+            onSearchValue
+            placeholder="Pilih Kecamatan"
+            searchPlaceholder="Cari Kecamatan"
+            defaultValue={district}
+            onSelected={(val) =>
+              setDistrict({
+                name: val[0].name,
+                value: val[0].value,
+              })
+            }
+            classname={`${errors.districtID ? "!border-error-500" : ""}`}
+          />
+          {errors.districtID ? <span className="font-medium text-error-400 text-xs block mt-2">{errors.districtID}</span> : ''}
+        </div>
+      </div>
                <div className="flex">
                     <label className="w-1/3 text-neutral-600 font-medium">Kecamatan*</label>
                     <div className="w-2/3">
@@ -353,16 +528,54 @@ const AddressForm = ({ AddressData, errors }) => {
                     </div>
                </div>
 
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Kota</label>
+        <div className="w-2/3 text-neutral-900 font-medium">
+          {city.name ? city.name : "-"}
+        </div>
+      </div>
                <div className="flex">
                     <label className="w-1/3 text-neutral-600 font-medium">Kota</label>
                     <div className="w-2/3 text-neutral-900 font-medium">{city.name ? city.name : "-"}</div>
                </div>
 
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Provinsi</label>
+        <div className="w-2/3 text-neutral-900 font-medium">
+          {province.name ? province.name : "-"}
+        </div>
+      </div>
                <div className="flex">
                     <label className="w-1/3 text-neutral-600 font-medium">Provinsi</label>
                     <div className="w-2/3 text-neutral-900 font-medium">{province.name ? province.name : "-"}</div>
                </div>
 
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Kode Pos*</label>
+        <div className="w-2/3">
+          <Dropdown
+            options={postalCodeList}
+            onSearchValue
+            placeholder="Pilih Kode Pos"
+            searchPlaceholder="Cari Kode Pos"
+            defaultValue={postalCode}
+            onSelected={(val) =>
+              setPostalCode({
+                name: val[0].name,
+                value: val[0].value,
+              })
+            }
+          />
+        </div>
+      </div>
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">
+          Titik Lokasi*
+        </label>
+        <div className="w-2/3">
+          <MiniMap onClick={() => setOpenMap(true)} />
+        </div>
+      </div>
                <div className="flex">
                     <label className="w-1/3 text-neutral-600 font-medium">Kode Pos*</label>
                     <div className="w-2/3">

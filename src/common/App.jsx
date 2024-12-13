@@ -20,8 +20,7 @@ function App({ children }) {
     <ResponsiveProvider>
       <div
         style={{
-          marginTop: `${isMobile ? headerHeight + 16 : headerHeight}px`,
-          paddingInline: isMobile ? "16px" : "",
+          marginTop: `${headerHeight}px`,
           height: `calc(100vh - ${headerHeight}px)`,
         }}
         className={`w-full`}
