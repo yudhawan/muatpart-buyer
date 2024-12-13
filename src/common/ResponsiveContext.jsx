@@ -66,6 +66,7 @@ function ResponsiveProvider({children}) {
             console.log('do something')
         }
     }
+    console.log(getGlobalPadding,isMobile)
     return (
         <ResponsiveContext.Provider value={{
             appBarType:getHeader.appBarType,
@@ -90,7 +91,7 @@ function ResponsiveProvider({children}) {
             />
             {
                 DefaultScreen(getHeader.appBarType)?
-                <div style={{marginTop:`${isMobile&&getGlobalPadding?headerHeight+16:!isMobile&&getGlobalPadding?headerHeight+24:0}px`,paddingInline:isMobile&&getGlobalPadding?'16px':''}} className={`w-full ${getGlobalPadding?'max-w-[1280px] mx-auto':''}`}>
+                <div style={{marginTop:`${isMobile&&getGlobalPadding?headerHeight+16:!isMobile&&getGlobalPadding?headerHeight:0}px`,}} className={`w-full ${getGlobalPadding?'max-w-[1280px] mx-auto':''}`}>
                     {DefaultScreen(getHeader.appBarType)}
                 </div>
                 :children
