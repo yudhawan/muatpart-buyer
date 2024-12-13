@@ -221,14 +221,17 @@ const InformasiTokoAkun = () => {
   );
 };
 
-const DivParticleRegister = ({
+export const DivParticleRegister = ({
   title,
   children,
   mustFill = true,
   classname,
+  classLabel,
 }) => (
   <div className={`flex items-baseline ${classname}`}>
-    <label className="w-1/3 text-neutral-600 font-medium text-xs">
+    <label
+      className={`w-1/3 text-neutral-600 font-medium text-xs ${classLabel}`}
+    >
       {title}
       {mustFill && "*"}
     </label>

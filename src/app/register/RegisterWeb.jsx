@@ -7,6 +7,7 @@ import IconComponent from "@/components/IconComponent/IconComponent";
 import InformasiTokoAkun from "@/containers/Register/InformasiTokoAkun";
 import Otp from "@/containers/Register/Otp";
 import InformasiPendaftarDanRekening from "@/containers/Register/InformasiPendaftarDanRekening";
+import KonfirmasiData from "@/containers/Register/KonfirmasiData";
 
 function RegisterWeb({
   handleNext,
@@ -61,7 +62,7 @@ function RegisterWeb({
                   hasVerifiedRekening={hasVerifiedRekening}
                 /> 
               ) : null}
-              
+              {step === "3" && <KonfirmasiData />}
             </div>
           </div>
 

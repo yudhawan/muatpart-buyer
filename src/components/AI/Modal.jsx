@@ -3,7 +3,7 @@
 import { modal } from "@/store/modal";
 import { X } from "lucide-react";
 
-const Modal = ({ children }) => {
+const Modal = ({ children, headerBg }) => {
   const { modalOpen, setModalOpen, modalContent, modalConfig } = modal();
 
   if (!modalOpen) return null;
@@ -34,7 +34,7 @@ const Modal = ({ children }) => {
             <div
               className="relative w-full h-[70px] rounded-t-lg overflow-hidden"
               style={{
-                backgroundImage: "url(/img/headermodal386.svg)",
+                backgroundImage: `url(${modalConfig.headerBg})`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",

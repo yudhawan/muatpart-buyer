@@ -30,9 +30,8 @@ function Register() {
     nextStep,
     prevStep,
   } = registerForm();
-console.log("form",formData,formData[0].tipeToko === 0
-  ? `${api}v1/register/merchant_personal`
-  : `${api}v1/register/merchant_company`)
+  const {setDataToast, setShowToast} = toast()
+
   const { data: merchantData } = useSWRHook(
     formData[0].tipeToko === 0
       ? `${api}v1/register/merchant_personal`
@@ -40,7 +39,7 @@ console.log("form",formData,formData[0].tipeToko === 0
     "GET"
   );
 
-  const { trigger: submitData } = useSWRMutateHook(
+  const { trigger: submitData, error: errorSubmitData } = useSWRMutateHook(
     formData[0].tipeToko === 0
       ? `${api}v1/register/merchant_personal`
       : `${api}v1/register/merchant_company`,
@@ -63,7 +62,7 @@ console.log("form",formData,formData[0].tipeToko === 0
   const existingMerchantData = merchantData?.Data || {}
   const hasVerifiedLegality = existingMerchantData?.legality?.length > 0 && existingMerchantData?.legalityFile?.length > 0
   const hasVerifiedRekening = existingMerchantData?.rekening?.length > 0
-console.log('exis', merchantData, existingMerchantData)
+
   useEffect(() => {
     if (merchantData?.Data) {
       setFormData([{ ...formData[0], ...merchantData.Data }, formData[1]]);
@@ -89,8 +88,6 @@ console.log('exis', merchantData, existingMerchantData)
         ...existingMerchantData?.rekening[0]
       }
     }
-    console.log("zeze",formData)
-    console.log('zaza',[ formData[0], { ...formData[1], ...newFormDataStepTwo }])
     setFormData([ formData[0], { ...formData[1], ...newFormDataStepTwo }])
   }, [JSON.stringify(existingMerchantData), hasVerifiedLegality, hasVerifiedRekening])
 
@@ -116,18 +113,17 @@ console.log('exis', merchantData, existingMerchantData)
                 formData[0].tipeToko === 0 ? "personal" : "company"
               }`
             );
-            toast
-              .getState()
-              .setDataToast({
-                type: "success",
-                message: "Data berhasil disimpan",
-              });
+            setShowToast(true);
+            setDataToast({
+              type: "success",
+              message: "Data berhasil disimpan",
+            });
             router.push(`/register?step=${currentStep + 1}`);
           })
-          .catch(() => {
-            toast
-              .getState()
-              .setDataToast({ type: "error", message: "Gagal menyimpan data" });
+          .catch((err) => {
+            console.log(err,errorSubmitData, " erddio");
+            setShowToast(true);
+            setDataToast({ type: "error", message: "Gagal menyimpan data" });
           });
       } finally {
         setIsSubmitting(false);

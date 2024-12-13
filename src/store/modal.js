@@ -11,6 +11,8 @@ export const modal = create((set) => ({
     withHeader: true,
     withClose: true,
     classname: "",
+    headerBg: "/img/headermodal386.svg",
+    // headerBg: "/img/headermodal550.svg",
   },
   setModalConfig: (config) =>
     set((state) => ({
