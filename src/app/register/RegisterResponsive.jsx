@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 
 function RegisterResponsive() {
   const {
-    appBarType, //pilih salah satu : 'titleSecondary' || 'searchSecondary' || 'navbarMobileDefaultScreen' || 'search' || 'title'
+    appBarType, //pilih salah satu : 'titleSecondary' || 'searchSecondary' || 'defaultSearchNavbarMobile' || 'search' || 'title'
     appBar, // muncul ini : {onBack:null,title:'',showBackButton:true,appBarType:'',appBar:null,header:null}
     renderAppBarMobile, // untuk render komponen header mobile dengan memasukkanya ke useEffect atau by trigger function / closer
     setAppBar, // tambahkan payload seperti ini setAppBar({onBack:()=>setScreen('namaScreen'),title:'Title header',appBarType:'type'})

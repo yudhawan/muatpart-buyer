@@ -27,7 +27,7 @@ function HeaderContainerMobile({
   return (
     <header className={style.main} ref={headerRef}>
       {
-        !!(type==='titleSecondary'|type==='searchSecondary'|type==='navbarMobileDefaultScreen')&&<HeaderTitleSearchMobile appBar={appBar} type={type} title={appBar?.title} onBack={handleBack} setSearch={setSearch} searchPlaceholder={search?.placeholder} searchValue={search?.value} />
+        !!(type==='titleSecondary'|type==='searchSecondary'|type==='defaultSearchNavbarMobile')&&<HeaderTitleSearchMobile appBar={appBar} type={type} title={appBar?.title} onBack={handleBack} setSearch={setSearch} searchPlaceholder={search?.placeholder} searchValue={search?.value} />
       }
       {
         type.includes('Modal')&&<HeaderModalMobile shadow={shadow} handleAction={handleAction} setAppBar={setAppBar} appBar={appBar} type={type} title={appBar?.title} onBack={handleBack} setSearch={setSearch} searchPlaceholder={search?.placeholder} searchValue={search?.value}/>
@@ -47,7 +47,7 @@ function HeaderContainerMobile({
                     setAppBar({
                       onBack:()=>setAppBar({appBarType:''}),
                       title:'Cari berdasarkan',
-                      appBarType:'navbarMobileDefaultScreen'
+                      appBarType:'defaultSearchNavbarMobile'
                     })
                     }} classname={style.inputMobile} placeholder='Cari Produk' icon={{left:'/icons/search.svg'}} />
                 </div>
@@ -81,7 +81,7 @@ function HeaderContainerMobile({
 export function HeaderTitleSearchMobile({appBar,type,title,onBack,searchPlaceholder, searchValue,setSearch,shadow}){
   const RenderBack=appBar?.renderBack||null
   const ActionButton = appBar?.renderActionButton||null
-  const isBgSecondary = type==='titleSecondary'|type==='searchSecondary'|type==='navbarMobileDefaultScreen'
+  const isBgSecondary = type==='titleSecondary'|type==='searchSecondary'|type==='defaultSearchNavbarMobile'
   return(
     <div className={`${isBgSecondary?'bg-neutral-50':'bg-[#c22716]'} relative w-full h-auto max-h-[88px] p-4 pb-3 flex gap-2 ${shadow? 'shadow-lg':''}`}>
       <Image src='/img/fallinstartheader.png' width={153} height={62} alt='fallin' className='absolute right-0 bottom-0' />
@@ -95,7 +95,7 @@ export function HeaderTitleSearchMobile({appBar,type,title,onBack,searchPlacehol
         </span>:''
         }
         {(type==='search' || type==='searchSecondary')&&<Input classname={style.inputSearchMobile} placeholder={searchPlaceholder} value={searchValue} changeEvent={e=>setSearch({value:e.target.value})} />}
-        {(type==='title' || type==='titleSecondary' || type==='navbarMobileDefaultScreen')&&<span className={`font-bold text-base ${isBgSecondary?'text-[#176cf7]':'text-neutral-50'}`}>{title}</span>}
+        {(type==='title' || type==='titleSecondary' || type==='defaultSearchNavbarMobile')&&<span className={`font-bold text-base ${isBgSecondary?'text-[#176cf7]':'text-neutral-50'}`}>{title}</span>}
         {
           ActionButton?ActionButton:''
         }

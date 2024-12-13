@@ -61,6 +61,20 @@ export default ${name}Web;
   `;
 }
 
+function createNameOther(name) {
+  return `
+'use client';
+import style from './${name}.module.scss'
+function ${name}Web() {
+    return (
+        <div className={style.main}>${name} Web</div>
+    );
+}
+
+export default ${name}Web;
+  `;
+}
+
 function createNameResponsive(name) {
   return `
 import { useHeader } from '@/common/ResponsiveContext'
@@ -68,7 +82,7 @@ import React, { useEffect } from 'react'
 import style from './${name}.module.scss'
 function ${name}Responsive() {
   const {
-    appBarType, //pilih salah satu : 'titleSecondary' || 'searchSecondary' || 'navbarMobileDefaultScreen' || 'search' || 'title'
+    appBarType, //pilih salah satu : 'titleSecondary' || 'searchSecondary' || 'defaultSearchNavbarMobile' || 'search' || 'title'
     appBar, // muncul ini : {onBack:null,title:'',showBackButton:true,appBarType:'',appBar:null,header:null}
     renderAppBarMobile, // untuk render komponen header mobile dengan memasukkanya ke useEffect atau by trigger function / closer
     setAppBar, // tambahkan payload seperti ini setAppBar({onBack:()=>setScreen('namaScreen'),title:'Title header',appBarType:'type'})
@@ -215,10 +229,8 @@ async function scanDir(pathDir) {
                 ]);
             }else{
                 await Promise.all([
-                    fs.writeFile(fileIndex, createName(name), 'utf8'),
+                    fs.writeFile(fileName, createNameOther(name), 'utf8'),
                     fs.writeFile(fileStyle, createStyle(name), 'utf8'),
-                    fs.writeFile(fileWeb, createNameWeb(name), 'utf8'),
-                    fs.writeFile(fileMobile, createNameResponsive(name), 'utf8'),
                 ]);
             }
 

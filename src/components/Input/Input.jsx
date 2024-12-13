@@ -3,16 +3,8 @@ import React, { forwardRef, useState } from "react";
 import style from "./Input.module.scss";
 import PropTypes from "prop-types";
 import IconComponent from "../IconComponent/IconComponent";
-"use client";
-import React, { forwardRef, useState } from "react";
-import style from "./Input.module.scss";
-import PropTypes from "prop-types";
-import IconComponent from "../IconComponent/IconComponent";
 
 const Input = ({
-  name,
-  type = "text",
-  placeholder = "Placeholder",
   name,
   type = "text",
   placeholder = "Placeholder",
