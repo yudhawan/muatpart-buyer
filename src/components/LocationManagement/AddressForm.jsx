@@ -415,280 +415,162 @@ const AddressForm = ({ AddressData, errors }) => {
           />
         </div>
       </div>
-      <div className="space-y-4 my-4 mx-12 text-xs">
-        <pre>
-          {JSON.stringify(
-            {
-              address,
-              location,
-              district,
-              city,
-              province,
-              postalCode,
-              coordinates,
-            },
-            null,
-            2
-          )}
-        </pre>
 
-        <div className="flex">
-          <label className="w-1/3 text-neutral-600 font-medium">Alamat*</label>
-          <div className="w-2/3">
-            <TextArea
-              status={`${errors?.address && "error"}`}
-              supportiveText={{
-                title: `${errors?.address ? errors?.address : ""}`,
-              }}
-              maxLength={60}
-              resize="none"
-              placeholder="Masukkan alamat lengkap dengan detail. Contoh : Nama Jalan (bila tidak ditemukan), Gedung, No. Rumah/Patokan, Blok/Unit"
-              value={address}
-              changeEvent={handleAddressChange}
-            />
-          </div>
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Lokasi*</label>
+        <div className="w-2/3 relative" ref={locationRef}>
+          <InputSearchLocation
+            onClickSearchResult={(val) => {
+              setLocation({
+                id: val.id,
+                title: val.title,
+              });
+            }}
+            errors={errors}
+            onSelectLocation={(val) => {}}
+            searchResults={autocompleteData?.slice(0, 3)}
+            changeEvent={handleLocationChange}
+            locationRef={locationRef}
+            addressValue={address}
+            locationValue={location}
+          />
         </div>
-
-        <div className="flex items-baseline">
-          <label className="w-1/3 text-neutral-600 font-medium">Lokasi*</label>
-          <div className="w-2/3 relative" ref={locationRef}>
-            <InputSearchLocation
-              onClickSearchResult={(val) => {
-                setLocation({
-                  id: val.id,
-                  title: val.title,
-                });
-              }}
-              errors={errors}
-              onSelectLocation={(val) => {}}
-              searchResults={autocompleteData?.slice(0, 3)}
-              changeEvent={handleLocationChange}
-              locationRef={locationRef}
-              addressValue={address}
-              locationValue={location}
-            />
-          </div>
-        </div>
-        <div className="flex">
-          <label className="w-1/3 text-neutral-600 font-medium">Lokasi*</label>
-          <div className="w-2/3 relative" ref={locationRef}>
-            <InputSearchLocation
-              onClickSearchResult={(val) => {
-                setLocation({
-                  id: val.ID,
-                  title: val.Title,
-                });
-              }}
-              onSelectLocation={(val) => {}}
-              changeEvent={handleLocationChange}
-              locationRef={locationRef}
-              addressValue={address}
-              locationValue={location}
-              openAddManual={isOpenAddManual}
-              autoFillForm={(val) => handleAutoFillForm(val)}
-            />
-          </div>
-        </div>
-
-        <div className="flex items-baseline">
-          <label className="w-1/3 text-neutral-600 font-medium">
-            Kecamatan*
-          </label>
-          <div className="w-2/3">
-            <Dropdown
-              options={kecamatanList}
-              onSearchValue
-              placeholder="Pilih Kecamatan"
-              searchPlaceholder="Cari Kecamatan"
-              defaultValue={district}
-              onSelected={(val) =>
-                setDistrict({
-                  name: val[0].name,
-                  value: val[0].value,
-                })
-              }
-              classname={`${errors.districtID ? "!border-error-500" : ""}`}
-            />
-            {errors.districtID ? (
-              <span className="font-medium text-error-400 text-xs block mt-2">
-                {errors.districtID}
-              </span>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
-        <div className="flex">
-          <label className="w-1/3 text-neutral-600 font-medium">
-            Kecamatan*
-          </label>
-          <div className="w-2/3">
-            <Dropdown
-              options={kecamatanList}
-              onSearchValue
-              placeholder="Pilih Kecamatan"
-              searchPlaceholder="Cari Kecamatan"
-              defaultValue={district}
-              onSelected={(val) =>
-                setDistrict({
-                  name: val[0].name,
-                  value: val[0].value,
-                })
-              }
-            />
-          </div>
-        </div>
-
-        <div className="flex items-baseline">
-          <label className="w-1/3 text-neutral-600 font-medium">Kota</label>
-          <div className="w-2/3 text-neutral-900 font-medium">
-            {city.name ? city.name : "-"}
-          </div>
-        </div>
-        <div className="flex">
-          <label className="w-1/3 text-neutral-600 font-medium">Kota</label>
-          <div className="w-2/3 text-neutral-900 font-medium">
-            {city.name ? city.name : "-"}
-          </div>
-        </div>
-
-        <div className="flex items-baseline">
-          <label className="w-1/3 text-neutral-600 font-medium">Provinsi</label>
-          <div className="w-2/3 text-neutral-900 font-medium">
-            {province.name ? province.name : "-"}
-          </div>
-        </div>
-        <div className="flex">
-          <label className="w-1/3 text-neutral-600 font-medium">Provinsi</label>
-          <div className="w-2/3 text-neutral-900 font-medium">
-            {province.name ? province.name : "-"}
-          </div>
-        </div>
-
-        <div className="flex items-baseline">
-          <label className="w-1/3 text-neutral-600 font-medium">
-            Kode Pos*
-          </label>
-          <div className="w-2/3">
-            <Dropdown
-              options={postalCodeList}
-              onSearchValue
-              placeholder="Pilih Kode Pos"
-              searchPlaceholder="Cari Kode Pos"
-              defaultValue={postalCode}
-              onSelected={(val) =>
-                setPostalCode({
-                  name: val[0].name,
-                  value: val[0].value,
-                })
-              }
-            />
-          </div>
-        </div>
-        <div className="flex items-baseline">
-          <label className="w-1/3 text-neutral-600 font-medium">
-            Titik Lokasi*
-          </label>
-          <div className="w-2/3">
-            <MiniMap onClick={() => setOpenMap(true)} />
-          </div>
-        </div>
-        <div className="flex">
-          <label className="w-1/3 text-neutral-600 font-medium">
-            Kode Pos*
-          </label>
-          <div className="w-2/3">
-            <Dropdown
-              options={postalCodeList}
-              onSearchValue
-              placeholder="Pilih Kode Pos"
-              searchPlaceholder="Cari Kode Pos"
-              defaultValue={postalCode}
-              onSelected={(val) =>
-                setPostalCode({
-                  name: val[0].name,
-                  value: val[0].value,
-                })
-              }
-            />
-          </div>
-        </div>
-        <div className="flex">
-          <label className="w-1/3 text-neutral-600 font-medium">
-            Titik Lokasi*
-          </label>
-          <div className="w-2/3">
-            <MiniMap onClick={() => setOpenMap(true)} />
-          </div>
-        </div>
-
-        <ModalComponent
-          isOpen={isOpenMap}
-          setClose={() => setOpenMap(false)}
-          hideHeader
-        >
-          <div className="flex item-start gap-4 pt-[14px] px-3">
-            <MapContainer
-              width={600}
-              height={390}
-              lat={coordinates.lat ? coordinates.lat : -7.250445}
-              long={coordinates.long ? coordinates.long : 112.768845}
-              onPosition={(val) => console.log(val.lat, val.lng)}
-            />
-            <div className="flex flex-col gap-[22px]">
-              <span className="text-base font-semibold text-neutral-900">
-                Atur Pin Lokasi
-              </span>
-              <Input
-                classname={"w-[255px] max-w-none"}
-                value={getSearchLokasi}
-                changeEvent={(e) => setSearchLokasi(e.target.value)}
-                placeholder="Cari Lokasi"
-                icon={{
-                  left: <IconComponent src={"/icons/marker.svg"} />,
-                  right: getSearchLokasi ? (
-                    <span
-                      className="flex items-center"
-                      onClick={() => setSearchLokasi("")}
-                    >
-                      <Image
-                        src={"/icons/closes.svg"}
-                        width={10}
-                        height={10}
-                        alt="closes"
-                      />
-                    </span>
-                  ) : (
-                    ""
-                  ),
-                }}
-              />
-            </div>
-          </div>
-        </ModalComponent>
-
-        <Modal
-          isOpen={isOpenConfirmChangeLocation}
-          setIsOpen={setIsOpenConfirmChangeLocation}
-          closeArea={false}
-          closeBtn={true}
-        >
-          <div className="space-y-6">
-            <div className="text-center font-medium text-sm">
-              Apakah kamu yakin ingin mengganti lokasi?
-            </div>
-            <div className="flex items-center justify-center gap-3">
-              <Button
-                color="primary_secondary"
-                onClick={() => setIsOpenConfirmChangeLocation(false)}
-              >
-                Tidak
-              </Button>
-              <Button>Ya</Button>
-            </div>
-          </div>
-        </Modal>
       </div>
+
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Kecamatan*</label>
+        <div className="w-2/3">
+          <Dropdown
+            options={kecamatanList}
+            onSearchValue
+            placeholder="Pilih Kecamatan"
+            searchPlaceholder="Cari Kecamatan"
+            defaultValue={district}
+            onSelected={(val) =>
+              setDistrict({
+                name: val[0].name,
+                value: val[0].value,
+              })
+            }
+            classname={`${errors.districtID ? "!border-error-500" : ""}`}
+          />
+          {errors.districtID ? (
+            <span className="font-medium text-error-400 text-xs block mt-2">
+              {errors.districtID}
+            </span>
+          ) : (
+            ""
+          )}
+        </div>
+      </div>
+
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Kota</label>
+        <div className="w-2/3 text-neutral-900 font-medium">
+          {city.name ? city.name : "-"}
+        </div>
+      </div>
+
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Provinsi</label>
+        <div className="w-2/3 text-neutral-900 font-medium">
+          {province.name ? province.name : "-"}
+        </div>
+      </div>
+
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Kode Pos*</label>
+        <div className="w-2/3">
+          <Dropdown
+            options={postalCodeList}
+            onSearchValue
+            placeholder="Pilih Kode Pos"
+            searchPlaceholder="Cari Kode Pos"
+            defaultValue={postalCode}
+            onSelected={(val) =>
+              setPostalCode({
+                name: val[0].name,
+                value: val[0].value,
+              })
+            }
+          />
+        </div>
+      </div>
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">
+          Titik Lokasi*
+        </label>
+        <div className="w-2/3">
+          <MiniMap onClick={() => setOpenMap(true)} />
+        </div>
+      </div>
+
+      <ModalComponent
+        isOpen={isOpenMap}
+        setClose={() => setOpenMap(false)}
+        hideHeader
+      >
+        <div className="flex item-start gap-4 pt-[14px] px-3">
+          <MapContainer
+            width={600}
+            height={390}
+            lat={coordinates.lat ? coordinates.lat : -7.250445}
+            long={coordinates.long ? coordinates.long : 112.768845}
+            onPosition={(val) => console.log(val.lat, val.lng)}
+          />
+          <div className="flex flex-col gap-[22px]">
+            <span className="text-base font-semibold text-neutral-900">
+              Atur Pin Lokasi
+            </span>
+            <Input
+              classname={"w-[255px] max-w-none"}
+              value={getSearchLokasi}
+              changeEvent={(e) => setSearchLokasi(e.target.value)}
+              placeholder="Cari Lokasi"
+              icon={{
+                left: <IconComponent src={"/icons/marker.svg"} />,
+                right: getSearchLokasi ? (
+                  <span
+                    className="flex items-center"
+                    onClick={() => setSearchLokasi("")}
+                  >
+                    <Image
+                      src={"/icons/closes.svg"}
+                      width={10}
+                      height={10}
+                      alt="closes"
+                    />
+                  </span>
+                ) : (
+                  ""
+                ),
+              }}
+            />
+          </div>
+        </div>
+      </ModalComponent>
+
+      <Modal
+        isOpen={isOpenConfirmChangeLocation}
+        setIsOpen={setIsOpenConfirmChangeLocation}
+        closeArea={false}
+        closeBtn={true}
+      >
+        <div className="space-y-6">
+          <div className="text-center font-medium text-sm">
+            Apakah kamu yakin ingin mengganti lokasi?
+          </div>
+          <div className="flex items-center justify-center gap-3">
+            <Button
+              color="primary_secondary"
+              onClick={() => setIsOpenConfirmChangeLocation(false)}
+            >
+              Tidak
+            </Button>
+            <Button>Ya</Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
