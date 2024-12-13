@@ -1,9 +1,7 @@
-"use client";
+import React from "react";
 
-import LocationManagement from "@/components/LocationManagement/LocationManagement";
-
-function page() {
-  return <LocationManagement />;
-}
+const page = () => {
+  return <div>Products</div>;
+};
 
 export default page;
