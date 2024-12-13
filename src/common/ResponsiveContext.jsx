@@ -64,11 +64,11 @@ function ResponsiveProvider({children}) {
             setSearch,
             search
         }}>
-            <HeaderContainer
+            {/* <HeaderContainer
                 renderAppBarMobile={getHeader.appBar}
                 renderAppBar={getHeader.header}
                 type={getHeader.appBarType}
-            />
+            /> */}
             {DefaultScreen(getHeader.appBarType)?<div style={{marginTop:`${isMobile?headerHeight+16:headerHeight+24}px`,paddingInline:isMobile?'16px':''}} className={`w-full max-w-[1280px] mx-auto`}>{DefaultScreen(getHeader.appBarType)}</div>:children}
         </ResponsiveContext.Provider>
     )

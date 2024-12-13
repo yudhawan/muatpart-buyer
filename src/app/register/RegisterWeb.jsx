@@ -6,7 +6,6 @@ import Button from "@/components/Button/Button";
 import IconComponent from "@/components/IconComponent/IconComponent";
 import InformasiTokoAkun from "@/containers/Register/InformasiTokoAkun";
 import Otp from "@/containers/Register/Otp";
-import { useRouter, useSearchParams } from "next/navigation";
 import InformasiPendaftarDanRekening from "@/containers/Register/InformasiPendaftarDanRekening";
 
 function RegisterWeb({

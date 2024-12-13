@@ -3,8 +3,7 @@ import Modal from '@/components/Modals/modal';
 import Input from '@/components/Input/Input';
 import IconComponent from '@/components/IconComponent/IconComponent';
 import style from "./UpdateEmailModal.module.scss"
-
-const verifiedEmails = ['verified@example.com', 'test@example.com']; // Dummy data
+import SWRHandler from '@/services/useSWRHook';
 
 const UpdateEmailModal = ({ 
   isOpen, 
@@ -15,12 +14,22 @@ const UpdateEmailModal = ({
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
 
+  const { useSWRMutateHook } = new SWRHandler();
+  const { trigger: changeEmail } = useSWRMutateHook(
+    `${process.env.NEXT_PUBLIC_API}v1/register/change_email`,
+    "POST",
+    null,
+    (err) => {
+      console.log('err',err)
+    }
+  );
+
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  const handleSave = () => {
+  const handleSave = async() => {
     // Reset error
     setError('');
 
@@ -42,16 +51,18 @@ const UpdateEmailModal = ({
       return;
     }
 
-    // Validate if email already verified
-    if (verifiedEmails.includes(email)) {
-      setError('Email sudah terdaftar');
-      return;
-    }
+    await changeEmail({ OldEmail: "abc@gmail.com", NewEmail: email })
+      .then((res) => {
+        console.log('res',res)
+      })
+      .catch((err) => {
+        console.log('err',err)
+      })
 
     // If all validations pass
-    onEmailChange(email);
-    setEmail('');
-    setIsOpen(false);
+    // onEmailChange(email);
+    // setEmail('');
+    // setIsOpen(false);
   };
 
   const handleClose = () => {

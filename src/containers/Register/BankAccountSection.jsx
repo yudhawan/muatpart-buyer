@@ -8,14 +8,14 @@ import registerForm from '@/store/registerForm';
 const BankAccountSection = ({ bankOptions, errors }) => {
   const {
     formData,
-    // currentStep,
+    currentStep,
     handleInputChange: handleFormDataChange,
     // setFormData,
     // validateStep,
     // nextStep,
     // prevStep,
   } = registerForm();
-  const currentStep = 1 // nanti dihapus
+
   const bankNameValue = bankOptions.find(item => item.value === formData[currentStep].bankID)
   const isBackAccountInifoFilled = bankNameValue && formData[currentStep].rekeningNumber
 
@@ -35,8 +35,8 @@ const BankAccountSection = ({ bankOptions, errors }) => {
   }
 
   return (
-    <div>
-      <span className="font-semibold text-[18px] leading-[21.6px]">Informasi Rekening Pencairan</span>
+    <>
+      <div className="font-semibold text-[18px] leading-[21.6px] mt-6">Informasi Rekening Pencairan</div>
       <div className="space-y-4 mt-6">
         <div className="flex items-start">
           <div className="w-[291px] pt-1">
@@ -114,7 +114,7 @@ const BankAccountSection = ({ bankOptions, errors }) => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

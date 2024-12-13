@@ -21,6 +21,7 @@ function Register() {
     formData,
     currentStep,
     validateFirstStep,
+    validateSecondStep,
     isSubmitting,
     setIsSubmitting,
     setFormData,
@@ -29,7 +30,9 @@ function Register() {
     nextStep,
     prevStep,
   } = registerForm();
-
+console.log("form",formData,formData[0].tipeToko === 0
+  ? `${api}v1/register/merchant_personal`
+  : `${api}v1/register/merchant_company`)
   const { data: merchantData } = useSWRHook(
     formData[0].tipeToko === 0
       ? `${api}v1/register/merchant_personal`
@@ -44,17 +47,23 @@ function Register() {
     "POST"
   );
 
+  const { trigger: setLegality } = useSWRMutateHook(
+    formData[0].tipeToko === 0
+      ? `${api}v1/register/set_merchant_legality`
+      : `${api}v1/register/set_merchant_company_legality`,
+    "POST"
+  );
+
   const { data: dataBanks } = useSWRHook(`${process.env.NEXT_PUBLIC_API}v1/register/banks`)
-  const { data: dataMerchantCompany } = useSWRHook(`${process.env.NEXT_PUBLIC_API}v1/register/merchant_company`)
   // const { data: dataTimerOtp } = useSWRHook(`${process.env.NEXT_PUBLIC_API}v1/register/timer_otp?email=contohhasyim@yopmail.com&type=18`)
 // console.log('data',dataTimerOtp)
 
   const banks = dataBanks?.Data || []
   const bankOptions = banks.map(bank => ({ name: bank.value, value: bank.id }))
-  const merchantCompany = dataMerchantCompany?.Data || {}
-  const hasVerifiedLegality = merchantCompany?.legality?.length > 0 && merchantCompany?.legalityFile?.length > 0
-  const hasVerifiedRekening = merchantCompany?.rekening?.length > 0
-
+  const existingMerchantData = merchantData?.Data || {}
+  const hasVerifiedLegality = existingMerchantData?.legality?.length > 0 && existingMerchantData?.legalityFile?.length > 0
+  const hasVerifiedRekening = existingMerchantData?.rekening?.length > 0
+console.log('exis', merchantData, existingMerchantData)
   useEffect(() => {
     if (merchantData?.Data) {
       setFormData([{ ...formData[0], ...merchantData.Data }, formData[1]]);
@@ -62,22 +71,28 @@ function Register() {
   }, [merchantData]);
 
   useEffect(() => {
-    if (merchantCompany) {
-      if (hasVerifiedLegality) {
-        setFormData(1, "ktpFile", {
-          url: merchantCompany?.legalityFile[0].file,
-          name: merchantCompany?.legalityFile[0].file.split("/").at(-1)
-        })
-        setFormData(1, "ktpNo", merchantCompany?.legality[0].ktpNo)
-        setFormData(1, "namaKtpPendaftar", merchantCompany?.legality[0].namaKtpPendaftar)
-      }
-      if (hasVerifiedRekening) {
-        setFormData(1, "bankID", merchantCompany?.rekening[0].bankID)
-        setFormData(1, "rekeningNumber", merchantCompany?.rekening[0].rekeningNumber)
-        setFormData(1, "namaPemilik", merchantCompany?.rekening[0].namaPemilik)
+    let newFormDataStepTwo = {} 
+    if (hasVerifiedLegality) {
+      newFormDataStepTwo = {
+        ...newFormDataStepTwo,
+        ktpFile: {
+          url: existingMerchantData?.legalityFile[0].file,
+          name: existingMerchantData?.legalityFile[0].file.split("/").at(-1)
+        },
+        ktpNo: existingMerchantData?.legality[0].ktpNo,
+        namaKtpPendaftar: existingMerchantData?.legality[0].namaKtpPendaftar
       }
     }
-  }, [JSON.stringify(merchantCompany), hasVerifiedLegality, hasVerifiedRekening])
+    if (hasVerifiedRekening) {
+      newFormDataStepTwo = {
+        ...newFormDataStepTwo,
+        ...existingMerchantData?.rekening[0]
+      }
+    }
+    console.log("zeze",formData)
+    console.log('zaza',[ formData[0], { ...formData[1], ...newFormDataStepTwo }])
+    setFormData([ formData[0], { ...formData[1], ...newFormDataStepTwo }])
+  }, [JSON.stringify(existingMerchantData), hasVerifiedLegality, hasVerifiedRekening])
 
   const handleNext = async () => {
     if (currentStep === 0 && validateFirstStep()) {
@@ -117,7 +132,7 @@ function Register() {
       } finally {
         setIsSubmitting(false);
       }
-    } else {
+    } else if (currentStep === 1 && validateSecondStep()) {
       router.push(`/register?step=${currentStep + 1}`);
     }
   };

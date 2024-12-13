@@ -9,8 +9,8 @@ import registerForm from "@/store/registerForm";
 
 const InformasiPendaftarDanRekening = ({
   bankOptions,
-  // hasVerifiedLegality,
-  // hasVerifiedRekening
+  hasVerifiedLegality,
+  hasVerifiedRekening
 }) => {
   const {
     formData,
@@ -23,11 +23,11 @@ const InformasiPendaftarDanRekening = ({
     // prevStep,
   } = registerForm();
 const currentStep = 1 // nanti dicomment
-const hasVerifiedLegality = false,
-hasVerifiedRekening = false
+// const hasVerifiedLegality = false,
+// hasVerifiedRekening = false
 
   // const [touched, setTouched] = useState({});
-console.log('err',errors)
+// console.log('err',errors)
 
   const handleFileUpload = (fileData) => {
     if (fileData === null) {
@@ -72,7 +72,7 @@ console.log('err',errors)
     //   });
     // }
   };
-console.log('form',formData[currentStep])
+// console.log('form',formData[currentStep])
 	return (
 		<div className="mt-8">
 			<span className="font-semibold text-[18px] leading-[21.6px]">Data Pendaftar</span>
