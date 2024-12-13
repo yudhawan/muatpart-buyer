@@ -67,7 +67,7 @@ const ImageSlider = ({ baseImages }) => {
   };
 
   return (
-    <div className="relative w-full max-w-lg aspect-video overflow-hidden bg-gray-100 rounded-xl">
+    <div className="relative w-full overflow-hidden bg-gray-100 rounded-xl">
       {/* Slider Container */}
       <div
         className="relative h-full"
