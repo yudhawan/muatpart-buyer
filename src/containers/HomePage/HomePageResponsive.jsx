@@ -5,7 +5,7 @@ import ProductComponent from '@/components/ProductComponent/ProductComponent'
 import style from './HomePage.module.scss'
 import Bubble from '@/components/Bubble/Bubble'
 import categories from './mock'
-import ScreenSubCategories from './ScreenSubCategories'
+import ScreenCategories from './ScreenCategories'
 function HomePageResponsive({lastSeenProducts}) {
   const {
     setAppBar, 
@@ -18,7 +18,8 @@ function HomePageResponsive({lastSeenProducts}) {
     setGlobalPadding(false)
   },[])
   const [getCategory,setCategory]=useState(null)
-  if (screen==='screenSubCategories') return <ScreenSubCategories data={getCategory} />
+  if (screen==='screenCategories') return <ScreenCategories data={getCategory} />
+  if (screen==='screenSubCategories') return <ScreenCategories data={getCategory} />
   // main screen
   return (
     <div className="flex flex-col pb-6">
@@ -30,7 +31,7 @@ function HomePageResponsive({lastSeenProducts}) {
         <div className='flex gap-[6px]'>
           {categories.map(val=><div key={val.id} className='flex w-[46px] flex-col gap-1 justify-center' onClick={()=>{
             setCategory(val)
-            setScreen('screenSubCategories')
+            setScreen('screenCategories')
             setAppBar({
               appBarType:'titleModalSecondary',
               title:'Kategori '+val.name,

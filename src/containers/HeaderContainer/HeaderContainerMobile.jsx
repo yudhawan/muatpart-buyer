@@ -9,11 +9,12 @@ function HeaderContainerMobile({
     renderAppBarMobile,
     type
 }) {
-  const {setHeaderHeight,searchTitle} = headerProps()
+  const {setHeaderHeight,searchTitle,headerHeight} = headerProps()
   const headerRef = useRef(null)
   const {
     setAppBar,
     handleBack,
+    clearScreen,
     handleAction,
     appBar,
     appBarType,
@@ -27,7 +28,7 @@ function HeaderContainerMobile({
   return (
     <header className={style.main} ref={headerRef}>
       {
-        !!(type==='titleSecondary'|type==='searchSecondary'|type==='defaultSearchNavbarMobile')&&<HeaderTitleSearchMobile appBar={appBar} type={type} title={appBar?.title} onBack={handleBack} setSearch={setSearch} searchPlaceholder={search?.placeholder} searchValue={search?.value} />
+        !!(type==='titleSecondary'|type==='searchSecondary'|type==='title'|type==='search')&&<HeaderTitleSearchMobile appBar={appBar} type={type} title={appBar?.title} onBack={handleBack} setSearch={setSearch} searchPlaceholder={search?.placeholder} searchValue={search?.value} />
       }
       {
         type.includes('Modal')&&<HeaderModalMobile shadow={shadow} handleAction={handleAction} setAppBar={setAppBar} appBar={appBar} type={type} title={appBar?.title} onBack={handleBack} setSearch={setSearch} searchPlaceholder={search?.placeholder} searchValue={search?.value}/>
@@ -45,9 +46,10 @@ function HeaderContainerMobile({
                   </span>}
                   <Input focusEvent={()=>{
                     setAppBar({
-                      onBack:()=>setAppBar({appBarType:''}),
+                      onBack:()=>clearScreen(),
                       title:'Cari berdasarkan',
-                      appBarType:'defaultSearchNavbarMobile'
+                      appBarType:'searchSecondary',
+                      defaultType:'defaultSearchNavbarMobile'
                     })
                     }} classname={style.inputMobile} placeholder='Cari Produk' icon={{left:'/icons/search.svg'}} />
                 </div>
@@ -67,7 +69,12 @@ function HeaderContainerMobile({
                 </div>
               </div>
               <div className='w-auto max-w-[155px] h-6 p-2 rounded-md bg-neutral-50 flex items-center gap-1 ml-8'>
-                <span className='font-semibold text-[9px] text-[#c22716]'>Dikirim Ke: Kota Surabaya</span>
+                <span onClick={()=>setAppBar({
+                  appBarType:'title',
+                  title:'Ke mana pesanan mau dikirim?',
+                  defaultType:'defaultLocationNavbarMobile',
+                  onBack:()=>clearScreen()
+                })} className='font-semibold text-[9px] text-[#c22716]'>Dikirim Ke: Kota Surabaya</span>
                 <IconComponent src={'/icons/chevron-right.svg'} classname={style.iconBackRed} />
               </div>
               <Image src='/img/fallinstartheader.png' width={153} height={62} alt='fallin' className='absolute right-0 bottom-0' />
@@ -81,7 +88,7 @@ function HeaderContainerMobile({
 export function HeaderTitleSearchMobile({appBar,type,title,onBack,searchPlaceholder, searchValue,setSearch,shadow}){
   const RenderBack=appBar?.renderBack||null
   const ActionButton = appBar?.renderActionButton||null
-  const isBgSecondary = type==='titleSecondary'|type==='searchSecondary'|type==='defaultSearchNavbarMobile'
+  const isBgSecondary = type==='titleSecondary'|type==='searchSecondary'
   return(
     <div className={`${isBgSecondary?'bg-neutral-50':'bg-[#c22716]'} relative w-full h-auto max-h-[88px] p-4 pb-3 flex gap-2 ${shadow? 'shadow-lg':''}`}>
       <Image src='/img/fallinstartheader.png' width={153} height={62} alt='fallin' className='absolute right-0 bottom-0' />
@@ -95,7 +102,7 @@ export function HeaderTitleSearchMobile({appBar,type,title,onBack,searchPlacehol
         </span>:''
         }
         {(type==='search' || type==='searchSecondary')&&<Input classname={style.inputSearchMobile} placeholder={searchPlaceholder} value={searchValue} changeEvent={e=>setSearch({value:e.target.value})} />}
-        {(type==='title' || type==='titleSecondary' || type==='defaultSearchNavbarMobile')&&<span className={`font-bold text-base ${isBgSecondary?'text-[#176cf7]':'text-neutral-50'}`}>{title}</span>}
+        {(type==='title' || type==='titleSecondary')&&<span className={`font-bold text-base ${isBgSecondary?'text-[#176cf7]':'text-neutral-50'}`}>{title}</span>}
         {
           ActionButton?ActionButton:''
         }

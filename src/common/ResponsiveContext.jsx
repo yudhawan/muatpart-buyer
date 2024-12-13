@@ -22,7 +22,8 @@ function ResponsiveProvider({children}) {
         renderActionButton:null,
         renderAppBar:null,
         renderHeader:null,
-        shadow:true
+        shadow:true,
+        defaultType:''
     })
     const [search,editSearch] = useState({
         placeholder:'muatparts',
@@ -49,7 +50,8 @@ function ResponsiveProvider({children}) {
             renderHeader:null,
             renderBack:null,
             renderActionButton:null,
-            shadow:true
+            shadow:true,
+            defaultType:''
         })
     }
     const handleBack = ()=> {
@@ -66,7 +68,6 @@ function ResponsiveProvider({children}) {
             console.log('do something')
         }
     }
-    console.log(getGlobalPadding,isMobile)
     return (
         <ResponsiveContext.Provider value={{
             appBarType:getHeader.appBarType,
@@ -90,9 +91,9 @@ function ResponsiveProvider({children}) {
                 type={getHeader.appBarType}
             />
             {
-                DefaultScreen(getHeader.appBarType)?
-                <div style={{marginTop:`${isMobile&&getGlobalPadding?headerHeight+16:!isMobile&&getGlobalPadding?headerHeight:0}px`,}} className={`w-full ${getGlobalPadding?'max-w-[1280px] mx-auto':''}`}>
-                    {DefaultScreen(getHeader.appBarType)}
+                DefaultScreen(getHeader.defaultType)?
+                <div style={{marginTop:`${headerHeight}px`,}} className={`w-full ${getGlobalPadding?'max-w-[1280px] mx-auto':''}`}>
+                    {DefaultScreen(getHeader.defaultType)}
                 </div>
                 :children
             }

@@ -1,8 +1,8 @@
 import React from 'react'
 
-function ScreenSubCategories({data}) {
+function ScreenCategories({data}) {
   return (
-    <div className='w-full h-full flex flex-col bg-neutral-100'>
+    <div className='w-full h-full flex flex-col bg-neutral-100 containerMobile'>
       <ul className='list-none flex flex-col gap-4'>
         {
             data?.subCategories?.map(val=><li key={val.id}>
@@ -16,4 +16,4 @@ function ScreenSubCategories({data}) {
   )
 }
 
-export default ScreenSubCategories
+export default ScreenCategories
