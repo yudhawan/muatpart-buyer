@@ -27,9 +27,9 @@ function ResponsiveProvider({children}) {
     const [search,editSearch] = useState({
         placeholder:'muatparts',
         value:'',
-        type:'text'        
+        type:'text'
     })
-    
+
     const [screen,setScreen]=useState('')
     const [getGlobalPadding,setGlobalPadding]=useState(true)
     const {isMobile}=viewport()

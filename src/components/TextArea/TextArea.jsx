@@ -44,7 +44,7 @@ const TextArea = ({
       <div
         className={`flex w-full p-12 gap-[8px] ${
           disabled && style.input_disabled
-        } ${style.input_style} 
+        } ${style.input_style}
             ${
               status == "error"
                 ? style.border_red
@@ -68,7 +68,7 @@ const TextArea = ({
       </div>
       {(supportiveText.title || supportiveText.desc) && (
         <div
-          className={`flex justify-between ${style.supportive_text} 
+          className={`flex justify-between ${style.supportive_text}
                 ${
                   status == "error"
                     ? style.text_danger
@@ -78,15 +78,14 @@ const TextArea = ({
                 }`}
         >
           <span>{supportiveText.title}</span>
-          <span>{supportiveText.desc}</span>
-        </div>
-      )}
-      {hasCharCount && (
-        <div className="flex justify-end">
-          <span className={style.char_counter}>
-            {charCount}
-            {maxLength ? `/${maxLength}` : ""}
-          </span>
+          {hasCharCount ? (
+            <span className={style.char_counter}>
+              {charCount}
+              {maxLength ? `/${maxLength}` : ""}
+            </span>
+          ) : (
+            <span>{supportiveText.desc}</span>
+          )}
         </div>
       )}
     </div>

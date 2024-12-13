@@ -1,7 +1,5 @@
 .ImageUploader {
     border-radius: 12px;
-    width: 72px;
-    height: 72px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -17,8 +15,6 @@
 .ImageUploaderError {
     border-radius: 12px;
     border-color: #EE4343 !important;
-    width: 72px;
-    height: 72px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -26,6 +22,12 @@
     flex-direction: column;
     font-size: 12px;
     font-weight: 500;
+}
+
+.ImageUploader:hover, .ImageUploaderError:hover {
+    path {
+        stroke: var(--primary-700);
+    }
 }
 
 .ImageUploaderNull{

@@ -74,7 +74,7 @@ function HeaderContainerMobile({
             </div>
         }
       </div>}
-      
+
     </header>
   )
 }

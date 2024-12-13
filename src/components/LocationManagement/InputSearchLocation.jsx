@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import SWRHandler from "@/services/useSWRHook";
 import Input from "../Input/Input";
 import ModalComponent from "../Modals/ModalComponent";
 import Image from "next/image";
@@ -9,6 +8,7 @@ import Checkbox from "../Checkbox/Checkbox";
 import Button from "../Button/Button";
 
 const InputSearchLocation = ({
+  errors,
   searchResults,
   changeEvent,
   locationRef,
@@ -20,41 +20,9 @@ const InputSearchLocation = ({
     title: "",
   },
 }) => {
-  const DISTRICT_ENDPOINT = `${process.env.NEXT_PUBLIC_INTERNAL_API}/district_by_token`;
-
-  const swrHandler = new SWRHandler();
-  const [address, setAddress] = useState(addressValue);
-  const [location, setLocation] = useState({
-    id: locationValue.id,
-    title: locationValue.title,
-  });
-
-  const [district, setDistrict] = useState({
-    name: "",
-    value: "",
-  });
-  const [city, setCity] = useState({
-    name: "",
-    id: null,
-  });
-  const [province, setProvince] = useState({
-    name: "",
-    id: null,
-  });
-  const [postalCode, setPostalCode] = useState({
-    name: "",
-    value: "",
-  });
-  const [coordinates, setCoordinates] = useState({
-    lat: null,
-    long: null,
-  });
-
-  const [postalCodeList, setPostalCodeList] = useState([]);
-
+  const [location, setLocation] = useState(locationValue.title);
   const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const managedLocations = [
     {
       id: 1,
@@ -84,32 +52,9 @@ const InputSearchLocation = ({
     },
   ];
 
-  const districtFetcher = async (url) => {
-    const formData = new URLSearchParams();
-    formData.append("placeId", location.id);
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: formData.toString(),
-    });
-
-    return response.json();
-  };
-
-  const { data: districtData, error: districtError } = swrHandler.useSWRHook(
-    location.id ? DISTRICT_ENDPOINT : null,
-    districtFetcher,
-    (error) => {
-      // console.error("District fetch error:", error);
-    }
-  );
-
   const handleInputFocus = () => {
     setIsOpen(true);
-    if (!location.title && addressValue) {
+    if (!location && addressValue) {
       setLocation(addressValue);
     }
   };
@@ -141,20 +86,8 @@ const InputSearchLocation = ({
 
   const handleSelectLocation = (result) => {
     onClickSearchResult(result);
-    setLocation({
-      id: result.ID,
-      title: result.Title,
-    });
+    setLocation(result.title);
     setIsOpen(false);
-  };
-
-  const handleSaveLocation = (result) => {
-    setIsModalOpen(true);
-    setLocation({
-      id: result.id,
-      title: result.title,
-    });
-    console.log("addressValue:", addressValue);
   };
 
   useEffect(() => {
@@ -171,24 +104,13 @@ const InputSearchLocation = ({
 
   return (
     <>
-      {/* <pre>
-        {JSON.stringify(
-          {
-            location,
-            district,
-            city,
-            province,
-            postalCode,
-            coordinates,
-          },
-          null,
-          2
-        )}
-      </pre> */}
-
       <Input
+        status={`${errors.location && "error"}`}
+        supportiveText={{
+          title: `${errors.location ? errors.location : ""}`,
+        }}
         placeholder="Masukkan Lokasi Toko"
-        value={location.title}
+        value={location}
         changeEvent={handleInputChange}
         focusEvent={handleInputFocus}
       />
@@ -217,7 +139,7 @@ const InputSearchLocation = ({
 
               {searchResults?.map((result) => (
                 <div
-                  key={result.ID}
+                  key={result.id}
                   className="flex gap-3 justify-between items-start w-full mt-3"
                 >
                   <button
@@ -232,7 +154,7 @@ const InputSearchLocation = ({
                       className="object-contain shrink-0 w-5 aspect-square"
                     />
                     <div className="flex-1 shrink gap-2.5 self-stretch">
-                      {result.Title}
+                      {result.title}
                     </div>
                   </button>
                   <img
@@ -241,7 +163,7 @@ const InputSearchLocation = ({
                     }
                     alt=""
                     className="object-contain shrink-0 w-5 aspect-square cursor-pointer"
-                    onClick={() => handleSaveLocation(result)}
+                    onClick={() => setIsModalOpen(true)}
                   />
                 </div>
               ))}
@@ -295,9 +217,7 @@ const InputSearchLocation = ({
               ))}
 
               <div className="mt-3 text-xs font-medium leading-tight text-right text-blue-600">
-                <button onClick={() => setIsModalOpen(true)}>
-                  Lihat Manajemen Lokasi
-                </button>
+                <button>Lihat Manajemen Lokasi</button>
               </div>
             </div>
           </div>
@@ -306,8 +226,7 @@ const InputSearchLocation = ({
 
       <ModalComponent
         isOpen={isModalOpen}
-        preventAreaClose
-        setClose={() => setIsModalOpen(false)}
+        setIsOpen={() => setIsModalOpen(false)}
         classnameContent="w-[400px]"
         hideHeader
       >
@@ -333,7 +252,8 @@ const InputSearchLocation = ({
                   alt="marker"
                 />
                 <div className="font-semibold">
-                  {location.title || "Lokasi Toko"}
+                  Graha Airi, Jl. Kedung Doro No.101 A, RT.001/RW.06,
+                  Kedungdoro, Kec. Tegalsari, Surabaya, Jawa Timur 60261
                 </div>
               </div>
             </div>
@@ -346,46 +266,31 @@ const InputSearchLocation = ({
                 maxLength={60}
                 resize="none"
                 hasCharCount={false}
-                value={address}
-                changeEvent={(e) => setAddress(e.target.value)}
               />
             </div>
             <div className="">
               <div className="text-[10px] text-neutral-600 font-semibold">
                 Kecamatan
               </div>
-              <div className="font-semibold">{district.name}</div>
+              <div className="font-semibold">Tegalsari</div>
             </div>
             <div className="">
               <div className="text-[10px] text-neutral-600 font-semibold">
                 Kota
               </div>
-              <div className="font-semibold">{city.name}</div>
+              <div className="font-semibold">Surabaya</div>
             </div>
             <div className="">
               <div className="text-[10px] text-neutral-600 font-semibold">
                 Provinsi
               </div>
-              <div className="font-semibold">{province.name}</div>
+              <div className="font-semibold">Jawa Timur</div>
             </div>
             <div className="">
               <div className="text-[10px] text-neutral-600 font-semibold">
                 Kode Pos*
               </div>
-              <Dropdown
-                options={postalCodeList}
-                onSearchValue
-                placeholder="Pilih Kode Pos"
-                searchPlaceholder="Cari Kode Pos"
-                defaultValue={postalCode}
-                onSelected={(val) =>
-                  setPostalCode({
-                    name: val[0].name,
-                    value: val[0].value,
-                  })
-                }
-                classname="!w-full"
-              />
+              <Dropdown onSearchValue placeholder="Pilih Kode Pos" />
             </div>
             <div className="">
               <div className="text-[10px] text-neutral-600 font-semibold">

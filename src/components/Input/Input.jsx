@@ -3,8 +3,16 @@ import React, { forwardRef, useState } from "react";
 import style from "./Input.module.scss";
 import PropTypes from "prop-types";
 import IconComponent from "../IconComponent/IconComponent";
+"use client";
+import React, { forwardRef, useState } from "react";
+import style from "./Input.module.scss";
+import PropTypes from "prop-types";
+import IconComponent from "../IconComponent/IconComponent";
 
 const Input = ({
+  name,
+  type = "text",
+  placeholder = "Placeholder",
   name,
   type = "text",
   placeholder = "Placeholder",
@@ -14,6 +22,7 @@ const Input = ({
   text = { left: "", right: "" },
   supportiveText = { title: "", desc: "" },
   width = { width: "", maxWidth: "", minWidth: "" },
+  classInput,
   changeEvent = () => {},
   focusEvent = () => {},
   blurEvent = () => {},
@@ -32,7 +41,7 @@ const Input = ({
       <div
         className={`flex w-full p-12 gap-[8px] ${
           disabled && style.input_disabled
-        } ${style.input_style} 
+        } ${style.input_style}
         ${
           status == "error"
             ? style.border_red
@@ -91,7 +100,7 @@ const Input = ({
       </div>
       {(supportiveText.title || supportiveText.desc) && (
         <div
-          className={`flex justify-between ${style.supportive_text} 
+          className={`flex justify-between ${style.supportive_text}
           ${
             status == "error"
               ? style.text_danger

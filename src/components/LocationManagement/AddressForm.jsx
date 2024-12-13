@@ -63,6 +63,13 @@ const AddressForm = ({ AddressData, errors }) => {
 
   // Start Form Data
 
+  const autocompleteFormData = new FormData();
+  autocompleteFormData.append("phrase", location.title || address);
+  autocompleteFormData.append("dataType", "json");
+
+  const districtFormData = new FormData();
+  districtFormData.append("place_id", location.id);
+
   const latLongFormData = new FormData();
   latLongFormData.append("Lat", coordinates.lat);
   latLongFormData.append("Long", coordinates.long);
@@ -74,34 +81,18 @@ const AddressForm = ({ AddressData, errors }) => {
 
   // Start Fetchers
 
-  const autoCompleteFetcher = async (url) => {
-    const formData = new URLSearchParams();
-    formData.append("phrase", location.title || address);
-
-    const response = await fetch(url, {
+  const autoCompleteFetcher = (url) => {
+    return fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: formData.toString(),
-    });
-
-    return response.json();
+      body: autocompleteFormData,
+    }).then((res) => res.json());
   };
 
-  const districtFetcher = async (url) => {
-    const formData = new URLSearchParams();
-    formData.append("placeId", location.id);
-
-    const response = await fetch(url, {
+  const districtFetcher = (url) => {
+    return fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: formData.toString(),
-    });
-
-    return response.json();
+      body: districtFormData,
+    }).then((res) => res.json());
   };
 
   const latLongFetcher = (url) => {
@@ -125,7 +116,7 @@ const AddressForm = ({ AddressData, errors }) => {
   const { data: autocompleteData, error: autocompleteError } =
     swrHandler.useSWRHook(
       location.title.length > 2 || address.length > 2
-        ? AUTOCOMPLETE_ENDPOINT
+        ? `${process.env.NEXT_PUBLIC_INTERNAL_API}/get_autocomplete_street`
         : null,
       autoCompleteFetcher,
       (error) => {
@@ -134,7 +125,9 @@ const AddressForm = ({ AddressData, errors }) => {
     );
 
   const { data: districtData, error: districtError } = swrHandler.useSWRHook(
-    location.id ? DISTRICT_ENDPOINT : null,
+    location.id
+      ? `${process.env.NEXT_PUBLIC_INTERNAL_API}/get_districts_by_token`
+      : null,
     districtFetcher,
     (error) => {
       // console.error("District fetch error:", error);
@@ -250,7 +243,7 @@ const AddressForm = ({ AddressData, errors }) => {
   useEffect(() => {
     if (!districtData) return;
 
-    if (districtData.Message.Code === 400) {
+    if (districtData.Message.Code === 500) {
       setCoordinates({
         lat: districtData.Data.lat,
         long: districtData.Data.lng,
@@ -259,74 +252,70 @@ const AddressForm = ({ AddressData, errors }) => {
       return;
     }
 
-    if (districtData.Message.Code === 200) {
-      // Prepare all the new values first
-      const newDistrict = {
-        name: districtData.Data.Districts[0].District,
-        value: districtData.Data.Districts[0].DistrictID,
-      };
+    // Prepare all the new values first
+    const newDistrict = {
+      name: districtData.Data.Districts[0].District,
+      value: districtData.Data.Districts[0].DistrictID,
+    };
 
-      const newCity = {
-        name: districtData.Data.CompleteLocation.city,
-        id: districtData.Data.CompleteLocation.cityid,
-      };
+    const newCity = {
+      name: districtData.Data.CompleteLocation.city,
+      id: districtData.Data.CompleteLocation.cityid,
+    };
 
-      const newProvince = {
-        name: districtData.Data.CompleteLocation.province,
-        id: districtData.Data.CompleteLocation.provinceid,
-      };
+    const newProvince = {
+      name: districtData.Data.CompleteLocation.province,
+      id: districtData.Data.CompleteLocation.provinceid,
+    };
 
-      const newKecamatanList = districtData.Data.Districts[0].DistrictList.map(
-        (i) => ({
-          value: i.DistrictID,
-          name: i.District,
-        })
-      );
+    const newKecamatanList = districtData.Data.Districts[0].DistrictList.map(
+      (i) => ({
+        value: i.DistrictID,
+        name: i.District,
+      })
+    );
 
-      const newPostalCodeList = districtData.Data.Districts[0].PostalCodes.map(
-        (i) => ({
-          value: i.ID,
-          name: i.PostalCode,
-        })
-      );
+    const newPostalCodeList = districtData.Data.Districts[0].PostalCodes.map(
+      (i) => ({
+        value: i.ID,
+        name: i.PostalCode,
+      })
+    );
 
-      const findPostalCode = districtData.Data.Districts[0].PostalCodes.find(
-        (item) => item.PostalCode === districtData.Data.CompleteLocation.postal
-      );
+    const findPostalCode = districtData.Data.Districts[0].PostalCodes.find(
+      (item) => item.PostalCode === districtData.Data.CompleteLocation.postal
+    );
 
-      const newPostalCode = {
-        name: findPostalCode.Description,
-        value: findPostalCode.ID,
-      };
+    const newPostalCode = {
+      name: findPostalCode.Description,
+      value: findPostalCode.ID,
+    };
 
-      const newCoordinates = {
-        lat: districtData.Data.Lat,
-        long: districtData.Data.Long,
-      };
+    const newCoordinates = {
+      lat: districtData.Data.Lat,
+      long: districtData.Data.Long,
+    };
 
-      // Set all the states
-      setDistrict(newDistrict);
-      setCity(newCity);
-      setProvince(newProvince);
-      setKecamatanList(newKecamatanList);
-      setPostalCodeList(newPostalCodeList);
-      setPostalCode(newPostalCode);
-      setCoordinates(newCoordinates);
+    // Set all the states
+    setDistrict(newDistrict);
+    setCity(newCity);
+    setProvince(newProvince);
+    setKecamatanList(newKecamatanList);
+    setPostalCodeList(newPostalCodeList);
+    setPostalCode(newPostalCode);
+    setCoordinates(newCoordinates);
 
-      // Call AddressData with the new values
-      AddressData({
-        address,
-        location,
-        district: newDistrict,
-        city: newCity,
-        province: newProvince,
-        postalCode: newPostalCode,
-        coordinates: newCoordinates,
-      });
-
-      return;
-    }
-  }, [districtData, address, location]);
+    // Call AddressData with the new values
+    AddressData({
+      address,
+      location,
+      district: newDistrict,
+      city: newCity,
+      province: newProvince,
+      postalCode: newPostalCode,
+      coordinates: newCoordinates,
+    });
+  }, [districtData, address, location]); // Add other dependencies if needed
 
   useEffect(() => {
     if (manualSearchData) {
@@ -336,39 +325,22 @@ const AddressForm = ({ AddressData, errors }) => {
 
   useEffect(() => {
     if (latLongData) {
-      console.log("Lat Long Data", latLongData);
       // Handle the lat long data here
-      // if (latLongData.Message.Code === 200) {
-      //   // Additional logic here
-      // }
+      if (latLongData.Message.Code === 200) {
+        // Additional logic here
+      }
     }
   }, [latLongData]);
 
   return (
     <div className="space-y-4 my-4 mx-12 text-xs">
-      <pre>
-        {JSON.stringify(
-          {
-            address,
-            location,
-            district,
-            city,
-            province,
-            postalCode,
-            coordinates,
-          },
-          null,
-          2
-        )}
-      </pre>
-
-      <div className="flex">
+      <div className="flex items-baseline">
         <label className="w-1/3 text-neutral-600 font-medium">Alamat*</label>
         <div className="w-2/3">
           <TextArea
-            status={`${errors?.address && "error"}`}
+            status={`${errors?.email && "error"}`}
             supportiveText={{
-              title: `${errors?.address ? errors?.address : ""}`,
+              title: `${errors?.email ? errors?.email : ""}`,
             }}
             maxLength={60}
             resize="none"
@@ -379,16 +351,17 @@ const AddressForm = ({ AddressData, errors }) => {
         </div>
       </div>
 
-      <div className="flex">
+      <div className="flex items-baseline">
         <label className="w-1/3 text-neutral-600 font-medium">Lokasi*</label>
         <div className="w-2/3 relative" ref={locationRef}>
           <InputSearchLocation
             onClickSearchResult={(val) => {
               setLocation({
-                id: val.ID,
-                title: val.Title,
+                id: val.id,
+                title: val.title,
               });
             }}
+            errors={errors}
             onSelectLocation={(val) => {}}
             searchResults={autocompleteData?.slice(0, 3)}
             changeEvent={handleLocationChange}
@@ -399,7 +372,7 @@ const AddressForm = ({ AddressData, errors }) => {
         </div>
       </div>
 
-      <div className="flex">
+      <div className="flex items-baseline">
         <label className="w-1/3 text-neutral-600 font-medium">Kecamatan*</label>
         <div className="w-2/3">
           <Dropdown
@@ -414,25 +387,27 @@ const AddressForm = ({ AddressData, errors }) => {
                 value: val[0].value,
               })
             }
+            classname={`${errors.districtID ? "!border-error-500" : ""}`}
           />
+          {errors.districtID ? <span className="font-medium text-error-400 text-xs block mt-2">{errors.districtID}</span> : ''}
         </div>
       </div>
 
-      <div className="flex">
+      <div className="flex items-baseline">
         <label className="w-1/3 text-neutral-600 font-medium">Kota</label>
         <div className="w-2/3 text-neutral-900 font-medium">
           {city.name ? city.name : "-"}
         </div>
       </div>
 
-      <div className="flex">
+      <div className="flex items-baseline">
         <label className="w-1/3 text-neutral-600 font-medium">Provinsi</label>
         <div className="w-2/3 text-neutral-900 font-medium">
           {province.name ? province.name : "-"}
         </div>
       </div>
 
-      <div className="flex">
+      <div className="flex items-baseline">
         <label className="w-1/3 text-neutral-600 font-medium">Kode Pos*</label>
         <div className="w-2/3">
           <Dropdown
@@ -450,7 +425,7 @@ const AddressForm = ({ AddressData, errors }) => {
           />
         </div>
       </div>
-      <div className="flex">
+      <div className="flex items-baseline">
         <label className="w-1/3 text-neutral-600 font-medium">
           Titik Lokasi*
         </label>

@@ -3,7 +3,7 @@
 import LocationManagement from "@/components/LocationManagement/LocationManagement";
 
 function page() {
-  return <LocationManagement value={() => {}} />;
+  return <LocationManagement />;
 }
 
 export default page;
