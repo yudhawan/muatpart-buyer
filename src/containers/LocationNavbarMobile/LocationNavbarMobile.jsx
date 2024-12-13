@@ -26,11 +26,11 @@ function LocationNavbarMobile() {
             <Input classname={'bg-neutral-50'} focusEvent={()=>{
                 setScreen('cari_lokasi')
                 setAppBar({
-                    appBarType:'search',
+                    appBarType:'header_search',
                     onBack:()=>{
                         clearScreen()
                         setAppBar({
-                            appBarType:'title',
+                            appBarType:'header_title',
                             title:'Ke mana pesanan mau dikirim?',
                             defaultType:'defaultLocationNavbarMobile',
                             onBack:()=>clearScreen()

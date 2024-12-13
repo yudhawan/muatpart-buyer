@@ -1,7 +1,13 @@
-import React from "react";
 
-const page = () => {
-  return <div>Products</div>;
-};
+import Products from './Products';
 
-export default page;
+function Page() {
+    return (
+        <div className='w-full'>
+            <Products />
+        </div>
+    );
+}
+
+export default Page;
+  

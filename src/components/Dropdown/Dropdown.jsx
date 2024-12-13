@@ -3,8 +3,7 @@ import PropTypes from "prop-types";
 import IconComponent from "../IconComponent/IconComponent";
 import style from "./Dropdown.module.scss";
 
-const Dropdown = forwardRef(
-  (
+const Dropdown = (
     {
       options = [],
       classname,
@@ -19,8 +18,7 @@ const Dropdown = forwardRef(
       onCustom,
       textCustom,
       defaultValue,
-    },
-    ref
+    }
   ) => {
     const [isOpen, setIsOpen] = useState(showDropdown);
     const [selected, setSelected] = useState([]);
@@ -89,7 +87,6 @@ const Dropdown = forwardRef(
     return (
       <div ref={dropdownRef} className={`${style.main} ${classname}`}>
         <button
-          ref={ref}
           onClick={handleToggle}
           className={`${style.buttonPlace} ${
             !selected.length && "!text-neutral-600"
@@ -186,7 +183,7 @@ const Dropdown = forwardRef(
       </div>
     );
   }
-);
+
 
 export default Dropdown;
 

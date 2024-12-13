@@ -31,7 +31,7 @@ const Input = ({
       }}
     >
       <div
-        className={`flex w-full p-12 gap-[8px] ${
+        className={`flex w-full p-12 gap-[8px] items-center ${
           disabled && style.input_disabled
         } ${style.input_style}
         ${

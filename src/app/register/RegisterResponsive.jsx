@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 
 function RegisterResponsive() {
   const {
-    appBarType, //pilih salah satu : 'titleSecondary' || 'searchSecondary' || 'defaultSearchNavbarMobile' || 'search' || 'title'
+    appBarType, //pilih salah satu : 'header_title_secondary' || 'header_search_secondary' || 'defaultSearchNavbarMobile' || 'header_search' || 'header_title'
     appBar, // muncul ini : {onBack:null,title:'',showBackButton:true,appBarType:'',appBar:null,header:null}
     renderAppBarMobile, // untuk render komponen header mobile dengan memasukkanya ke useEffect atau by trigger function / closer
     setAppBar, // tambahkan payload seperti ini setAppBar({onBack:()=>setScreen('namaScreen'),title:'Title header',appBarType:'type'})
@@ -20,12 +20,12 @@ function RegisterResponsive() {
     if(screen==='example2'){
       setAppBar({
         title:'Example 2',
-        appBarType:'search',
+        appBarType:'header_search',
         onBack:()=>{
         setScreen('example')
           setAppBar({
             title:'Example',
-            appBarType:'title',
+            appBarType:'header_title',
             onBack:()=>clearScreen()
           })
         }
@@ -37,14 +37,14 @@ function RegisterResponsive() {
     if(screen==='example3'){
       setAppBar({
         title:'Example 3',
-        appBarType:'titleSecondary',
+        appBarType:'header_title_secondary',
         onBack:()=>setScreen('example2')
       })
     }
     if(screen==='example4'){
       setAppBar({
         title:'Example 4',
-        appBarType:'searchSecondary',
+        appBarType:'header_search_secondary',
         onBack:()=>setScreen('example3')
       })
       setSearch({
@@ -82,7 +82,7 @@ function RegisterResponsive() {
         setScreen('example')
         setAppBar({
           title:'Example',
-          appBarType:'title',
+          appBarType:'header_title',
           onBack:()=>clearScreen()
         })
       }} >To example Screen</button>

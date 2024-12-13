@@ -45,10 +45,30 @@
     div{
         height: 32px;
         background-color: var(--neutral-50);
+        // border: none;
+    }
+    input{
+        width: 100%;
+    }
+}
+.inputMobileCompact{
+    width: 100%;
+    div{
+        height: 32px;
+        background-color: var(--neutral-50);
         border: none;
     }
     input{
         width: 100%;
+    }
+}
+.inputMobileCompact:hover{
+    div{
+        border:none
+    }
+}.inputMobileCompact:focus{
+    div{
+        border:none
     }
 }
 .iconWhiteGarasi{

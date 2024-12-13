@@ -23,6 +23,7 @@ function ResponsiveProvider({children}) {
         renderAppBar:null,
         renderHeader:null,
         shadow:true,
+        showReset:true,
         defaultType:''
     })
     const [search,editSearch] = useState({
@@ -80,16 +81,13 @@ function ResponsiveProvider({children}) {
             setScreen,
             screen,
             setSearch,
+            showReset:getHeader.showReset,
             handleAction,
             setGlobalPadding,
             search,
             shadow:getHeader.shadow
         }}>
-            <HeaderContainer 
-                renderAppBarMobile={getHeader.renderAppBar} 
-                renderAppBar={getHeader.renderHeader}
-                type={getHeader.appBarType}
-            />
+            <HeaderContainer />
             {
                 DefaultScreen(getHeader.defaultType)?
                 <div style={{marginTop:`${headerHeight}px`,}} className={`w-full ${getGlobalPadding?'max-w-[1280px] mx-auto':''}`}>
