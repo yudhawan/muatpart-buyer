@@ -9,7 +9,7 @@ import Button from "@/components/Button/Button";
 import ProductComponent from "@/components/ProductComponent/ProductComponent";
 import ImageSlider from "@/components/ImageSlider/ImageSlider";
 
-function HomePageWeb({ lastSeenProducts }) {
+function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
   const [filter, setVehicle] = useState({
     vehicle: {
       name: "Semua Jenis Kendaraan",
@@ -77,6 +77,21 @@ function HomePageWeb({ lastSeenProducts }) {
     },
   ];
 
+  const bannerImages = [
+    {
+      src: "https://placehold.co/1000x250/blue/white",
+      alt: "Promotion image 1",
+    },
+    {
+      src: "https://placehold.co/1000x250/red/white",
+      alt: "Promotion image 2",
+    },
+    {
+      src: "https://placehold.co/1000x250/brown/white",
+      alt: "Promotion image 3",
+    },
+  ];
+
   const promotionImages = [
     {
       src: "https://placehold.co/500x250/blue/white",
@@ -99,8 +114,8 @@ function HomePageWeb({ lastSeenProducts }) {
   return (
     <div>
       <pre>{/* <code>{JSON.stringify(filter, null, 2)}</code> */}</pre>
-      <section className="bg-neutral-100">
-        <div className="flex justify-center gap-10 max-w-[1280px] mx-auto py-6">
+      <section className="bg-neutral-100 py-6">
+        <div className="flex justify-center gap-10 max-w-[1280px] mx-auto">
           <div className="max-w-[500px]">
             <ImageSlider baseImages={headerImages} />
           </div>
@@ -222,17 +237,71 @@ function HomePageWeb({ lastSeenProducts }) {
           </div>
         </div>
       </section>
-      <section className="flex py-6 mx-auto">
-        <ImageSlider baseImages={promotionImages} />
+      <section className="bg-white py-6">
+        <div className="w-[1000px] mx-auto">
+          <ImageSlider baseImages={bannerImages} />
+        </div>
       </section>
-      <section className="flex flex-col gap-4 w-[1080px] mx-auto py-6">
-        <h1 className="text-neutral-900 font-semibold text-base">
-          Terakhir Dilihat
-        </h1>
-        <div className="w-full flex gap-3 overflow-scroll no-scrollbar">
-          {lastSeenProducts.products.map((val) => {
-            return <ProductComponent key={val.id} {...val} />;
-          })}
+      <section className="bg-white py-6">
+        <div className="w-[1080px] mx-auto space-y-7">
+          <h1 className="text-neutral-900 font-bold text-lg">
+            Produk Yang Banyak Dikunjungi
+          </h1>
+          <div className="w-full grid grid-cols-6 gap-3">
+            {Array(Math.ceil(18 / mostVisitedProducts.products.length))
+              .fill(mostVisitedProducts.products)
+              .flat()
+              .slice(0, 18)
+              .map((val) => {
+                return <ProductComponent key={val.id} {...val} />;
+              })}
+          </div>
+
+          <Button Class="place-self-center">Muat Lebih Banyak</Button>
+        </div>
+      </section>
+
+      <section className="bg-white py-6">
+        <div className="w-[1080px] mx-auto space-y-7">
+          <h1 className="text-neutral-900 font-bold text-lg">
+            Mungkin Kamu Juga Suka
+          </h1>
+          <div className="w-full grid grid-cols-6 gap-3">
+            {Array(Math.ceil(18 / mostVisitedProducts.products.length))
+              .fill(mostVisitedProducts.products)
+              .flat()
+              .slice(0, 18)
+              .map((val) => {
+                return <ProductComponent key={val.id} {...val} />;
+              })}
+          </div>
+
+          <Button Class="place-self-center">Muat Lebih Banyak</Button>
+        </div>
+      </section>
+
+      <section className="bg-white py-6">
+        <div className="w-[1012px] mx-auto space-y-7">
+          <h1 className="text-neutral-900 font-bold text-lg">
+            Promo muatparts Mart
+          </h1>
+          <div className="flex gap-3">
+            <ImageSlider baseImages={promotionImages} />
+            <ImageSlider baseImages={promotionImages} />
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-6">
+        <div className="w-[1080px] mx-auto space-y-7">
+          <h1 className="text-neutral-900 font-bold text-lg">
+            Terakhir Dilihat
+          </h1>
+          <div className="w-full grid grid-cols-6 gap-3">
+            {lastSeenProducts.products.map((val) => {
+              return <ProductComponent key={val.id} {...val} />;
+            })}
+          </div>
         </div>
       </section>
     </div>

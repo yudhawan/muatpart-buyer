@@ -13,7 +13,12 @@ function HomePage() {
   if (typeof isMobile !== "boolean") return <></>; //buat skeleton
   if (isMobile)
     return <HomePageResponsive lastSeenProducts={mockProductsData} />;
-  return <HomePageWeb lastSeenProducts={mockProductsData} />;
+  return (
+    <HomePageWeb
+      lastSeenProducts={mockProductsData}
+      mostVisitedProducts={mockProductsData}
+    />
+  );
 }
 
 export default HomePage;
