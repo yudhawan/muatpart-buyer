@@ -24,7 +24,9 @@ function ResponsiveProvider({children}) {
         renderHeader:null,
         shadow:true,
         showReset:true,
-        defaultType:''
+        defaultType:'',
+        withSearchBottom:'',
+        blankBackground:false
     })
     const [search,editSearch] = useState({
         placeholder:'muatparts',
@@ -52,7 +54,9 @@ function ResponsiveProvider({children}) {
             renderBack:null,
             renderActionButton:null,
             shadow:true,
-            defaultType:''
+            defaultType:'',
+            withSearchBottom:'',
+            blankBackground:false
         })
     }
     const handleBack = ()=> {
@@ -85,7 +89,7 @@ function ResponsiveProvider({children}) {
             handleAction,
             setGlobalPadding,
             search,
-            shadow:getHeader.shadow
+            shadow:getHeader.shadow,
         }}>
             <HeaderContainer />
             {

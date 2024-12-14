@@ -33,7 +33,7 @@ function HomePageResponsive({lastSeenProducts}) {
             setCategory(val)
             setScreen('screenCategories')
             setAppBar({
-              appBarType:'titleModalSecondary',
+              appBarType:'header_title_modal_secondary',
               title:'Kategori '+val.name,
               onBack:()=>clearScreen(),
               renderActionButton:<span className='w-4 bg-transparent'></span>

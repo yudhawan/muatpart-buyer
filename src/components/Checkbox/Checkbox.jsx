@@ -4,7 +4,7 @@ import React, { useRef, useState } from 'react'
 import style from "./Checkbox.module.scss";
 import PropTypes from 'prop-types'
 
-const Checkbox = ({onChange = () => {}, label='label', value, disabled, children, checked = false, ...props}) => {
+const Checkbox = ({onChange = () => {}, label='label', value, disabled, children, checked = false, classname,...props}) => {
 
   const [checkedState, setChecked] = useState(checked)
 
@@ -23,7 +23,7 @@ const Checkbox = ({onChange = () => {}, label='label', value, disabled, children
   }
 
   return (
-    <div className={`${style.container_checkbox} flex gap-[8px] items-center`} onClick={checkedClick}>
+    <div className={`${style.container_checkbox} flex gap-[8px] items-center ${classname}`} onClick={checkedClick}>
         <input type="checkbox" ref={checkedRef} checked={checkedState} value={value} onChange={checkedClick} disabled={disabled} {...props}/>
         <span className={`${style.checkbox_primary}`}></span>
         <span className='select-none'>
@@ -43,4 +43,5 @@ Checkbox.propTypes = {
     value:PropTypes.string,
     children:PropTypes.element,
     disabled:PropTypes.bool,
+    classname:PropTypes.string
 }

@@ -32,7 +32,7 @@ function LocationNavbarMobile() {
                         setAppBar({
                             appBarType:'header_title',
                             title:'Ke mana pesanan mau dikirim?',
-                            defaultType:'defaultLocationNavbarMobile',
+                            defaultType:'default_location_navbar_mobile',
                             onBack:()=>clearScreen()
                         })
                     }

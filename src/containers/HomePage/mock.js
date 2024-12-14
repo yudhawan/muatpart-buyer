@@ -330,9 +330,9 @@ export const categories = [
   ];
   
   // Example of how to use:
-  console.log(categories[0].name); // "Electronics"
-  console.log(categories[0].subCategories[0].name); // "Smartphones"
-  console.log(categories[0].subCategories[0].items[0]); // "iPhones"
+  // console.log(categories[0].name); // "Electronics"
+  // console.log(categories[0].subCategories[0].name); // "Smartphones"
+  // console.log(categories[0].subCategories[0].items[0]); // "iPhones"
   
   // Example of finding a subcategory by ID
   const findSubCategory = (id) => {
