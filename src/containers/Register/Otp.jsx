@@ -5,24 +5,38 @@ import UpdateEmailModal from "./UpdateEmailModal";
 import Button from "@/components/Button/Button";
 import SWRHandler from '@/services/useSWRHook';
 import { useRouter } from 'next/navigation';
+import styles from "./Otp.module.scss"
+import registerForm from '@/store/registerForm';
+import IconComponent from '@/components/IconComponent/IconComponent';
+// import headerZustand from "@/store/zustand/header" // nanti kalo di rdp
 
-const Otp = () => {
+const Otp = ({ remainingTime }) => {
+  const [otp, setOtp] = useState(new Array(6).fill(""));
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
-  const [currentEmail, setCurrentEmail] = useState('angkutjayatrans@gmail.com');
-  const [timeLeft, setTimeLeft] = useState(120);
-  const [isTimerActive, setIsTimerActive] = useState(true);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [isTimerActive, setIsTimerActive] = useState(false);
   const [otpValue, setOtpValue] = useState('');
+  const [notification, setNotification] = useState(null)
+
+  const {
+    formData,
+  } = registerForm();
 
   const router = useRouter()
+  // const { setHeader } = headerZustand() // nanti kalo di rdp
 
   const { useSWRMutateHook } = new SWRHandler();
-  const { trigger: verifyOtp } = useSWRMutateHook(
-    process.env.NEXT_PUBLIC_API + 'v1/register/verify_otp',
-  'POST');
+  const { trigger: verifyOtp, error: errorVerifyOtp } = useSWRMutateHook(
+    process.env.NEXT_PUBLIC_API_HASYIM + 'v1/register/verify_otp',
+  'POST'
+  );
 
-  const handleEmailChange = (newEmail) => {
-    setCurrentEmail(newEmail);
-  };
+  const { data: dataResendOtp, trigger: resendOtp } = useSWRMutateHook(
+    process.env.NEXT_PUBLIC_API_HASYIM + 'v1/register/resend_otp',
+  'POST'
+  );
+
+  const expiresIn = dataResendOtp?.data.Data.expiresIn
 
   // Format seconds to MM:SS
   const formatTime = (seconds) => {
@@ -30,6 +44,34 @@ const Otp = () => {
     const remainingSeconds = seconds % 60;
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
+// nanti kalo di rdp
+  // useEffect(() => {
+  //   setHeader("")
+  // }, [])
+
+  // set error
+  useEffect(() => {
+    if (errorVerifyOtp) {
+      const message = errorVerifyOtp.response.data.Data.Message
+      const status = "error"
+      setNotification({ message, status })
+    }
+  }, [JSON.stringify(errorVerifyOtp)])
+
+  useEffect(() => {
+    if (remainingTime) {
+      setTimeLeft(remainingTime)
+      setIsTimerActive(true)
+    }
+  }, [remainingTime])
+
+  useEffect(() => {
+    if (expiresIn) {
+      setTimeLeft(expiresIn)
+      setIsTimerActive(true)
+      setNotification({ type: "success", message: "Berhasil mengirim ulang OTP" })
+    }
+  }, [expiresIn])
 
   // Start countdown timer
   useEffect(() => {
@@ -38,7 +80,7 @@ const Otp = () => {
       timerId = setTimeout(() => {
         setTimeLeft(timeLeft - 1);
       }, 1000);
-    } else if (timeLeft === 0) {
+    } else if (isTimerActive && timeLeft === 0) {
       setIsTimerActive(false);
     }
     return () => {
@@ -51,24 +93,26 @@ const Otp = () => {
   // Handle OTP completion
   useEffect(() => {
     const handleVerifyOtp = async () => {
-      await verifyOtp({ Email: "testeruser@yopmail.com", Otp: otpValue, Role: 5, SuperMenuID: 6 })
+      await verifyOtp({ 
+        Email: formData[0].email,
+        Otp: otpValue,
+        // Role: 5,
+        // SuperMenuID: 6 
+      })
         .then(() => {
           // nanti ganti dashboard
+          // setHeader(false) nanti di rdp
           router.push("/")
-        })
-        .catch(() => {
-          
         })
     };
 
     if (otpValue.length === 6) {
       handleVerifyOtp();
     }
-  }, [otpValue]);
+  }, [otpValue, formData[0].email]);
 
-  const handleResendCode = () => {
-    setTimeLeft(120);
-    setIsTimerActive(true);
+  const handleResendCode = async () => {
+    await resendOtp({ Email: formData[0].email })
   };
 
   return (
@@ -115,6 +159,21 @@ const Otp = () => {
             />
           </div>
 
+          {/* ERROR OR SUCCESS MESSAGE */}
+          {notification ? (
+            <div className={`
+              border py-[15px] px-3 justify-center flex flex-row gap-x-2.5 rounded-md w-[440px]
+              ${notification.status === "error" ? "bg-[#FFE5E5] border-[#F71717]" : "bg-[#F1FFEB] border-[#3ECD00]"}
+            `}
+            >
+              <IconComponent
+                classname={errorVerifyOtp ? styles.icon_error : ""}
+                src={errorVerifyOtp ? "/icons/info.svg" : "/icons/success-toast.svg"}
+              />
+              <span className="font-semibold text-[12px] leading-[14.4px]">{notification.message}</span>
+            </div>
+          ) : null}
+
           {/* Section 3: Main Form Content */}
           <div className="flex flex-col items-center w-full">
             {/* Email verification message */}
@@ -132,22 +191,25 @@ const Otp = () => {
                     Kode OTP dikirim ke email
                   </div>
                   <div className="text-[14px] leading-[16.8px] font-semibold text-gray-200 truncate max-w-[112px]">
-                    {currentEmail}
+                    {formData[0].email}
                   </div>
                 </div>
-                <button 
-                  className="px-3 py-1 text-xs font-semibold text-blue-600 bg-white rounded-xl"
+                <Button 
+                  Class={`!px-3 h-5 min-w-[unset] text-[10px] leading-[12px] font-semibold rounded-xl
+                    ${isTimerActive ? "" : "!text-primary-700 !bg-neutral-50"}
+                  `}
                   onClick={() => setIsEmailModalOpen(true)}
+                  disabled={isTimerActive}
                 >
                   Ganti
-                </button>
+                </Button>
               </div>
 
               <div className="flex gap-3 items-center mt-3 justify-center">
                 <label className="text-[14px] leading-[16.8px] font-bold text-white w-[102px]">
                   Masukkan OTP
                 </label>
-                <OtpInput onChange={setOtpValue} />
+                <OtpInput onChange={setOtpValue} otp={otp} setOtp={setOtp} />
               </div>
             </div>
 
@@ -194,8 +256,8 @@ const Otp = () => {
       <UpdateEmailModal 
         isOpen={isEmailModalOpen}
         setIsOpen={setIsEmailModalOpen}
-        currentEmail={currentEmail}
-        onEmailChange={handleEmailChange}
+        setNotification={setNotification}
+        setOtp={setOtp}
       />
     </div>
   );

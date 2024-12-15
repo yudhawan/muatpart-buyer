@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import BreadCrumb from "@/components/Breadcrumb/Breadcrumb";
 import Button from "@/components/Button/Button";
 import IconComponent from "@/components/IconComponent/IconComponent";
@@ -8,14 +8,19 @@ import InformasiTokoAkun from "@/containers/Register/InformasiTokoAkun";
 import Otp from "@/containers/Register/Otp";
 import InformasiPendaftarDanRekening from "@/containers/Register/InformasiPendaftarDanRekening";
 import KonfirmasiData from "@/containers/Register/KonfirmasiData";
+import registerForm from "@/store/registerForm";
 
 function RegisterWeb({
   handleNext,
   isSubmitting,
   bankOptions,
   hasVerifiedLegality,
-  hasVerifiedRekening
+  hasVerifiedRekening,
+  remainingTime
 }) {
+  const {
+    prevStep,
+  } = registerForm();
   const router = useRouter();
   const step = useSearchParams().get("step") || "1";
 
@@ -25,12 +30,16 @@ function RegisterWeb({
     "Konfirmasi Data",
   ];
 
-  const handleGoBack = () =>
-    step !== "1" && router.push(`/register?step=${Number(step) - 1}`);
+  const handleGoBack = () => {
+    if (step !== "1") {
+      prevStep();
+      router.push(`/register?step=${Number(step) - 1}`);
+    }
+  }
 
   return (
     <div>
-      {step === "4" ? <Otp /> : (
+      {step === "4" ? <Otp remainingTime={remainingTime} /> : (
         <div className="max-w-[758px] mx-auto mt-[108px] pb-5">
           <div className="bg-white rounded-[10px] border border-[#E5E7EB] shadow-muat">
             <div className="px-8 py-6">
@@ -62,7 +71,8 @@ function RegisterWeb({
                   hasVerifiedRekening={hasVerifiedRekening}
                 /> 
               ) : null}
-              {step === "3" && <KonfirmasiData />}
+              {/* SOS */}
+              {/* {step === "3" && <KonfirmasiData />} */} 
             </div>
           </div>
 

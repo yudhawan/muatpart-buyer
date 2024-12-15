@@ -1,28 +1,53 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from '@/components/Modals/modal';
 import Input from '@/components/Input/Input';
 import IconComponent from '@/components/IconComponent/IconComponent';
 import style from "./UpdateEmailModal.module.scss"
 import SWRHandler from '@/services/useSWRHook';
+import registerForm from '@/store/registerForm';
+// import { useSWRConfig } from 'swr';
 
 const UpdateEmailModal = ({ 
   isOpen, 
-  setIsOpen, 
-  currentEmail, 
-  onEmailChange 
+  setIsOpen,
+  setNotification,
+  setOtp
 }) => {
-  const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [error, setError] = useState("");
 
+  const {
+    formData,
+    setFormData
+  } = registerForm();
+
+  // const { mutate } = useSWRConfig()
   const { useSWRMutateHook } = new SWRHandler();
-  const { trigger: changeEmail } = useSWRMutateHook(
-    `${process.env.NEXT_PUBLIC_API}v1/register/change_email`,
-    "POST",
-    null,
-    (err) => {
-      console.log('err',err)
-    }
+  const { data: dataChangeEmail, trigger: changeEmail, error: errorChangeEmail } = useSWRMutateHook(
+    `${process.env.NEXT_PUBLIC_API_HASYIM}v1/register/change_email`,
+    "POST"
   );
+
+  useEffect(() => {
+    if (dataChangeEmail) {
+      setFormData([{ ...formData[0], email: dataChangeEmail.data.Data.newEmail }, formData[1]])
+      setNotification({ type: "success", message: "Berhasil mengubah email" })
+      setEmail("")
+      setIsOpen(false)
+      setOtp(new Array(6).fill(""))
+    }
+  }, [JSON.stringify(dataChangeEmail)])
+
+  useEffect(() => {
+    if (errorChangeEmail) {
+      const message = errorChangeEmail.response.data.Data?.Message
+      setError(message)
+    }
+  }, [JSON.stringify(errorChangeEmail)])
+
+  const handleEmailChange = (newEmail) => {
+    setEmail(newEmail)
+  };
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -46,14 +71,14 @@ const UpdateEmailModal = ({
     }
 
     // Validate if same as current email
-    if (email === currentEmail) {
+    if (email === formData[0].email) {
       setError('Email tidak boleh sama dengan sebelumya');
       return;
     }
 
-    await changeEmail({ OldEmail: "abc@gmail.com", NewEmail: email })
+    await changeEmail({ OldEmail: formData[0].email, NewEmail: email })
       .then((res) => {
-        console.log('res',res)
+        // mutate(`${process.env.NEXT_PUBLIC_API_HASYIM}v1/register/timer_otp?Email=${formData[0].email}&Type=18`)
       })
       .catch((err) => {
         console.log('err',err)
@@ -100,7 +125,7 @@ const UpdateEmailModal = ({
           type="email"
           placeholder="Masukkan email"
           value={email}
-          changeEvent={(e) => setEmail(e.target.value)}
+          changeEvent={(e) => handleEmailChange(e.target.value)}
           classname={error ? style.input_error : ""}
           icon={{
             left: '/icons/check-yellow.svg'

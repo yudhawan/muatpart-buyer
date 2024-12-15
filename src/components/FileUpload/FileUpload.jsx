@@ -30,7 +30,7 @@ const FileUpload = ({
 
   const { useSWRMutateHook } = new SWRHandler();
   const { trigger: triggerUploadPhoto } = useSWRMutateHook(
-    process.env.NEXT_PUBLIC_DEV_LINUX_API + 'v1/muatparts/product/photo',
+    process.env.NEXT_PUBLIC_API_HASYIM_DEVLINUX + 'v1/muatparts/product/photo',
     'POST',
     (url, arg) => {
       return axios({

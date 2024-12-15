@@ -20,12 +20,12 @@ const INITIAL_FORM = {
   },
   step2: {
     ktpFile: null,
-    ktpNo: null,
-    namaKtpPendaftar: "",
+    ktpNo: "",
+    ktpNama: "",
     hasBankAccount: false,
     bankID: null,
-    rekeningNumber: null,
-    namaPemilik: null,
+    accountNumber: "",
+    accountName: "",
   },
 };
 
@@ -49,19 +49,6 @@ const registerForm = create((set, get) => ({
       ),
       errors: {},
     }));
-  },
-
-  setFormData: (step, field, value) => {
-    set((state) => {
-      const newFormData = [...state.formData];
-      newFormData[step] = {
-        ...newFormData[step],
-        [field]: value,
-      };
-      return {
-        formData: newFormData
-      };
-    });
   },
 
   validateFirstStep: () => {
@@ -143,7 +130,7 @@ const registerForm = create((set, get) => ({
     const { formData } = get();
     const currentStepData = formData[1];
     const errors = {};
-console.log('curr',currentStepData)
+
     // Required KTP fields validation
     if (!currentStepData.ktpFile) {
       errors.ktpFile = "KTP Pendaftar wajib diisi";
@@ -155,8 +142,8 @@ console.log('curr',currentStepData)
       errors.ktpNo = "No. KTP Pendaftar harus 16 digit";
     }
 
-    if (!currentStepData.namaKtpPendaftar) {
-      errors.namaKtpPendaftar = "Nama KTP Pendaftar wajib diisi";
+    if (!currentStepData.ktpNama) {
+      errors.ktpNama = "Nama KTP Pendaftar wajib diisi";
     }
 
     // Bank account validation if hasBankAccount is true
@@ -165,13 +152,13 @@ console.log('curr',currentStepData)
         errors.bankName = "Nama Bank wajib dipilih";
       }
       
-      if (!currentStepData.rekeningNumber) {
-        errors.rekeningNumber = "Nomor Rekening wajib diisi";
+      if (!currentStepData.accountNumber) {
+        errors.accountNumber = "Nomor Rekening wajib diisi";
       }
 
-      // Validate that user has clicked 'Periksa' button by checking if namaPemilik exists
-      if (currentStepData.bankID && currentStepData.rekeningNumber && !currentStepData.namaPemilik) {
-        errors.rekeningNumber = "Nomor Rekening wajib diperiksa";
+      // Validate that user has clicked 'Periksa' button by checking if accountName exists
+      if (currentStepData.bankID && currentStepData.accountNumber && !currentStepData.accountName) {
+        errors.accountNumber = "Nomor Rekening wajib diperiksa";
       }
     }
 

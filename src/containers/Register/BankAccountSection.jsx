@@ -8,16 +8,11 @@ import registerForm from '@/store/registerForm';
 const BankAccountSection = ({ bankOptions, errors }) => {
   const {
     formData,
-    currentStep,
-    handleInputChange: handleFormDataChange,
-    // setFormData,
-    // validateStep,
-    // nextStep,
-    // prevStep,
+    handleInputChange: handleFormDataChange
   } = registerForm();
 
-  const bankNameValue = bankOptions.find(item => item.value === formData[currentStep].bankID)
-  const isBackAccountInifoFilled = bankNameValue && formData[currentStep].rekeningNumber
+  const bankNameValue = bankOptions.find(item => item.value === formData[1].bankID)
+  const isBackAccountInfoFilled = bankNameValue && formData[1].accountNumber
 
   const handleBankSelect = (selected) => {
     handleFormDataChange("bankID", selected[0]?.value)
@@ -28,10 +23,10 @@ const BankAccountSection = ({ bankOptions, errors }) => {
   };
 
   const handleCheckBankAccount = () => {
-    if (!isBackAccountInifoFilled) {
+    if (!isBackAccountInfoFilled) {
       return;
     }
-    handleFormDataChange("namaPemilik", "mulyono")
+    handleFormDataChange("accountName", "mulyono")
   }
 
   return (
@@ -64,34 +59,34 @@ const BankAccountSection = ({ bankOptions, errors }) => {
           </div>
           <div className="flex-1">
             <Input
-              name="rekeningNumber"
+              name="accountNumber"
               type="text"
               placeholder="Masukkan Nomor Rekening"
               width={{ width: "372px" }}
-              changeEvent={handleInputChange('rekeningNumber')}
-              status={errors.rekeningNumber ? 'error' : null}
-              supportiveText={{ title: errors.rekeningNumber }}
+              changeEvent={handleInputChange('accountNumber')}
+              status={errors.accountNumber ? 'error' : null}
+              supportiveText={{ title: errors.accountNumber }}
               text={{ right: (
                 <span
-                  className={`font-medium text-[12px] leading-[14.4px] ${!isBackAccountInifoFilled ? "text-neutral-500" : "text-primary-700 cursor-pointer"}`}
+                  className={`font-medium text-[12px] leading-[14.4px] ${!isBackAccountInfoFilled ? "text-neutral-500" : "text-primary-700 cursor-pointer"}`}
                   onClick={handleCheckBankAccount}
                 >
                   Periksa
                 </span>
               ) }}
-              value={formData[currentStep].rekeningNumber}
+              value={formData[1].accountNumber}
             />
           </div>
         </div>
 
-        {formData[currentStep].namaPemilik && (
+        {formData[1].accountName && (
           <div className="flex items-start">
             <div className="w-[291px] pt-1">
               <span className="font-medium text-[12px] leading-[14.4px] text-neutral-600">Nama Pemilik Rekening*</span>
             </div>
             <div className="flex-1">
               <span className="font-medium text-[12px] leading-[14.4px]">
-                {formData[currentStep].namaPemilik}
+                {formData[1].accountName}
               </span>
             </div>
           </div>

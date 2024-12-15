@@ -55,8 +55,10 @@ class SWRHandler {
       {
         onError: (err) => {
           this.interceptor = err.status;
+          console.log('cb',cbError)
           if (cbError) cbError(err);
           else {
+            console.log('nocberr')
             if (err.status === 401 || err.status === 403) {
               useToken.getState().clearToken();
             }

@@ -14,20 +14,9 @@ const InformasiPendaftarDanRekening = ({
 }) => {
   const {
     formData,
-    // currentStep,
     errors,
     handleInputChange: handleFormDataChange,
-    // setFormData,
-    // validateStep,
-    // nextStep,
-    // prevStep,
   } = registerForm();
-const currentStep = 1 // nanti dicomment
-// const hasVerifiedLegality = false,
-// hasVerifiedRekening = false
-
-  // const [touched, setTouched] = useState({});
-// console.log('err',errors)
 
   const handleFileUpload = (fileData) => {
     if (fileData === null) {
@@ -40,7 +29,6 @@ const currentStep = 1 // nanti dicomment
         name: fileData.name
       })
     }
-    // setTouched(prev => ({...prev, ktpFile: true}));
   };
 
   const handleFileUploadError = (error) => {
@@ -55,24 +43,6 @@ const currentStep = 1 // nanti dicomment
     handleFormDataChange(field, e.target.value)
   };
 
-  const handleSubmit = () => {
-    // const isValid = validateForm();
-    // if (isValid) {
-    //   console.log('Form submitted:', formData);
-    // } else {
-    //   setTouched({
-    //     ktpFile: true,
-    //     ktpNumber: true,
-    //     ktpName: true,
-    //     ...(showBankInfo && {
-    //       bankName: true,
-    //       accountNumber: true,
-    //       accountName: true
-    //     })
-    //   });
-    // }
-  };
-// console.log('form',formData[currentStep])
 	return (
 		<div className="mt-8">
 			<span className="font-semibold text-[18px] leading-[21.6px]">Data Pendaftar</span>
@@ -87,7 +57,7 @@ const currentStep = 1 // nanti dicomment
               <span
                 className="font-medium text-[12px] leading-[14.4px] text-success-400"
               >
-                {/* {merchantCompany?.legalityFile[0].file.split("/").at(-1)} */}
+                {formData[1].ktpFile?.name}
               </span>
             ) : (
               <div className="flex flex-col gap-2">
@@ -98,7 +68,7 @@ const currentStep = 1 // nanti dicomment
                   maxSize={5}
                   onSuccess={handleFileUpload}
                   onError={handleFileUploadError}
-                  value={formData[currentStep].ktpFile}
+                  value={formData[1].ktpFile}
                 />
                 {errors.ktpFile && (
                   <span className="text-[12px] font-medium text-error-400">{errors.ktpFile}</span>
@@ -115,7 +85,7 @@ const currentStep = 1 // nanti dicomment
 					<div className={`flex-1 ${hasVerifiedLegality ? "pt-[11px]" : ""}`}>
             {hasVerifiedLegality ? (
               <span className="font-medium text-[12px] leading-[14.4px]">
-                {formData[currentStep].ktpNo}
+                {formData[1].ktpNo}
               </span>
             ) : (
               <Input
@@ -126,7 +96,7 @@ const currentStep = 1 // nanti dicomment
                 changeEvent={handleInputChange('ktpNo')}
                 status={errors.ktpNo ? 'error' : null}
                 supportiveText={{ title: errors.ktpNo }}
-                value={formData[currentStep].ktpNo}
+                value={formData[1].ktpNo}
               />
             )}
           </div>
@@ -139,18 +109,18 @@ const currentStep = 1 // nanti dicomment
 					<div className={`flex-1 ${hasVerifiedLegality ? "pt-[11px]" : ""}`}>
             {hasVerifiedLegality ? (
               <span className="font-medium text-[12px] leading-[14.4px]">
-                {formData[currentStep].namaKtpPendaftar}
+                {formData[1].ktpNama}
               </span>
             ) : (
               <Input
-                name="namaKtpPendaftar"
+                name="ktpNama"
                 type="text"
                 placeholder="Masukkan Nama sesuai KTP"
                 width={{ width: "372px" }}
-                changeEvent={handleInputChange('namaKtpPendaftar')}
-                status={errors.namaKtpPendaftar ? 'error' : null}
-                supportiveText={{ title: errors.namaKtpPendaftar }}
-                value={formData[currentStep].namaKtpPendaftar}
+                changeEvent={handleInputChange('ktpNama')}
+                status={errors.ktpNama ? 'error' : null}
+                supportiveText={{ title: errors.ktpNama }}
+                value={formData[1].ktpNama}
               />
             )}
 					</div>
@@ -163,7 +133,7 @@ const currentStep = 1 // nanti dicomment
                 <Checkbox
                   label="Lengkapi Informasi Rekening Pencairan Dana"
                   onChange={({ checked }) => handleFormDataChange("hasBankAccount", checked)}
-                  checked={formData[currentStep].hasBankAccount}
+                  checked={formData[1].hasBankAccount}
                 />
                 <Tooltip
                   text="Lengkapi info rekening saat registrasi untuk memudahkan pencairan dana."
@@ -176,7 +146,7 @@ const currentStep = 1 // nanti dicomment
               </div>
             </div>
 
-            {formData[currentStep].hasBankAccount && (
+            {formData[1].hasBankAccount && (
               <BankAccountSection
                 bankOptions={bankOptions}
                 errors={errors}
