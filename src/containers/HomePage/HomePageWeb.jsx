@@ -12,27 +12,54 @@ import ImageSlider from "@/components/ImageSlider/ImageSlider";
 function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
   const [filter, setVehicle] = useState({
     vehicle: {
-      name: "Semua Jenis Kendaraan",
       value: "",
+      name: "",
     },
     brand: {
-      name: "Semua Brand",
       value: "",
+      name: "",
     },
     year: {
-      name: "Semua Tahun",
       value: "",
+      name: "",
     },
     model: {
-      name: "Semua Model",
       value: "",
+      name: "",
     },
     type: {
-      name: "Semua Tipe",
       value: "",
+      name: "",
     },
     keyword: "",
   });
+
+  // reset state
+  const resetFilter = () => {
+    setVehicle({
+      vehicle: {
+        value: "",
+        name: "",
+      },
+      brand: {
+        value: "",
+        name: "",
+      },
+      year: {
+        value: "",
+        name: "",
+      },
+      model: {
+        value: "",
+        name: "",
+      },
+      type: {
+        value: "",
+        name: "",
+      },
+      keyword: "",
+    });
+  };
 
   const [options, setOptions] = useState({
     vehicle: [
@@ -113,9 +140,11 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
 
   return (
     <div>
-      <pre>{/* <code>{JSON.stringify(filter, null, 2)}</code> */}</pre>
+      {/* <pre>
+        <code>{JSON.stringify(filter, null, 2)}</code>
+      </pre> */}
       <section className="bg-neutral-100 py-6">
-        <div className="flex justify-center gap-10 max-w-[1280px] mx-auto">
+        <div className="flex justify-center gap-10 max-w-7xl mx-auto">
           <div className="max-w-[500px]">
             <ImageSlider baseImages={headerImages} />
           </div>
@@ -129,13 +158,14 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
                 width={16}
                 height={16}
                 alt="reset"
-                onClick={() => {}}
+                onClick={() => resetFilter()}
                 className="cursor-pointer hover:rotate-45 transition-transform"
               />
             </div>
 
             <div className="grid grid-flow-row-dense grid-cols-4 grid-rows-3 gap-3">
               <Dropdown
+                defaultValue={filter.vehicle}
                 options={options.vehicle}
                 placeholder="Pilih Jenis Kendaraan"
                 classname="!w-full col-span-4"
@@ -152,6 +182,7 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
                 onSelected={(val) => setVehicle({ ...filter, vehicle: val[0] })}
               />
               <Dropdown
+                defaultValue={filter.brand}
                 options={options.brand}
                 placeholder="Pilih Brand"
                 classname="!w-full col-span-2"
@@ -168,6 +199,7 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
                 onSelected={(val) => setVehicle({ ...filter, brand: val[0] })}
               />
               <Dropdown
+                defaultValue={filter.year}
                 options={options.year}
                 placeholder="Pilih Tahun"
                 classname="!w-full col-span-2"
@@ -184,6 +216,7 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
                 onSelected={(val) => setVehicle({ ...filter, year: val[0] })}
               />
               <Dropdown
+                defaultValue={filter.model}
                 options={options.model}
                 placeholder="Pilih Model"
                 classname="!w-full col-span-2"
@@ -200,6 +233,7 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
                 onSelected={(val) => setVehicle({ ...filter, model: val[0] })}
               />
               <Dropdown
+                defaultValue={filter.type}
                 options={options.type}
                 placeholder="Pilih Tipe"
                 classname="!w-full col-span-2"
@@ -302,6 +336,70 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
               return <ProductComponent key={val.id} {...val} />;
             })}
           </div>
+        </div>
+      </section>
+
+      <section className="bg-neutral-100 relative">
+        <h1 className="text-neutral-900 my-10 font-bold text-[28px] text-center">
+          Keuntungan belanja di muatparts
+        </h1>
+        <div className="absolute flex flex-col items-center max-w-7xl left-0 right-0 bottom-0 mx-auto">
+          <div className="grid grid-cols-4 gap-14">
+            <div className="max-w-[200px] space-y-3">
+              <Image
+                src={"/img/web-keuntungan-1.png"}
+                alt="image"
+                width={185.4}
+                height={178}
+              />
+              <div className="text-center font-bold leading-5">
+                Layanan pengembalian 7 hari setelah pesanan selesai
+              </div>
+            </div>
+            <div className="max-w-[200px] space-y-3">
+              <Image
+                src={"/img/web-keuntungan-2.png"}
+                alt="image"
+                width={200}
+                height={200}
+              />
+              <div className="text-center font-bold leading-5">
+                Keamanan Pembayaran
+              </div>
+            </div>
+            <div className="max-w-[200px] space-y-3">
+              <Image
+                src={"/img/web-keuntungan-3.png"}
+                alt="image"
+                width={200}
+                height={200}
+              />
+              <div className="text-center font-bold leading-5">
+                Gratis Pengiriman
+              </div>
+            </div>
+            <div className="max-w-[200px] space-y-3">
+              <Image
+                src={"/img/web-keuntungan-4.png"}
+                alt="image"
+                width={200}
+                height={200}
+              />
+              <div className="text-center font-bold leading-5">
+                Sparepart Terlengkap
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white h-[200px] mt-24 w-full rounded-t-[40px]"></div>
+      </section>
+
+      <section className="bg-white py-16">
+        <h1 className="text-neutral-900 my-10 font-bold text-[28px] text-center">
+          Penjual yang Telah Bergabung
+        </h1>
+        <div className="w-[1120px] mx-auto">
+          <ImageSlider baseImages={bannerImages} />
         </div>
       </section>
     </div>

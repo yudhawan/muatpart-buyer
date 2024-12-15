@@ -1,9 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const ImageSlider = ({ baseImages }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(1); // Start at first real slide
   const [direction, setDirection] = useState("next");
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [dragOffset, setDragOffset] = useState(0);
+  const containerRef = useRef(null);
+  const transitionTimeoutRef = useRef(null);
 
   // Add the first image to the end and last image to the beginning for seamless loop
   const images = [
@@ -14,22 +19,86 @@ const ImageSlider = ({ baseImages }) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      handleNext();
+      if (!isDragging) {
+        handleNext();
+      }
     }, 3000);
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => {
+      clearInterval(interval);
+      if (transitionTimeoutRef.current) {
+        clearTimeout(transitionTimeoutRef.current);
+      }
+    };
+  }, [isDragging]);
+
+  const handleDragStart = (e) => {
+    if (isTransitioning) return; // Prevent dragging during transition
+    setIsDragging(true);
+    setIsTransitioning(false);
+    setStartX(e.type.includes("mouse") ? e.pageX : e.touches[0].pageX);
+  };
+
+  const handleDragMove = (e) => {
+    if (!isDragging) return;
+
+    const currentX = e.type.includes("mouse") ? e.pageX : e.touches[0].pageX;
+    const diff = currentX - startX;
+    const containerWidth = containerRef.current?.offsetWidth || 0;
+
+    // Limit drag to one slide width
+    const boundedDiff = Math.max(
+      Math.min(diff, containerWidth),
+      -containerWidth
+    );
+
+    setDragOffset(boundedDiff);
+  };
+
+  const resetToRealSlide = (index) => {
+    if (transitionTimeoutRef.current) {
+      clearTimeout(transitionTimeoutRef.current);
+    }
+    transitionTimeoutRef.current = setTimeout(() => {
+      setIsTransitioning(false);
+      setCurrentIndex(index);
+    }, 500);
+  };
+
+  const handleDragEnd = () => {
+    if (!isDragging) return;
+
+    setIsDragging(false);
+    setIsTransitioning(true);
+
+    const containerWidth = containerRef.current?.offsetWidth || 0;
+    const moveRatio = dragOffset / containerWidth;
+
+    if (moveRatio < -0.2) {
+      if (currentIndex >= images.length - 2) {
+        setCurrentIndex(images.length - 1);
+        resetToRealSlide(1);
+      } else {
+        setCurrentIndex(currentIndex + 1);
+      }
+    } else if (moveRatio > 0.2) {
+      if (currentIndex <= 1) {
+        setCurrentIndex(0);
+        resetToRealSlide(images.length - 2);
+      } else {
+        setCurrentIndex(currentIndex - 1);
+      }
+    }
+
+    setDragOffset(0);
+  };
 
   const handleNext = () => {
     setDirection("next");
     setIsTransitioning(true);
     setCurrentIndex((prev) => {
       if (prev >= images.length - 2) {
-        // Schedule reset to first real slide
-        setTimeout(() => {
-          setIsTransitioning(false);
-          setCurrentIndex(1);
-        }, 500);
+        resetToRealSlide(1);
         return images.length - 1;
       }
       return prev + 1;
@@ -40,12 +109,8 @@ const ImageSlider = ({ baseImages }) => {
     setDirection("prev");
     setIsTransitioning(true);
     setCurrentIndex((prev) => {
-      if (prev <= 0) {
-        // Schedule reset to last real slide
-        setTimeout(() => {
-          setIsTransitioning(false);
-          setCurrentIndex(images.length - 2);
-        }, 500);
+      if (prev <= 1) {
+        resetToRealSlide(images.length - 2);
         return 0;
       }
       return prev - 1;
@@ -53,37 +118,47 @@ const ImageSlider = ({ baseImages }) => {
   };
 
   const handleDotClick = (index) => {
+    if (isTransitioning) return;
     setIsTransitioning(true);
-    setDirection(index > currentIndex ? "next" : "prev");
-    setCurrentIndex(index + 1); // +1 because of the extra first slide
+    setDirection(index + 1 > currentIndex ? "next" : "prev");
+    setCurrentIndex(index + 1);
   };
 
-  const getSlideStyle = () => {
-    const baseStyle =
-      "absolute top-0 left-0 w-full h-full transition-all duration-500";
-    return `${baseStyle} ${
-      direction === "next" ? "animate-slideNext" : "animate-slidePrev"
-    }`;
+  const getTransform = () => {
+    const baseTransform = -currentIndex * 100;
+    const dragPercent =
+      (dragOffset / (containerRef.current?.offsetWidth || 1)) * 100;
+    return `translateX(${baseTransform + dragPercent}%)`;
   };
 
   return (
     <div className="relative w-full overflow-hidden bg-gray-100 rounded-xl">
       {/* Slider Container */}
       <div
-        className="relative h-full"
+        ref={containerRef}
+        className="relative h-full touch-pan-y"
         style={{
-          transform: `translateX(-${currentIndex * 100}%)`,
+          transform: getTransform(),
           transition: isTransitioning ? "transform 0.5s ease-in-out" : "none",
           display: "flex",
+          cursor: isDragging ? "grabbing" : "grab",
         }}
+        onMouseDown={handleDragStart}
+        onMouseMove={handleDragMove}
+        onMouseUp={handleDragEnd}
+        onMouseLeave={handleDragEnd}
+        onTouchStart={handleDragStart}
+        onTouchMove={handleDragMove}
+        onTouchEnd={handleDragEnd}
       >
         {images.map((image, idx) => (
           <div key={idx} className="min-w-full">
             <img
               src={image.src}
               alt={image.alt}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover select-none"
               loading={idx === 0 ? "eager" : "lazy"}
+              draggable={false}
             />
           </div>
         ))}
