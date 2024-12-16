@@ -21,9 +21,9 @@ function App({ children }) {
       <div
         style={{
           marginTop: `${headerHeight}px`,
-          height: `calc(100vh - ${headerHeight}px)`,
+          // height: `calc(100vh - ${headerHeight}px)`,
         }}
-        className={`w-full`}
+        className={`w-full bg-neutral-50`}
       >
         {children}
       </div>

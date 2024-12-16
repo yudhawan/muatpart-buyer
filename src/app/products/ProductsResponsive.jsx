@@ -14,6 +14,7 @@ import Input from '@/components/Input/Input'
 import { mockProductsData } from '@/containers/HomePage/mock'
 import ProductComponent from '@/components/ProductComponent/ProductComponent'
 import GarasiCardComponent from '@/components/GarasiCardComponent/GarasiCardComponent'
+import { categoriesDummy } from './screens/mockcategories'
 function ProductsResponsive({products}) {
   const menus=[
     {
@@ -91,7 +92,7 @@ function ProductsResponsive({products}) {
 
   if(screen==='filter') return <FilterScreenProduct isToko={getMenu?.id==='toko'} textLeft={getMenu?.id==='toko'?'Reset':''} textRight={getMenu?.id==='toko'?'Terapkan':''} />
   if(screen==='location') return <LokasiScreenProduct actionFilter={actionFilter} />
-  if(screen==='category') return <CategoryScreenProduct actionFilter={actionFilter} />
+  if(screen==='category') return <CategoryScreenProduct actionFilter={actionFilter} categories={categoriesDummy} />
   if(screen==='brand') return <BrandScreenProduct actionFilter={actionFilter} />
   // main screen
   return (
@@ -138,7 +139,7 @@ function ProductsResponsive({products}) {
               </div>
               <div className={`${getMenu?.id==='produk'?'flex-col':'flex-col-reverse'} flex gap-6`}>
                 <div className='flex flex-col gap-4'>
-                  <p className='font-semibold text-sm text-neutral-900 flex gap-1'>Email <p className='text-[10px]'>{'(Optional)'}</p></p>
+                  <span className='font-semibold text-sm text-neutral-900 flex gap-1'>Email <p className='text-[10px]'>{'(Optional)'}</p></span>
                   <Input placeholder='Contoh : brikobatubata@mail.com' value={getState.email} changeEvent={(e)=>setState(prev=>({...prev,email:e.target.value}))} />
                 </div>
                 <div className='flex flex-col gap-4'>

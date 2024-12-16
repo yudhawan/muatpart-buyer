@@ -7,16 +7,16 @@ export const filterProduct = create((set)=>({
         minimum: null,
         maximum: null
     },
-    distance: [],
+    distance: '',
     location: [],
     shipping: [],
-    lastActiveSeller: [],
+    lastActiveSeller: '',
     category: [],
     brand: [],
     saleType: '',
     promo: [],
     productType: '',
     productRating: [],
-    setProductFilter: (field,val)=>set({[field]:val})
+    setFilterProduct: (field,val)=>set({[field]:val})
 
 }))
