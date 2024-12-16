@@ -34,7 +34,9 @@ const registerForm = create((set, get) => ({
   currentStep: 0,
   errors: {},
   isSubmitting: false,
+  formIsFilled: false, // tambahkan state baru
 
+  setFormIsFilled: (value) => set({ formIsFilled: value }),
   setIsSubmitting: (value) => set({ isSubmitting: value }),
   setFormData: (newData) => set({ formData: newData }),
 
@@ -151,13 +153,17 @@ const registerForm = create((set, get) => ({
       if (!currentStepData.bankID) {
         errors.bankName = "Nama Bank wajib dipilih";
       }
-      
+
       if (!currentStepData.accountNumber) {
         errors.accountNumber = "Nomor Rekening wajib diisi";
       }
 
       // Validate that user has clicked 'Periksa' button by checking if accountName exists
-      if (currentStepData.bankID && currentStepData.accountNumber && !currentStepData.accountName) {
+      if (
+        currentStepData.bankID &&
+        currentStepData.accountNumber &&
+        !currentStepData.accountName
+      ) {
         errors.accountNumber = "Nomor Rekening wajib diperiksa";
       }
     }

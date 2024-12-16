@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import BreadCrumb from "@/components/Breadcrumb/Breadcrumb";
 import Button from "@/components/Button/Button";
@@ -16,11 +17,9 @@ function RegisterWeb({
   bankOptions,
   hasVerifiedLegality,
   hasVerifiedRekening,
-  remainingTime
+  remainingTime,
 }) {
-  const {
-    prevStep,
-  } = registerForm();
+  const { prevStep, formData } = registerForm();
   const router = useRouter();
   const step = useSearchParams().get("step") || "1";
 
@@ -35,18 +34,30 @@ function RegisterWeb({
       prevStep();
       router.push(`/register?step=${Number(step) - 1}`);
     }
-  }
+  };
+
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
 
   return (
     <div>
-      {step === "4" ? <Otp remainingTime={remainingTime} /> : (
+      {step === "4" ? (
+        <Otp remainingTime={remainingTime} />
+      ) : (
         <div className="max-w-[758px] mx-auto mt-[108px] pb-5">
-          <div className="bg-white rounded-[10px] border border-[#E5E7EB] shadow-muat">
+          <div
+            className={`bg-white ${
+              step === "3"
+                ? "!rounded-b-none !border-none shadow-[0px_4px_11px_0px_#41414140]"
+                : "shadow-muat"
+            } rounded-[10px] border border-[#E5E7EB]`}
+          >
             <div className="px-8 py-6">
               <div className="flex">
                 <IconComponent
-                  src='/icons/blue-arrow-left.svg'
-                  size='medium'
+                  src="/icons/blue-arrow-left.svg"
+                  size="medium"
                   onclick={step !== "1" ? handleGoBack : null}
                 />
                 <div className="flex flex-col flex-1 gap-y-3 ml-8 items-center">
@@ -57,8 +68,10 @@ function RegisterWeb({
                     data={BREADCRUMB_ITEMS.slice(0, step)}
                     maxWidth="188"
                     onclick={(val) => {
-                      const index = BREADCRUMB_ITEMS.findIndex(item => item === val)
-                      router.push(`/register?step=${Number(index)+1}`)
+                      const index = BREADCRUMB_ITEMS.findIndex(
+                        (item) => item === val
+                      );
+                      router.push(`/register?step=${Number(index) + 1}`);
                     }}
                   />
                 </div>
@@ -69,26 +82,37 @@ function RegisterWeb({
                   bankOptions={bankOptions}
                   hasVerifiedLegality={hasVerifiedLegality}
                   hasVerifiedRekening={hasVerifiedRekening}
-                /> 
+                />
               ) : null}
-              {/* SOS */}
-              {/* {step === "3" && <KonfirmasiData />} */} 
             </div>
           </div>
+          <div className="kadal">{step === "3" && <KonfirmasiData />}</div>
 
-          <div className="mt-6 flex justify-center">
+          <div className="mt-6 flex flex-col items-center gap-4 justify-center">
             <Button
               name="next"
               color="primary"
               onClick={handleNext}
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Loading..." : "Selanjutnya"}
+              {isSubmitting
+                ? "Loading..."
+                : step === "3"
+                ? "Daftar"
+                : "Selanjutnya"}
             </Button>
+            {step === "3" && (
+              <span className="font-medium text-xs text-neutral-900">
+                Baca{" "}
+                <span className="font-medium text-xs !text-primary-700">
+                  Syarat dan Ketentuan
+                </span>{" "}
+                muatparts Mart.
+              </span>
+            )}
           </div>
         </div>
       )}
-      
     </div>
   );
 }

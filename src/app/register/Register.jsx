@@ -30,6 +30,8 @@ function Register() {
     validateStep,
     nextStep,
     prevStep,
+    formIsFilled,
+    setFormIsFilled,
   } = registerForm();
   const {setDataToast, setShowToast} = toast()
 
@@ -76,7 +78,7 @@ function Register() {
       setFormData([{ ...formData[0], ...existingMerchantData }, formData[1]]);
     }
     if (step === "2") {
-      let newFormDataStepTwo = {} 
+      let newFormDataStepTwo = {}
       if (hasVerifiedLegality) {
         newFormDataStepTwo = {
           ...newFormDataStepTwo,
@@ -103,6 +105,13 @@ function Register() {
   }, [JSON.stringify(existingMerchantData), hasVerifiedLegality, hasVerifiedRekening, step])
 
   const handleNext = async () => {
+    console.log(currentStep, formIsFilled, " clicked nextt")
+    // Jika form sudah pernah diisi dan divalidasi sebelumnya
+    //  if (formIsFilled && (currentStep === 0 || currentStep === 1)) {
+    //    router.push("/register?step=3");
+    //    return;
+    //  }
+
     if (currentStep === 0 && validateFirstStep()) {
       try {
         setIsSubmitting(true);
@@ -129,11 +138,17 @@ function Register() {
               type: "success",
               message: "Data berhasil disimpan",
             });
-            nextStep()
-            router.push(`/register?step=${Number(step) + 1}`);
+
+            // Check if formIsFilled
+            if (formData.formIsFilled) {
+              router.push("/register?step=3");
+            } else {
+              nextStep();
+              router.push(`/register?step=${Number(step) + 1}`);
+            }
           })
           .catch((err) => {
-            console.log(err,errorSubmitData, " erddio");
+            console.log(err, errorSubmitData, " erddio");
             setShowToast(true);
             setDataToast({ type: "error", message: "Gagal menyimpan data" });
             setIsSubmitting(false);
@@ -144,8 +159,8 @@ function Register() {
     } else if (currentStep === 1 && validateSecondStep()) {
       const step2Data = {
         ...formData[1],
-        ktpFile: formData[1].ktpFile.url, 
-      }
+        ktpFile: formData[1].ktpFile.url,
+      };
       setIsSubmitting(true);
       await setLegality(step2Data)
         .then(() => {
@@ -160,8 +175,13 @@ function Register() {
             type: "success",
             message: "Data berhasil disimpan",
           });
-          nextStep()
-          router.push(`/register?step=${Number(step) + 1}`);
+          // Check if formIsFilled
+          if (formData.formIsFilled) {
+            router.push("/register?step=3");
+          } else {
+            nextStep();
+            router.push(`/register?step=${Number(step) + 1}`);
+          }
         })
         .catch((err) => {
           setShowToast(true);
@@ -170,17 +190,30 @@ function Register() {
         });
     } else if (currentStep === 2) {
       setIsSubmitting(true);
-      await registerSeller()
+      await registerSeller(null, {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdtMkBhei5jb20iLCJyb2xlIjoiZ20iLCJmdWxsTmFtZSI6IkdNIiwiaWQiOiI5Y2M4YWRiMi01NGI5LTQ1YzYtODZiNS0yNjk4ZDc4NzU2OWYiLCJpYXQiOjE3MzM0NjkxNTIsImV4cCI6MTczMzQ3MDk1Mn0.Jl6BJqTWozN52L4UTnDlHTkozISXQlG17q9838dJCjo",
+        },
+      })
         .then(() => {
           setIsSubmitting(false);
-          nextStep()
-          router.push(`/register?step=${Number(step) + 1}`);
+          // Check if formIsFilled
+          if (formData.formIsFilled) {
+            router.push("/register?step=3");
+          } else {
+            nextStep();
+            router.push(`/register?step=${Number(step) + 1}`);
+          }
         })
         .catch(() => {
           setShowToast(true);
-          setDataToast({ type: "error", message: "Gagal melakukan registrasi" });
+          setDataToast({
+            type: "error",
+            message: "Gagal melakukan registrasi",
+          });
           setIsSubmitting(false);
-        })
+        });
     }
   };
 
@@ -190,7 +223,7 @@ function Register() {
     <RegisterResponsive />
   ) : (
     <RegisterWeb
-      handleNext={handleNext} 
+      handleNext={handleNext}
       isSubmitting={isSubmitting}
       bankOptions={bankOptions}
       hasVerifiedLegality={hasVerifiedLegality}
