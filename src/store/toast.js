@@ -14,6 +14,9 @@ const toast = create((set) => ({
   setDataBottomsheet: (state) => set({ dataBottomsheet: state }),
   titleBottomsheet: "",
   setTitleBottomsheet: (state) => set({ titleBottomsheet: state }),
+  cleanBottomsheet: false,
+  setCleanBottomsheet: () =>
+    set((state) => ({ cleanBottomsheet: !state.cleanBottomsheet })),
   // sidebar show hide
   showSidebar: true,
   setShowSidebar: (showState) => set({ showSidebar: showState }),

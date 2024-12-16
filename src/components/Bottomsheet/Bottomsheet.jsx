@@ -15,7 +15,7 @@ const Bottomsheet = ({
     showBottomsheet,
     setShowBottomsheet,
     dataBottomsheet,
-    titleBottomsheet,
+    titleBottomsheet
   } = toast();
   const bottomsheetRef = useRef(null);
   const [startY, setStartY] = useState(null);
@@ -106,36 +106,37 @@ const Bottomsheet = ({
               className="w-[38px] h-1 rounded-[4px] bg-[#dddddd] mx-auto mb-3 cursor-grab active:cursor-grabbing"
               onTouchStart={handleTouchStart}
             />
-
-            <div
-              className={`flex ${
-                withReset && "justify-between"
-              } items-center mt-4`}
-            >
-              <IconComponent
-                classname="cursor-pointer"
-                color="primary"
-                src="../../icons/silang.svg"
-                width={20}
-                height={20}
-                onclick={() => setShowBottomsheet(false)}
-              />
-              <span
-                className={`font-bold text-sm text-neutral-900 w-64 text-center ${
-                  !withReset && "mx-auto -translate-x-3"
-                }`}
+            {titleBottomsheet === ' -' && (
+              <div
+                className={`flex ${
+                  withReset && "justify-between"
+                } items-center mt-4`}
               >
-                {titleBottomsheet || label}
-              </span>
-              {withReset && (
+                <IconComponent
+                  classname="cursor-pointer"
+                  color="primary"
+                  src="../../icons/silang.svg"
+                  width={20}
+                  height={20}
+                  onclick={() => setShowBottomsheet(false)}
+                />
                 <span
-                  className="font-semibold text-xs text-primary-700 -translate-x-2 cursor-pointer"
-                  onClick={onClickReset}
+                  className={`font-bold text-sm text-neutral-900 w-64 text-center ${
+                    !withReset && "mx-auto -translate-x-3"
+                  }`}
                 >
-                  Reset
+                  {titleBottomsheet || label}
                 </span>
-              )}
-            </div>
+                {withReset && (
+                  <span
+                    className="font-semibold text-xs text-primary-700 -translate-x-2 cursor-pointer"
+                    onClick={onClickReset}
+                  >
+                    Reset
+                  </span>
+                )}
+              </div>
+            )}
 
             <div className="mt-4 overflow-auto pr-1">
               {dataBottomsheet || children}

@@ -4,7 +4,7 @@ import registerForm from "@/store/registerForm";
 import { PencilLine } from "lucide-react";
 import { DivParticleRegister } from "./InformasiTokoAkun";
 
-const KonfirmasiData = () => {
+const KonfirmasiDataResponsive = () => {
   const { formData, formIsFilled, setFormIsFilled } = registerForm();
   const router = useRouter();
 
@@ -61,7 +61,7 @@ const KonfirmasiData = () => {
       case "No. Rekening":
         return (
           <span className="font-medium text-xs text-neutral-900">
-            {formData[0]?.rekening?.[0]?.accountNumber || "-"}
+            {formData[0]?.rekening?.[0]?.rekeningNumber || "-"}
           </span>
         );
       case "No. KTP Pendaftar":
@@ -150,7 +150,7 @@ const KonfirmasiData = () => {
               },
               {
                 title: "No. Rekening",
-                value: formData[0]?.rekening?.[0]?.accountNumber,
+                value: formData[0]?.rekening?.[0]?.rekeningNumber,
               },
             ],
       showMessage:
@@ -158,38 +158,31 @@ const KonfirmasiData = () => {
     },
   ];
 
-   const handleEdit = (section) => {
-     // Arahkan ke step yang sesuai berdasarkan section
-     switch (section.title) {
-       case "Informasi Toko":
-         router.push("/register?step=1");
-         break;
-       case "Data Pendaftar":
-       case "Informasi Rekening":
-         router.push("/register?step=2");
-         break;
-       default:
-         break;
-     }
-   };
+  const handleEdit = (section) => {
+    // Arahkan ke step yang sesuai berdasarkan section
+    switch (section.title) {
+      case "Informasi Toko":
+        router.push("/register?step=1");
+        break;
+      case "Data Pendaftar":
+      case "Informasi Rekening":
+        router.push("/register?step=2");
+        break;
+      default:
+        break;
+    }
+  };
 
   useEffect(() => {
     setFormIsFilled(true);
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-14 pb-24 bg-white min-h-screen">
       {sections.map((section, idx) => (
-        <div
-          key={idx}
-          className={`bg-white ${
-            idx === 0
-              ? "!rounded-t-none !border-t-none shadow-[0px_11px_11px_0px_#41414140]"
-              : "shadow-[0px_4px_11px_0px_#41414140]"
-          } rounded-xl p-6`}
-        >
+        <div key={idx} className={`bg-white`}>
           <div className="flex justify-between items-center">
-            <span className="text-neutral-900 font-semibold text-lg block">
+            <span className="text-neutral-900 font-semibold text-sm block">
               {section.title}
             </span>
             <div
@@ -203,7 +196,7 @@ const KonfirmasiData = () => {
 
           <div className="flex flex-col space-y-4 mt-5">
             {section.showMessage ? (
-              <span className="text-sm text-neutral-900">
+              <span className="text-xs text-neutral-900">
                 Anda dapat melengkapi nanti pada menu <b>Informasi Rekening</b>{" "}
                 atau memilih untuk melengkapi sekarang.
               </span>
@@ -213,7 +206,7 @@ const KonfirmasiData = () => {
                   key={fieldIdx}
                   title={field.title}
                   mustFill={false}
-                  classLabel="!w-[350px]"
+                  classLabel="!text-neutral-600"
                   classname={
                     field.title === "Logo Toko"
                       ? "!items-center"
@@ -225,10 +218,16 @@ const KonfirmasiData = () => {
               ))
             )}
           </div>
+          {sections.length - 1 !== idx && (
+            <hr className="border-neutral-500 my-4" />
+          )}
         </div>
       ))}
+      <div className="bg-[#D3EBFF] py-2 rounded-[5px] font-medium text-xs text-center shadow-muat">
+        Baca <span className="!text-primary-700">Syarat dan Ketentuan</span> Muatparts Mart.
+      </div>
     </div>
   );
 };
 
-export default KonfirmasiData;
+export default KonfirmasiDataResponsive;

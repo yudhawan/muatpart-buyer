@@ -231,8 +231,7 @@ function Register() {
   if (typeof isMobile !== "boolean") return null;
 
   return isMobile ? (
-    <RegisterResponsive 
-      step={step}
+    <RegisterResponsive
       bankOptions={bankOptions}
       hasVerifiedLegality={hasVerifiedLegality}
       hasVerifiedRekening={hasVerifiedRekening}
@@ -240,6 +239,9 @@ function Register() {
       errorVerifyOtp={errorVerifyOtp}
       expiresIn={expiresIn}
       resendOtp={resendOtp}
+      handleNext={handleNext}
+      isSubmitting={isSubmitting}
+      remainingTime={remainingTime}
     />
   ) : (
     <RegisterWeb

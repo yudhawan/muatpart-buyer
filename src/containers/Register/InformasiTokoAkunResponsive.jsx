@@ -8,10 +8,12 @@ import registerForm from "@/store/registerForm";
 import ImageUploaderRegister from "@/components/ImageUploader/ImageUploaderRegister";
 import { Dropdown } from "@/app/garasi/page";
 import SWRHandler from "@/services/useSWRHook";
+import { DivParticleRegister } from "./InformasiTokoAkun";
+import ImageUploaderRegisterResponsive from "@/components/ImageUploader/ImageUploaderRegisterResponsive";
 
 const api = process.env.NEXT_PUBLIC_API_HASYIM;
 
-const InformasiTokoAkun = () => {
+const InformasiTokoAkunResponsive = () => {
   const [selectedEntityId, setSelectedEntityId] = useState("");
   const [manajemenLokasi, setManajemenLokasi] = useState();
   const [defaultManajemenLokasi, setDefaultManajemenLokasi] = useState(null);
@@ -75,9 +77,9 @@ const InformasiTokoAkun = () => {
     console.log(merchantData, businessEntities, " kadal");
     if (merchantData.businessEntityID && businessEntities) {
       const entity = businessEntities.find(
-        (item) => item.ID === merchantData.businessEntityID
+        (item) => item.ID == merchantData.businessEntityID
       );
-      console.log(entity, " tokeek")
+      console.log(entity, " tokeek");
       if (entity) setSelectedEntityId(entity.Description);
     }
   };
@@ -102,12 +104,12 @@ const InformasiTokoAkun = () => {
   };
 
   return (
-    <>
-      <span className="text-neutral-900 font-semibold text-lg block mb-4 mx-12">
+    <div className="pt-14 pb-24 bg-white min-h-screen">
+      <h1 className="text-sm font-semibold text-neutral-900 mb-5">
         Informasi Toko
-      </span>
+      </h1>
 
-      <div className="flex flex-col space-y-4 mx-12">
+      <div className="space-y-4">
         {/* Tipe Toko */}
         <DivParticleRegister title="Tipe Toko" mustFill={false}>
           <div className="flex gap-[18px]">
@@ -125,7 +127,6 @@ const InformasiTokoAkun = () => {
             ))}
           </div>
         </DivParticleRegister>
-
         {/* Conditional Company Fields */}
         {formData[0].tipeToko === 1 && (
           <>
@@ -168,7 +169,6 @@ const InformasiTokoAkun = () => {
             </DivParticleRegister>
           </>
         )}
-
         {/* Store Name */}
         <DivParticleRegister title="Nama Toko">
           <Input
@@ -183,65 +183,42 @@ const InformasiTokoAkun = () => {
             changeEvent={(e) =>
               handleInputWithTrim("storeName", e.target.value)
             }
+            classInput="!max-w-full"
           />
         </DivParticleRegister>
-
         {/* Store Logo */}
         <DivParticleRegister
           title="Logo Toko"
           mustFill={false}
           classname="!items-center"
         >
-          <ImageUploaderRegister
+          <ImageUploaderRegisterResponsive
             value={(e) => handleInputChange("logo", e)}
             defaultValue={formData[0].logo}
           />
         </DivParticleRegister>
-      </div>
-
-      {/* Location Management */}
-      <LocationManagement
-        value={setManajemenLokasi}
-        defaultValue={defaultManajemenLokasi}
-        errors={errors}
-      />
-
-      {/* Email */}
-      <DivParticleRegister title="Email" classname="mx-12">
-        <Input
-          status={errors.email ? "error" : ""}
-          supportiveText={{
-            title: errors.email || "",
-          }}
-          value={formData[0].email}
-          placeholder="Masukkan Email"
-          maxLength="60"
-          changeEvent={(e) => handleInputChange("email", e.target.value)}
+        {/* Location Management */}
+        <LocationManagement
+          value={setManajemenLokasi}
+          defaultValue={defaultManajemenLokasi}
+          errors={errors}
         />
-      </DivParticleRegister>
-    </>
+        {/* Email */}
+        <DivParticleRegister title="Email">
+          <Input
+            status={errors.email ? "error" : ""}
+            supportiveText={{
+              title: errors.email || "",
+            }}
+            placeholder="Masukkan Email"
+            value={formData[0].email}
+            className="w-full"
+            changeEvent={(e) => handleInputChange("email", e.target.value)}
+          />
+        </DivParticleRegister>
+      </div>
+    </div>
   );
 };
 
-export const DivParticleRegister = ({
-  title,
-  children,
-  mustFill = true,
-  classname,
-  classLabel,
-  classValue,
-}) => (
-  <div
-    className={`flex sm:flex-col sm:gap-2 sm:w-full items-baseline ${classname}`}
-  >
-    <label
-      className={`w-1/3 text-neutral-600 font-medium sm:font-semibold sm:text-sm sm:text-neutral-900 sm:w-full text-xs ${classLabel}`}
-    >
-      {title}
-      {mustFill && "*"}
-    </label>
-    <div className={`w-2/3 sm:w-full ${classValue}`}>{children}</div>
-  </div>
-);
-
-export default InformasiTokoAkun;
+export default InformasiTokoAkunResponsive;

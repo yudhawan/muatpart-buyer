@@ -126,7 +126,7 @@ export const Dropdown = ({
 
       {/* Dropdown menu */}
       {isOpen && (
-        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg !font-medium !text-xs">
+        <div className="absolute z-10 w-full mt-1 sm:mt-0 sm:border-primary-700 bg-white border border-gray-200 rounded-lg shadow-lg !font-medium !text-xs">
           {withSearch && (
             <div className="p-2">
               <div className="relative">
@@ -151,7 +151,7 @@ export const Dropdown = ({
             {filteredOptions?.map((option) => (
               <button
                 key={option}
-                className="w-full px-4 py-2 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 truncate"
+                className="w-full px-4 py-2 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 sm:text-neutral-600 sm:px-[10px] truncate"
                 onClick={() => handleSelect(option)}
               >
                 {option}
@@ -400,12 +400,16 @@ export const vehicleData = {
   },
 };
 
-export const ButtonSubmitMobileNav = ({ title, onclick }) => {
+export const ButtonSubmitMobileNav = ({ title, onclick, children }) => {
   return (
     <div className="fixed bottom-0 left-0 w-full py-3 px-4 shadow-muat rounded-t-[10px] z-30 bg-white">
-      <Button onClick={onclick} Class="!min-w-full !w-full !font-semibold">
-        {title}
-      </Button>
+      {children ? (
+        children
+      ) : (
+        <Button onClick={onclick} Class="!min-w-full !w-full !font-semibold">
+          {title}
+        </Button>
+      )}
     </div>
   );
 };
