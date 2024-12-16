@@ -1,16 +1,11 @@
 import { useRef, useEffect } from 'react';
 
-const OtpInput = ({ onChange, otp, setOtp }) => {
+const OtpInput = ({ otp, setOtp }) => {
 	const inputRefs = useRef([]);
 
 	useEffect(() => {
 		inputRefs.current = inputRefs.current.slice(0, 6);
 	}, []);
-
-	useEffect(() => {
-    const otpString = otp.join('');
-    onChange?.(otpString);
-  }, [otp, onChange]);
 
 	const handleChange = (element, index) => {
 		const value = element.value;

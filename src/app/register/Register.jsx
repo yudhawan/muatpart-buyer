@@ -144,11 +144,10 @@ function Register() {
               router.push("/register?step=3");
             } else {
               nextStep();
-              router.push(`/register?step=${Number(step) + 1}`);
+              router.push(`/register?step=${currentStep}`);
             }
           })
           .catch((err) => {
-            console.log(err, errorSubmitData, " erddio");
             setShowToast(true);
             setDataToast({ type: "error", message: "Gagal menyimpan data" });
             setIsSubmitting(false);
@@ -180,7 +179,7 @@ function Register() {
             router.push("/register?step=3");
           } else {
             nextStep();
-            router.push(`/register?step=${Number(step) + 1}`);
+            router.push(`/register?step=${currentStep}`);
           }
         })
         .catch((err) => {
@@ -203,7 +202,7 @@ function Register() {
             router.push("/register?step=3");
           } else {
             nextStep();
-            router.push(`/register?step=${Number(step) + 1}`);
+            router.push(`/register?step=${currentStep}`);
           }
         })
         .catch(() => {

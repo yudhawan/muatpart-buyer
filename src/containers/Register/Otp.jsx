@@ -15,7 +15,6 @@ const Otp = ({ remainingTime }) => {
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
   const [isTimerActive, setIsTimerActive] = useState(false);
-  const [otpValue, setOtpValue] = useState('');
   const [notification, setNotification] = useState(null)
 
   const {
@@ -67,6 +66,7 @@ const Otp = ({ remainingTime }) => {
 
   useEffect(() => {
     if (expiresIn) {
+      console.log("expires",expiresIn)
       setTimeLeft(expiresIn)
       setIsTimerActive(true)
       setNotification({ type: "success", message: "Berhasil mengirim ulang OTP" })
@@ -95,7 +95,7 @@ const Otp = ({ remainingTime }) => {
     const handleVerifyOtp = async () => {
       await verifyOtp({ 
         Email: formData[0].email,
-        Otp: otpValue,
+        Otp: otp.join(""),
         // Role: 5,
         // SuperMenuID: 6 
       })
@@ -106,13 +106,16 @@ const Otp = ({ remainingTime }) => {
         })
     };
 
-    if (otpValue.length === 6) {
+    if (otp.length === 6 && !otp.includes("")) {
       handleVerifyOtp();
     }
-  }, [otpValue, formData[0].email]);
+  }, [otp, formData[0].email]);
 
   const handleResendCode = async () => {
     await resendOtp({ Email: formData[0].email })
+      .then(() => {
+        setOtp(new Array(6).fill(""))
+      })
   };
 
   return (
@@ -209,7 +212,7 @@ const Otp = ({ remainingTime }) => {
                 <label className="text-[14px] leading-[16.8px] font-bold text-white w-[102px]">
                   Masukkan OTP
                 </label>
-                <OtpInput onChange={setOtpValue} otp={otp} setOtp={setOtp} />
+                <OtpInput otp={otp} setOtp={setOtp} />
               </div>
             </div>
 

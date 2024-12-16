@@ -205,16 +205,22 @@ const InformasiTokoAkunResponsive = () => {
         />
         {/* Email */}
         <DivParticleRegister title="Email">
-          <Input
-            status={errors.email ? "error" : ""}
-            supportiveText={{
-              title: errors.email || "",
-            }}
-            placeholder="Masukkan Email"
-            value={formData[0].email}
-            className="w-full"
-            changeEvent={(e) => handleInputChange("email", e.target.value)}
-          />
+          {merchantData?.Data?.isVerifEmail ? (
+            <span className="text-xs font-medium text-neutral-900">
+              {formData[0].email}
+            </span>
+          ) : (
+            <Input
+              status={errors.email ? "error" : ""}
+              supportiveText={{
+                title: errors.email || "",
+              }}
+              value={formData[0].email}
+              placeholder="Masukkan Email"
+              maxLength="60"
+              changeEvent={(e) => handleInputChange("email", e.target.value)}
+            />
+          )}
         </DivParticleRegister>
       </div>
     </div>

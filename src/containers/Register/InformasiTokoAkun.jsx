@@ -72,12 +72,10 @@ const InformasiTokoAkun = () => {
   };
 
   const setBusinessEntityData = (merchantData, businessEntities) => {
-    console.log(merchantData, businessEntities, " kadal");
     if (merchantData.businessEntityID && businessEntities) {
       const entity = businessEntities.find(
-        (item) => item.ID === merchantData.businessEntityID
+        (item) => item.ID == merchantData.businessEntityID
       );
-      console.log(entity, " tokeek")
       if (entity) setSelectedEntityId(entity.Description);
     }
   };
@@ -208,16 +206,20 @@ const InformasiTokoAkun = () => {
 
       {/* Email */}
       <DivParticleRegister title="Email" classname="mx-12">
-        <Input
-          status={errors.email ? "error" : ""}
-          supportiveText={{
-            title: errors.email || "",
-          }}
-          value={formData[0].email}
-          placeholder="Masukkan Email"
-          maxLength="60"
-          changeEvent={(e) => handleInputChange("email", e.target.value)}
-        />
+        {merchantData?.Data?.isVerifEmail ? (
+          <span className="text-xs font-medium text-neutral-900">{formData[0].email}</span>
+        ) : (
+          <Input
+            status={errors.email ? "error" : ""}
+            supportiveText={{
+              title: errors.email || "",
+            }}
+            value={formData[0].email}
+            placeholder="Masukkan Email"
+            maxLength="60"
+            changeEvent={(e) => handleInputChange("email", e.target.value)}
+          />
+        )}
       </DivParticleRegister>
     </>
   );

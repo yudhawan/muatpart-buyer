@@ -1,3 +1,5 @@
+
+import InformasiPendaftarDanRekeningResponsive from "@/containers/Register/InformasiPendaftarDanRekeningResponsive";
 import React, { useEffect } from "react";
 import { useHeader } from "@/common/ResponsiveContext";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -47,17 +49,9 @@ function RegisterResponsive({
         </button>
       </div>
     );
-  if (screen === "example2")
+  if (step === "2")
     return (
-      <div className=" flex flex-col">
-        <p>Example 2</p>
-        <button
-          className="bg-primary-600"
-          onClick={() => setScreen("example3")}
-        >
-          Go to Example 3
-        </button>
-      </div>
+      <InformasiPendaftarDanRekeningResponsive />
     );
   if (screen === "example3")
     return (
