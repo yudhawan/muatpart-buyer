@@ -142,7 +142,7 @@ function HeaderContainerWeb({ renderAppBar }) {
             {tips.map((val, i) => {
               if (i == 0)
                 return (
-                  <div className="w-full py-3 px-6 border-t border-neutral-400 flex ">
+                  <div key={i} className="w-full py-3 px-6 border-t border-neutral-400 flex ">
                     <span className="text-primary-700 text-xs font-bold w-1/2">
                       {val.left}
                     </span>
@@ -153,7 +153,7 @@ function HeaderContainerWeb({ renderAppBar }) {
                 );
               if (i == tips.length - 1)
                 return (
-                  <div className="w-full py-3 px-6 border-y border-neutral-400 flex ">
+                  <div key={i} className="w-full py-3 px-6 border-y border-neutral-400 flex ">
                     <span className="text-neutral-900 text-[10px] font-medium w-1/2">
                       {val.left}
                     </span>
@@ -163,7 +163,7 @@ function HeaderContainerWeb({ renderAppBar }) {
                   </div>
                 );
               return (
-                <div className="w-full py-3 px-6 border-t border-neutral-400 flex ">
+                <div key={i} className="w-full py-3 px-6 border-t border-neutral-400 flex ">
                   <span className="text-neutral-900 text-[10px] font-medium w-1/2">
                     {val.left}
                   </span>
@@ -256,9 +256,10 @@ function HeaderContainerWeb({ renderAppBar }) {
                     <div className="hidden absolute group-hover:flex top-2 right-0 pt-4">
                       <div className="bg-white z-[91] w-[327px] p-4 cursor-default h-[192px] flex rounded-lg p4 divide-x-2 divide-neutral-500 shadow-xl">
                         <div className="flex flex-col gap-4 pr-3">
-                          {getProfile.map((val) => {
+                          {getProfile.map((val,i) => {
                             return (
                               <Link
+                                key={i}
                                 href={val.url}
                                 className="flex items-center justify-between gap-4 w-full"
                               >
