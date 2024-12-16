@@ -220,7 +220,9 @@ function Register() {
   if (typeof isMobile !== "boolean") return null;
 
   return isMobile ? (
-    <RegisterResponsive />
+    <RegisterResponsive 
+      step={step}
+    />
   ) : (
     <RegisterWeb
       handleNext={handleNext}

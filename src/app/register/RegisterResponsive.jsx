@@ -1,7 +1,10 @@
 import { useHeader } from "@/common/ResponsiveContext";
+import InformasiPendaftarDanRekeningResponsive from "@/containers/Register/InformasiPendaftarDanRekeningResponsive";
 import React, { useEffect } from "react";
 
-function RegisterResponsive() {
+function RegisterResponsive({
+  step
+}) {
   const {
     appBarType, //pilih salah satu : 'titleSecondary' || 'searchSecondary' || 'navbarMobileDefaultScreen' || 'search' || 'title'
     appBar, // muncul ini : {onBack:null,title:'',showBackButton:true,appBarType:'',appBar:null,header:null}
@@ -65,17 +68,9 @@ function RegisterResponsive() {
         </button>
       </div>
     );
-  if (screen === "example2")
+  if (step === "2")
     return (
-      <div className=" flex flex-col">
-        <p>Example 2</p>
-        <button
-          className="bg-primary-600"
-          onClick={() => setScreen("example3")}
-        >
-          Go to Example 3
-        </button>
-      </div>
+      <InformasiPendaftarDanRekeningResponsive />
     );
   if (screen === "example3")
     return (
