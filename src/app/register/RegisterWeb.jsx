@@ -86,7 +86,7 @@ function RegisterWeb({
               ) : null}
             </div>
           </div>
-          <div className="kadal">{step === "3" && <KonfirmasiData />}</div>
+          <div className="">{step === "3" && <KonfirmasiData />}</div>
 
           <div className="mt-6 flex flex-col items-center gap-4 justify-center">
             <Button

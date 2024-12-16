@@ -7,13 +7,17 @@ import CropperImage from "../Cropper/Cropper";
 import { useSWRConfig } from "swr";
 import SWRHandler from "@/services/useSWRHook";
 import toast from "@/store/toast";
+import Bottomsheet from "../Bottomsheet/Bottomsheet";
+import { Camera, Upload } from "lucide-react";
 
 const api = process.env.NEXT_PUBLIC_API_HASYIM_DEVLINUX;
 
 // value berupa return an value img dari komponen ini
 // defaultValue yakni default value yang akan terpasang pada komponen ini (terpasang pada img bulat sebelah tombol ubah)
 
-const ImageUploaderRegister = ({ value, defaultValue }) => {
+const ImageUploaderRegisterResponsive = ({ value, defaultValue }) => {
+  const { setShowBottomsheet, setDataBottomsheet, setTitleBottomsheet } =
+    toast();
   const { setModalOpen, setModalConfig, setModalContent } = modal();
   const [resultCrops, setResultCrops] = useState(
     defaultValue !== null ? defaultValue : ""
@@ -28,13 +32,41 @@ const ImageUploaderRegister = ({ value, defaultValue }) => {
   }, [defaultValue]);
 
   const handleUbah = () => {
-    setModalContent(<UnggahFoto resultCrop={setResultCrops} />);
-    setModalConfig({
-      classname: "!w-[550px]",
-      withHeader: true,
-      withClose: true,
-    });
-    setModalOpen(true);
+    // setModalContent(<UnggahFoto resultCrop={setResultCrops} />);
+    // setModalConfig({
+    //   classname: "!w-[550px]",
+    //   withHeader: true,
+    //   withClose: true,
+    // });
+    // setModalOpen(true);
+    setTitleBottomsheet("  -");
+    setShowBottomsheet(true);
+    setDataBottomsheet(
+      <div className="flex justify-evenly items-center">
+        <div
+          className="flex flex-col gap-3 items-center cursor-pointer"
+          onClick={() => console.log("ambil foto")}
+        >
+          <div className="w-16 h-16 rounded-full bg-primary-700 flex items-center justify-center">
+            <Camera size={24} color="white" />
+          </div>
+          <span className="text-sm font-semibold text-neutral-900">
+            Ambil Foto
+          </span>
+        </div>
+        <div
+          className="flex flex-col gap-3 items-center cursor-pointer"
+          onClick={() => console.log("upload foto")}
+        >
+          <div className="w-16 h-16 rounded-full bg-primary-700 flex items-center justify-center">
+            <Upload size={24} color="white" />
+          </div>
+          <span className="text-sm font-semibold text-neutral-900">
+            Upload File
+          </span>
+        </div>
+      </div>
+    );
   };
 
   const handleDelete = () => {
@@ -68,61 +100,43 @@ const ImageUploaderRegister = ({ value, defaultValue }) => {
   };
 
   return (
-    <div className="flex items-center gap-4">
-      {resultCrops ? (
-        <div className="relative group">
-          <img
-            src={`${
-              resultCrops
-                ? resultCrops
-                : "https://azlogistik.s3.ap-southeast-3.amazonaws.com/undefined/file-1733985462989.webp"
-            }`}
-            loading="lazy"
-            className="size-[72px] rounded-full"
-          />
-          <div className="absolute inset-0 rounded-full bg-black/80 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-            <button
-              onClick={handleDelete}
-              className="text-white p-2 rounded-full flex items-center justify-center flex-col gap-1"
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M2 4H14M5.33333 4V2.66667C5.33333 1.74619 6.07952 1 7 1H9C9.92048 1 10.6667 1.74619 10.6667 2.66667V4M6.33333 6.33333V11.6667M9.66667 6.33333V11.6667M3 4V13.3333C3 14.2538 3.74619 15 4.66667 15H11.3333C12.2538 15 13 14.2538 13 13.3333V4"
-                  stroke="white"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <span className="text-xs font-semibold">Hapus</span>
-            </button>
-          </div>
-        </div>
-      ) : (
+    <>
+      <Bottomsheet />
+      <div className="flex flex-col items-center gap-4">
         <img
-          src={
-            "https://azlogistik.s3.ap-southeast-3.amazonaws.com/undefined/file-1733985462989.webp"
-          }
+          src={`${
+            resultCrops
+              ? resultCrops
+              : "https://azlogistik.s3.ap-southeast-3.amazonaws.com/undefined/file-1733985462989.webp"
+          }`}
           loading="lazy"
           className="size-[72px] rounded-full"
         />
-      )}
 
-      <Button onClick={handleUbah}>{resultCrops ? "Ubah" : "Unggah"}</Button>
-      <span className="w-[107px] font-medium text-xs text-neutral-600 leading-[14.4px]">
-        Format file jpg/png maks. 10MB
-      </span>
-    </div>
+        <div className="flex gap-3">
+          {resultCrops && (
+            <Button
+              onClick={handleDelete}
+              Class="!h-8 !font-semibold"
+              color="primary_secondary"
+            >
+              Hapus
+            </Button>
+          )}
+
+          <Button onClick={handleUbah} Class="!h-8 !font-semibold">
+            {resultCrops ? "Ubah" : "Unggah"}
+          </Button>
+        </div>
+        <span className="w-full text-center font-medium text-xs text-neutral-600 leading-[14.4px]">
+          Format file jpg/png maks. 10MB
+        </span>
+      </div>
+    </>
   );
 };
 
-export default ImageUploaderRegister;
+export default ImageUploaderRegisterResponsive;
 
 const UnggahFoto = ({ resultCrop }) => {
   const { setModalOpen } = modal();
