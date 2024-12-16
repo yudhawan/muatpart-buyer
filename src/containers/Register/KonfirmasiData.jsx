@@ -1,9 +1,89 @@
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import registerForm from "@/store/registerForm";
 import { PencilLine } from "lucide-react";
 import { DivParticleRegister } from "./InformasiTokoAkun";
 
 const KonfirmasiData = () => {
-  const { formData } = registerForm();
+  const { formData, formIsFilled, setFormIsFilled } = registerForm();
+  const router = useRouter();
+
+  const renderFieldValue = (field) => {
+    const { title, value, desc } = field;
+
+    switch (title) {
+      case "Logo Toko":
+        return (
+          <img
+            src={value || "/img/chopper.png"}
+            className="size-[72px] rounded-full border border-[#868686]"
+            alt="Logo Toko"
+          />
+        );
+      case "Titik Lokasi":
+        return (
+          <button
+            className="w-full h-[120px] bg-[#F3F4F6] rounded-lg flex items-center justify-center"
+            onClick={() => console.log("Show map")}
+          >
+            Lihat Pin Lokasi
+          </button>
+        );
+      case "KTP Pendaftar":
+        const fileUrl = typeof value === "object" ? value.url : value;
+        return (
+          <div className="flex items-center gap-2">
+            {fileUrl ? (
+              <>
+                {/* <span className="text-primary-700">{fileUrl}</span> */}
+                <span className="text-success-600 text-xs font-medium">
+                  {desc}
+                </span>
+              </>
+            ) : (
+              <span className="font-medium text-xs text-neutral-900">-</span>
+            )}
+          </div>
+        );
+      case "Nama Bank":
+        // Handle rekening data
+        return (
+          <span className="font-medium text-xs text-neutral-900">
+            {formData[0]?.rekening?.[0]?.bankName || "-"}
+          </span>
+        );
+      case "Nama Pemilik Rekening":
+        return (
+          <span className="font-medium text-xs text-neutral-900">
+            {formData[0]?.rekening?.[0]?.namaPemilik || "-"}
+          </span>
+        );
+      case "No. Rekening":
+        return (
+          <span className="font-medium text-xs text-neutral-900">
+            {formData[0]?.rekening?.[0]?.rekeningNumber || "-"}
+          </span>
+        );
+      case "No. KTP Pendaftar":
+        return (
+          <span className="font-medium text-xs text-neutral-900">
+            {formData[0]?.legality?.[0]?.ktpNo || "-"}
+          </span>
+        );
+      case "Nama KTP Pendaftar":
+        return (
+          <span className="font-medium text-xs text-neutral-900">
+            {formData[0]?.legality?.[0]?.namaKtpPendaftar || "-"}
+          </span>
+        );
+      default:
+        return (
+          <span className="font-medium text-xs text-neutral-900">
+            {value || "-"}
+          </span>
+        );
+    }
+  };
 
   const sections = [
     {
@@ -11,7 +91,7 @@ const KonfirmasiData = () => {
       fields: [
         {
           title: "Tipe Toko",
-          value: formData[0].tipeToko === 0 ? "Individu" : "Badan Usaha",
+          value: formData[0].tipeToko === 0 ? "Individu" : "Perusahaan",
         },
         ...(formData[0].tipeToko === 1
           ? [
@@ -20,21 +100,16 @@ const KonfirmasiData = () => {
             ]
           : []),
         { title: "Nama Toko", value: formData[0].storeName },
-        {
-          title: "Logo Toko",
-          value: formData[0].logo,
-          type: "image",
-        },
-        { title: "Alamat", value: formData[0].address },
+        { title: "Logo Toko", value: formData[0].logo },
+        { title: "Alamat", value: formData[0].addressDetail },
         { title: "Lokasi", value: formData[0].location },
-        { title: "Kecamatan", value: formData[0].districtID },
-        { title: "Kota", value: formData[0].cityID },
-        { title: "Provinsi", value: formData[0].provinceID },
+        { title: "Kecamatan", value: formData[0].districtDescription },
+        { title: "Kota", value: formData[0].cityDescription },
+        { title: "Provinsi", value: formData[0].provinceDescription },
         { title: "Kode Pos", value: formData[0].postalCode },
         {
           title: "Titik Lokasi",
-          value: "Lihat Pin Lokasi",
-          type: "map",
+          value: { lat: formData[0].latitude, long: formData[0].longitude },
         },
         { title: "Email", value: formData[0].email },
       ],
@@ -44,79 +119,82 @@ const KonfirmasiData = () => {
       fields: [
         {
           title: "KTP Pendaftar",
-          value: formData[1].ktpFile,
-          type: "file",
+          value: formData[0]?.legalityFile?.find(
+            (file) => file.fieldName === "ktp_pendaftar"
+          )?.file,
           desc: "File.png",
         },
-        { title: "No. KTP Pendaftar", value: formData[1].ktpNo },
-        { title: "Nama KTP Pendaftar", value: formData[1].ktpNama },
+        {
+          title: "No. KTP Pendaftar",
+          value: formData[0]?.legality?.[0]?.ktpNo,
+        },
+        {
+          title: "Nama KTP Pendaftar",
+          value: formData[0]?.legality?.[0]?.namaKtpPendaftar,
+        },
       ],
     },
-    {
-      title: "Informasi Rekening",
-      fields: [
-        { title: "Nama Bank", value: "Bank Central Asia (BCA)" },
-        { title: "Nama Pemilik Rekening", value: formData[1].accountName },
-        { title: "No. Rekening", value: formData[1].accountNumber },
-      ],
-    },
+    ...(!formData[1].haveActiveRekening
+      ? [
+          {
+            title: "Informasi Rekening",
+            fields: [
+              {
+                title: "Nama Bank",
+                value: formData[0]?.rekening?.[0]?.bankName,
+              },
+              {
+                title: "Nama Pemilik Rekening",
+                value: formData[0]?.rekening?.[0]?.namaPemilik,
+              },
+              {
+                title: "No. Rekening",
+                value: formData[0]?.rekening?.[0]?.rekeningNumber,
+              },
+            ],
+          },
+        ]
+      : []),
   ];
 
-const renderFieldValue = (field) => {
-  const { title, value, desc } = field;
+   const handleEdit = (section) => {
+     // Arahkan ke step yang sesuai berdasarkan section
+     switch (section.title) {
+       case "Informasi Toko":
+         router.push("/register?step=1");
+         break;
+       case "Data Pendaftar":
+       case "Informasi Rekening":
+         router.push("/register?step=2");
+         break;
+       default:
+         break;
+     }
+   };
 
-  switch (title) {
-    case "Logo Toko":
-      return (
-        <img
-          src={value || "/img/chopper.png"}
-          className="size-[72px] rounded-full border border-[#868686]"
-          alt="Logo Toko"
-        />
-      );
-    case "Titik Lokasi":
-      return (
-        <button
-          className="w-full h-[120px] bg-[#F3F4F6] rounded-lg flex items-center justify-center"
-          onClick={() => console.log("Show map")}
-        >
-          Lihat Pin Lokasi
-        </button>
-      );
-    case "Tipe Toko":
-      return (
-        <span className="font-medium text-xs text-neutral-900">
-          {value === 0 ? "Individu" : "Badan Usaha"}
-        </span>
-      );
-    case "KTP Pendaftar":
-      return (
-        <div className="flex items-center gap-2">
-          <span className="text-primary-700">{value}</span>
-          <span className="text-neutral-600">{desc}</span>
-        </div>
-      );
-    default:
-      return (
-        <span className="font-medium text-xs text-neutral-900">
-          {value || "-"}
-        </span>
-      );
-  }
-};
+  useEffect(() => {
+    setFormIsFilled(true);
+  }, []);
 
   return (
     <div className="space-y-6">
       {sections.map((section, idx) => (
         <div
           key={idx}
-          className="bg-white rounded-[10px] border border-[#E5E7EB] shadow-[0_1px_3px_0_rgba(0,0,0,0.1),0_1px_2px_-1px_rgba(0,0,0,0.1)] p-6"
+          className={`bg-white ${
+            idx === 0
+              ? "!rounded-t-none !border-t-none shadow-[0px_11px_11px_0px_#41414140]"
+              : "shadow-[0px_4px_11px_0px_#41414140]"
+          } rounded-xl p-6`}
         >
           <div className="flex justify-between items-center">
             <span className="text-neutral-900 font-semibold text-lg block">
               {section.title}
             </span>
-            <div className="flex items-center gap-2 cursor-pointer">
+            <div
+              className="flex items-center gap-2 cursor-pointer"
+              onClick={() => handleEdit(section)}
+            >
               <PencilLine size={16} className="text-primary-700" />
               <span className="text-xs font-medium text-primary-700">Ubah</span>
             </div>
@@ -129,9 +207,7 @@ const renderFieldValue = (field) => {
                 title={field.title}
                 mustFill={false}
                 classLabel="!w-[350px]"
-                classname={
-                  field.title === "Logo Toko" ? "!items-center" : "!items-start"
-                }
+                classname={field.title === "Logo Toko" ? "!items-center" : ""}
               >
                 {renderFieldValue(field)}
               </DivParticleRegister>
