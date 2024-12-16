@@ -1,7 +1,8 @@
+import ButtonBottomMobile from '@/components/ButtonBottomMobile/ButtonBottomMobile'
 import Checkbox from '@/components/Checkbox/Checkbox'
 import IconComponent from '@/components/IconComponent/IconComponent'
 import React, { memo, useState } from 'react'
-function CategoryScreenProduct({actionFilter,categories}) {
+function CategoryScreenProduct({categories,getFilterProduct,handleInput,search,setSearch}) {
   const constanta = ['groupCategory','categories','subCategories','items']
   const [getSelected,setSelected] = useState([])
   const [getExpand,setExpand] = useState([])
@@ -25,7 +26,7 @@ function CategoryScreenProduct({actionFilter,categories}) {
             </div>
           })
         }
-        {actionFilter}
+        <ButtonBottomMobile textLeft={'Reset'} textRight={'Terapkan'} onClickLeft={()=>setScreen('filter')} onClickRight={()=>{}} />
     </div>
   )
 }

@@ -6,7 +6,7 @@ import IconComponent from '@/components/IconComponent/IconComponent';
 import Dropdown from '@/components/Dropdown/Dropdown';
 import Checkbox from '@/components/Checkbox/Checkbox';
 import { filterProduct } from '@/store/products/filter';
-import ZustandHandler from '@/libs/handleInputGlobalState';
+import ZustandHandler from '@/libs/handleZustand';
 import Button from '@/components/Button/Button';
 function FilterProductsWeb() {
     const [getExpanded, setExpanded] = useState(['Kendaraan','Garasi','Jarak','Lokasi','PenjualTerakhirAktif','Brand','Rating']);

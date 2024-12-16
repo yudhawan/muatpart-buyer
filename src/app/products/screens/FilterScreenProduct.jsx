@@ -4,26 +4,57 @@ import Button from '@/components/Button/Button'
 import ButtonBottomMobile from '@/components/ButtonBottomMobile/ButtonBottomMobile'
 import IconComponent from '@/components/IconComponent/IconComponent'
 import Input from '@/components/Input/Input'
-import ZustandHandler from '@/libs/handleInputGlobalState'
+import ModalComponent from '@/components/Modals/ModalComponent'
+import ZustandHandler from '@/libs/handleZustand'
 import { filterProduct } from '@/store/products/filter'
-import React from 'react'
+import React, { useState } from 'react'
+import { mockProductsData } from '@/containers/HomePage/mock'
 
 function FilterScreenProduct({isToko,onClickLeft,onClickRight,textLeft,textRight}) {
     const {setAppBar,setScreen,screen,setSearch,search}=useHeader()
+    const [showKendaraan,setShowKendaraan]=useState(false)
+    const [getKendaraan,setKendaraan]=useState('')
+    const [getSearchKendaraan,setSearchKendaraan]=useState('')
     const getFilterProduct = filterProduct()
     const {handleInput} = new ZustandHandler(getFilterProduct)
   return (
     <div className='flex flex-col w-full gap-5 containerMobile bg-neutral-50 pb-[80px]'>
         {/* garasi */}
         {!isToko&&<><EachComponent label={'Garasi saya'} labelActionButton={'Reset filter garasi'} actionButton={()=>{}}>
-            <Button iconRight={'/icons/chevron-down.svg'} Class={'!bg-neutral-50 !text-neutral-600 border border-neutral-600 rounded-md !h-8 !font-semibold !max-w-full !w-full !justify-between !px-3'}>Jenis Kendaraan saya</Button>
+            <Button iconRight={'/icons/chevron-down.svg'} Class={'!bg-neutral-50 !text-neutral-600 border border-neutral-600 rounded-md !h-8 !font-semibold !max-w-full !w-full !justify-between !px-3'} onClick={()=>{
+                setScreen('garasi')
+                setSearch({
+                    placeholder:'Cari di Garasi saya'
+                })
+            }}>{getFilterProduct.garage?getFilterProduct.garage:'Jenis Kendaraan saya'}</Button>
         </EachComponent>
         {/* jenis kendaraan */}
+        
         <EachComponent label={'Jenis Kendaraan'} labelActionButton={'Reset filter Jenis Kendaraan'} actionButton={()=>{}}>
-            <Button iconRight={'/icons/chevron-down.svg'} Class={'!bg-neutral-50 !text-neutral-600 border border-neutral-600 rounded-md !h-8 !font-semibold !max-w-full !w-full !justify-between !px-3'}>Brand</Button>
-            <Button iconRight={'/icons/chevron-down.svg'} Class={'!bg-neutral-50 !text-neutral-600 border border-neutral-600 rounded-md !h-8 !font-semibold !max-w-full !w-full !justify-between !px-3'}>Tahun</Button>
-            <Button iconRight={'/icons/chevron-down.svg'} Class={'!bg-neutral-50 !text-neutral-600 border border-neutral-600 rounded-md !h-8 !font-semibold !max-w-full !w-full !justify-between !px-3'}>Model</Button>
-            <Button iconRight={'/icons/chevron-down.svg'} Class={'!bg-neutral-50 !text-neutral-600 border border-neutral-600 rounded-md !h-8 !font-semibold !max-w-full !w-full !justify-between !px-3'}>Tipe</Button>
+            <Button onClick={()=>{
+                setScreen('kendaraan')
+                setSearch({
+                    placeholder:'Cari Brand'
+                })
+            }} iconRight={'/icons/chevron-down.svg'} Class={'!bg-neutral-50 !text-neutral-600 border border-neutral-600 rounded-md !h-8 !font-semibold !max-w-full !w-full !justify-between !px-3'}>Brand</Button>
+            <Button onClick={()=>{
+                setScreen('kendaraan')
+                setSearch({
+                    placeholder:'Cari Tahun'
+                })
+            }} iconRight={'/icons/chevron-down.svg'} Class={'!bg-neutral-50 !text-neutral-600 border border-neutral-600 rounded-md !h-8 !font-semibold !max-w-full !w-full !justify-between !px-3'}>Tahun</Button>
+            <Button onClick={()=>{
+                setScreen('kendaraan')
+                setSearch({
+                    placeholder:'Cari Model'
+                })
+            }} iconRight={'/icons/chevron-down.svg'} Class={'!bg-neutral-50 !text-neutral-600 border border-neutral-600 rounded-md !h-8 !font-semibold !max-w-full !w-full !justify-between !px-3'}>Model</Button>
+            <Button onClick={()=>{
+                setScreen('kendaraan')
+                setSearch({
+                    placeholder:'Cari Tipe'
+                })
+            }} iconRight={'/icons/chevron-down.svg'} Class={'!bg-neutral-50 !text-neutral-600 border border-neutral-600 rounded-md !h-8 !font-semibold !max-w-full !w-full !justify-between !px-3'}>Tipe</Button>
         </EachComponent>
         {/* pengiriman */}
         <EachComponent label={'Harga'}>
@@ -94,13 +125,13 @@ function FilterScreenProduct({isToko,onClickLeft,onClickRight,textLeft,textRight
         <EachComponent label={'Penjual Terakhir Aktif'}>
             <div className='flex flex-wrap gap-2'>
                 <span onClick={()=>handleInput('lastActiveSeller', 'active')}>
-                    <Bubble classname={`border ${getFilterProduct?.['lastActiveSeller']==='active'?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Sedang Aktif</Bubble>
+                    <Bubble classname={`border ${getFilterProduct?.['lastActiveSeller']?.some(val=>val==='active')?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Sedang Aktif</Bubble>
                 </span>
                 <span onClick={()=>handleInput('lastActiveSeller', 'hour')}>
-                    <Bubble classname={`border ${getFilterProduct?.['lastActiveSeller']==='hour'?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Paling lama 1 jam yang lalu</Bubble>
+                    <Bubble classname={`border ${getFilterProduct?.['lastActiveSeller']?.some(val=>val==='hour')?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Paling lama 1 jam yang lalu</Bubble>
                 </span>
                 <span onClick={()=>handleInput('lastActiveSeller', 'day')}>
-                    <Bubble classname={`border ${getFilterProduct?.['lastActiveSeller']==='day'?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Paling lama 1 hari yang lalu</Bubble>
+                    <Bubble classname={`border ${getFilterProduct?.['lastActiveSeller']?.some(val=>val==='day')?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Paling lama 1 hari yang lalu</Bubble>
                 </span>
                 
             </div>
@@ -136,10 +167,10 @@ function FilterScreenProduct({isToko,onClickLeft,onClickRight,textLeft,textRight
         {/* Jenis Penjualan */}
         {!isToko&&<><EachComponent label={'Jenis Penjualan'} >
             <div className='flex flex-wrap gap-2'>
-                <span onClick={()=>handleInput('productType', 'eceran')}>
+                <span onClick={()=>handleInput('saleType', 'eceran')}>
                     <Bubble classname={`border ${getFilterProduct?.['saleType']==='eceran'?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Satuan/Ecer</Bubble>
                 </span>
-                <span onClick={()=>handleInput('productType', 'grosir')}>
+                <span onClick={()=>handleInput('saleType', 'grosir')}>
                     <Bubble classname={`border ${getFilterProduct?.['saleType']==='grosir'?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Grosir</Bubble>
                 </span>
             </div>
@@ -147,11 +178,11 @@ function FilterScreenProduct({isToko,onClickLeft,onClickRight,textLeft,textRight
         {/* promo */}
         <EachComponent label={'Promo'} >
             <div className='flex flex-wrap gap-2'>
-                <span onClick={()=>handleInput('productType', 'discount')}>
-                    <Bubble classname={`border ${getFilterProduct?.['promo']?.some(val=>val==='diskon')?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Diskon</Bubble>
+                <span onClick={()=>handleInput('promo', 'discount')}>
+                    <Bubble classname={`border ${getFilterProduct?.['promo']?.some(val=>val==='discount')?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Diskon</Bubble>
                 </span>
-                <span onClick={()=>handleInput('productType', 'free_delivery')}>
-                    <Bubble classname={`border ${getFilterProduct?.['promo']?.some(val=>val==='promo')?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Gratis Biaya Pengiriman</Bubble>
+                <span onClick={()=>handleInput('promo', 'free_delivery')}>
+                    <Bubble classname={`border ${getFilterProduct?.['promo']?.some(val=>val==='free_delivery')?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Gratis Biaya Pengiriman</Bubble>
                 </span>
             </div>
         </EachComponent>
@@ -159,10 +190,10 @@ function FilterScreenProduct({isToko,onClickLeft,onClickRight,textLeft,textRight
         <EachComponent label={'Jenis Produk'} >
             <div className='flex flex-wrap gap-2'>
                 <span onClick={()=>handleInput('productType', 'new')}>
-                    <Bubble classname={`border ${getFilterProduct?.['productType']==='baru'?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Produk Baru</Bubble>
+                    <Bubble classname={`border ${getFilterProduct?.['productType']?.some(val=>val==='new')?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Produk Baru</Bubble>
                 </span>
                 <span onClick={()=>handleInput('productType', 'second')}>
-                    <Bubble classname={`border ${getFilterProduct?.['productType']==='bekas'?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Produk Bekas</Bubble>
+                    <Bubble classname={`border ${getFilterProduct?.['productType']?.some(val=>val==='second')?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Produk Bekas</Bubble>
                 </span>
             </div>
         </EachComponent></>}
@@ -170,13 +201,13 @@ function FilterScreenProduct({isToko,onClickLeft,onClickRight,textLeft,textRight
         <EachComponent label={'Rating Produk'} >
             <div className='flex flex-wrap gap-2'>
                 <span onClick={()=>handleInput('productRating', 5)}>
-                    <Bubble  classname={`border ${getFilterProduct?.['brand']?.some(val=>val===5)?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium flex items-center gap-2`} >
+                    <Bubble  classname={`border ${getFilterProduct?.['productRating']?.some(val=>val===5)?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium flex items-center gap-2`} >
                         <IconComponent src={'/icons/product-star.svg'} width={14} height={14} />
                         <span>5 Bintang</span>
                     </Bubble>
                 </span>
                 <span onClick={()=>handleInput('productRating', 4)}>
-                    <Bubble  classname={`border ${getFilterProduct?.['brand']?.some(val=>val===4)?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium flex items-center gap-2`} >
+                    <Bubble  classname={`border ${getFilterProduct?.['productRating']?.some(val=>val===4)?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium flex items-center gap-2`} >
                         <IconComponent src={'/icons/product-star.svg'} width={14} height={14} />
                         <span>4 Bintang</span>
                     </Bubble>

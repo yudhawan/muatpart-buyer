@@ -1,8 +1,13 @@
 import { create } from "zustand";
 
 export const filterProduct = create((set)=>({
-    garage: [],
-    vehicleType: {},
+    garage: '',
+    vehicleType: {
+        brand:'',
+        year:'',
+        model:'',
+        type:''
+    },
     price: {
         minimum: null,
         maximum: null
@@ -10,12 +15,12 @@ export const filterProduct = create((set)=>({
     distance: '',
     location: [],
     shipping: [],
-    lastActiveSeller: '',
+    lastActiveSeller: [],
     category: [],
     brand: [],
     saleType: '',
     promo: [],
-    productType: '',
+    productType: [],
     productRating: [],
     setFilterProduct: (field,val)=>set({[field]:val})
 

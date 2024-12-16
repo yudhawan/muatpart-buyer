@@ -9,7 +9,7 @@ import { mockProductsData } from '@/containers/HomePage/mock';
 import ProductComponent from '@/components/ProductComponent/ProductComponent';
 import GarasiCardComponent from '@/components/GarasiCardComponent/GarasiCardComponent';
 
-function ProductsWeb() {
+function ProductsWeb({getFilterProduct, handleInput}) {
     const [getMenuActive,setMenuActive]=useState('')
     useEffect(()=>{
         setMenuActive('produk')

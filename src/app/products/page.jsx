@@ -1,10 +1,12 @@
 
+import { fetchCategories } from '@/services/categoriesServices';
 import Products from './Products';
 
-function Page() {
+async function Page() {
+    const getAllCategories=await fetchCategories()
     return (
         <div className='w-full'>
-            <Products />
+            <Products allCategories={getAllCategories} />
         </div>
     );
 }

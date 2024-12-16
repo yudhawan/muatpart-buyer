@@ -131,3 +131,197 @@ export const categoriesDummy = [
 ];
 
 
+const brands = [
+    {
+      id: 1,
+      name: "Toyota"
+    },
+    {
+      id: 2,
+      name: "Honda"
+    },
+    {
+      id: 3,
+      name: "Daihatsu"
+    },
+    {
+      id: 4,
+      name: "Suzuki"
+    },
+    {
+      id: 5,
+      name: "Mitsubishi"
+    },
+    {
+      id: 6,
+      name: "Nissan"
+    },
+    {
+      id: 7,
+      name: "Wuling"
+    },
+    {
+      id: 8,
+      name: "Hyundai"
+    },
+    {
+      id: 9,
+      name: "Mazda"
+    },
+    {
+      id: 10,
+      name: "BMW"
+    }
+  ];
+  
+
+  const types = [
+    {
+      id: 1,
+      name: "SUV"
+    },
+    {
+      id: 2,
+      name: "MPV"
+    },
+    {
+      id: 3,
+      name: "Sedan"
+    },
+    {
+      id: 4,
+      name: "Hatchback"
+    },
+    {
+      id: 5,
+      name: "Pickup"
+    },
+    {
+      id: 6,
+      name: "Sport"
+    },
+    {
+      id: 7,
+      name: "Wagon"
+    },
+    {
+      id: 8,
+      name: "Van"
+    },
+    {
+      id: 9,
+      name: "Convertible"
+    },
+    {
+      id: 10,
+      name: "Coupe"
+    }
+  ];
+  const models = [
+    {
+      id: 1,
+      name: "Avanza"
+    },
+    {
+      id: 2,
+      name: "Xenia"
+    },
+    {
+      id: 3,
+      name: "Innova"
+    },
+    {
+      id: 4,
+      name: "Brio"
+    },
+    {
+      id: 5,
+      name: "HR-V"
+    },
+    {
+      id: 6,
+      name: "Civic"
+    },
+    {
+      id: 7,
+      name: "Fortuner"
+    },
+    {
+      id: 8,
+      name: "Pajero Sport"
+    },
+    {
+      id: 9,
+      name: "Xpander"
+    },
+    {
+      id: 10,
+      name: "Rush"
+    },
+    {
+      id: 11,
+      name: "Terios"
+    },
+    {
+      id: 12,
+      name: "Ertiga"
+    },
+    {
+      id: 13,
+      name: "XL7"
+    },
+    {
+      id: 14,
+      name: "Almaz"
+    },
+    {
+      id: 15,
+      name: "Confero"
+    }
+  ];
+  
+  const years = [
+    {
+      id: 1,
+      name: "2024"
+    },
+    {
+      id: 2,
+      name: "2023"
+    },
+    {
+      id: 3,
+      name: "2022"
+    },
+    {
+      id: 4,
+      name: "2021"
+    },
+    {
+      id: 5,
+      name: "2020"
+    },
+    {
+      id: 6,
+      name: "2019"
+    },
+    {
+      id: 7,
+      name: "2018"
+    },
+    {
+      id: 8,
+      name: "2017"
+    },
+    {
+      id: 9,
+      name: "2016"
+    },
+    {
+      id: 10,
+      name: "2015"
+    }
+  ];
+  
+  
+export {types,brands,models,years};
