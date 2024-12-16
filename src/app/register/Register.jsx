@@ -94,7 +94,8 @@ function Register() {
           accountNumber: existingMerchantData?.rekening[0].rekeningNumber,
           accountName: existingMerchantData?.rekening[0].namaPemilik,
           bankID: existingMerchantData?.rekening[0].bankID,
-          hasBankAccount: true
+          hasBankAccount: true,
+          haveActiveRekening: existingMerchantData?.haveActiveRekening
         }
       }
       setFormData([ formData[0], { ...formData[1], ...newFormDataStepTwo }])

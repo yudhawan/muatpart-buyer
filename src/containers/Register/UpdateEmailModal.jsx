@@ -32,7 +32,7 @@ const UpdateEmailModal = ({
     if (dataChangeEmail) {
       setFormData([{ ...formData[0], email: dataChangeEmail.data.Data.newEmail }, formData[1]])
       setNotification({ type: "success", message: "Berhasil mengubah email" })
-      setEmail("")
+      
       setIsOpen(false)
       setOtp(new Array(6).fill(""))
     }
@@ -77,17 +77,12 @@ const UpdateEmailModal = ({
     }
 
     await changeEmail({ OldEmail: formData[0].email, NewEmail: email })
-      .then((res) => {
-        // mutate(`${process.env.NEXT_PUBLIC_API_HASYIM}v1/register/timer_otp?Email=${formData[0].email}&Type=18`)
+      .then(() => {
+        setEmail("")
       })
       .catch((err) => {
         console.log('err',err)
       })
-
-    // If all validations pass
-    // onEmailChange(email);
-    // setEmail('');
-    // setIsOpen(false);
   };
 
   const handleClose = () => {

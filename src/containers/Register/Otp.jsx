@@ -167,8 +167,8 @@ const Otp = ({ remainingTime }) => {
             `}
             >
               <IconComponent
-                classname={errorVerifyOtp ? styles.icon_error : ""}
-                src={errorVerifyOtp ? "/icons/info.svg" : "/icons/success-toast.svg"}
+                classname={notification.status === "error" ? styles.icon_error : ""}
+                src={notification.status === "error" ? "/icons/info.svg" : "/icons/success-toast.svg"}
               />
               <span className="font-semibold text-[12px] leading-[14.4px]">{notification.message}</span>
             </div>
