@@ -63,6 +63,16 @@ function Register() {
     "PUT"
   );
 
+  const { trigger: verifyOtp, error: errorVerifyOtp } = useSWRMutateHook(
+    process.env.NEXT_PUBLIC_API_HASYIM + 'v1/register/verify_otp',
+  'POST'
+  );
+
+  const { data: dataResendOtp, trigger: resendOtp } = useSWRMutateHook(
+    process.env.NEXT_PUBLIC_API_HASYIM + 'v1/register/resend_otp',
+  'POST'
+  );
+
   const { data: dataBanks } = useSWRHook(`${process.env.NEXT_PUBLIC_API_HASYIM}v1/register/banks`)
   const { data: dataTimerOtp } = useSWRHook(step === "4" ? `${process.env.NEXT_PUBLIC_API_HASYIM}v1/register/timer_otp?Email=${formData[0].email}&Type=18` : null)
 
@@ -72,6 +82,7 @@ function Register() {
   const hasVerifiedLegality = existingMerchantData?.legality?.length > 0 && existingMerchantData?.legalityFile?.length > 0
   const hasVerifiedRekening = existingMerchantData?.rekening?.length > 0
   const remainingTime = dataTimerOtp?.Data.Remaining
+  const expiresIn = dataResendOtp?.data.Data.expiresIn
 
   useEffect(() => {
     if (step === "1" && existingMerchantData) {
@@ -222,6 +233,13 @@ function Register() {
   return isMobile ? (
     <RegisterResponsive 
       step={step}
+      bankOptions={bankOptions}
+      hasVerifiedLegality={hasVerifiedLegality}
+      hasVerifiedRekening={hasVerifiedRekening}
+      verifyOtp={verifyOtp}
+      errorVerifyOtp={errorVerifyOtp}
+      expiresIn={expiresIn}
+      resendOtp={resendOtp}
     />
   ) : (
     <RegisterWeb
@@ -231,6 +249,10 @@ function Register() {
       hasVerifiedLegality={hasVerifiedLegality}
       hasVerifiedRekening={hasVerifiedRekening}
       remainingTime={remainingTime}
+      verifyOtp={verifyOtp}
+      errorVerifyOtp={errorVerifyOtp}
+      expiresIn={expiresIn}
+      resendOtp={resendOtp}
     />
   );
 }

@@ -23,9 +23,6 @@ const BankAccountSection = ({ bankOptions, errors }) => {
   };
 
   const handleCheckBankAccount = () => {
-    if (!isBackAccountInfoFilled) {
-      return;
-    }
     handleFormDataChange("accountName", "mulyono")
   }
 

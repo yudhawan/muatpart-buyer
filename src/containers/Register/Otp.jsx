@@ -10,7 +10,13 @@ import registerForm from '@/store/registerForm';
 import IconComponent from '@/components/IconComponent/IconComponent';
 // import headerZustand from "@/store/zustand/header" // nanti kalo di rdp
 
-const Otp = ({ remainingTime }) => {
+const Otp = ({ 
+  remainingTime,
+  verifyOtp,
+  errorVerifyOtp,
+  expiresIn,
+  resendOtp
+}) => {
   const [otp, setOtp] = useState(new Array(6).fill(""));
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [timeLeft, setTimeLeft] = useState(0);
@@ -24,18 +30,6 @@ const Otp = ({ remainingTime }) => {
   const router = useRouter()
   // const { setHeader } = headerZustand() // nanti kalo di rdp
 
-  const { useSWRMutateHook } = new SWRHandler();
-  const { trigger: verifyOtp, error: errorVerifyOtp } = useSWRMutateHook(
-    process.env.NEXT_PUBLIC_API_HASYIM + 'v1/register/verify_otp',
-  'POST'
-  );
-
-  const { data: dataResendOtp, trigger: resendOtp } = useSWRMutateHook(
-    process.env.NEXT_PUBLIC_API_HASYIM + 'v1/register/resend_otp',
-  'POST'
-  );
-
-  const expiresIn = dataResendOtp?.data.Data.expiresIn
 
   // Format seconds to MM:SS
   const formatTime = (seconds) => {
@@ -43,7 +37,7 @@ const Otp = ({ remainingTime }) => {
     const remainingSeconds = seconds % 60;
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
-// nanti kalo di rdp
+  // nanti kalo di rdp
   // useEffect(() => {
   //   setHeader("")
   // }, [])

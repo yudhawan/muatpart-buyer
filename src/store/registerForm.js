@@ -31,7 +31,7 @@ const INITIAL_FORM = {
 
 const registerForm = create((set, get) => ({
   formData: [INITIAL_FORM.step1, INITIAL_FORM.step2],
-  currentStep: 0,
+  currentStep: 1,
   errors: {},
   isSubmitting: false,
   formIsFilled: false, // tambahkan state baru

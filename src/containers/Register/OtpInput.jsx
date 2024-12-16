@@ -37,13 +37,13 @@ const OtpInput = ({ otp, setOtp }) => {
 					value={otp[index]}
 					onChange={(e) => handleChange(e.target, index)}
 					onKeyDown={(e) => handleKeyDown(e, index)}
-					className="h-[30px] w-[30px] bg-white rounded-lg border border-solid border-[#868686] text-center p-0 font-bold text-[14px] leading-[16.8px]"
-					style={{
-						minWidth: '30px',
-						maxWidth: '30px',
-						minHeight: '30px',
-						maxHeight: '30px'
-					}}
+					className="h-[42px] w-[42px] md:h-[30px] md:w-[30px] bg-white rounded-[4px] md:rounded-lg border border-solid border-[#868686] text-center p-0 font-bold text-[14px] leading-[16.8px]"
+					// style={{
+					// 	minWidth: '30px',
+					// 	maxWidth: '30px',
+					// 	minHeight: '30px',
+					// 	maxHeight: '30px'
+					// }}
 					aria-label={`OTP digit ${index + 1}`}
 				/>
 			))}

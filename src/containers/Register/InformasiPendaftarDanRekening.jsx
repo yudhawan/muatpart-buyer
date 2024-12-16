@@ -131,10 +131,13 @@ const InformasiPendaftarDanRekening = ({
             <div className="flex items-start">
               <div className="flex items-center gap-2">
                 <Checkbox
-                  label="Lengkapi Informasi Rekening Pencairan Dana"
                   onChange={({ checked }) => handleFormDataChange("hasBankAccount", checked)}
                   checked={formData[1].hasBankAccount}
-                />
+                >
+                  <span className="font-medium text-[12px] leading-[14.4px]">
+                    Lengkapi Informasi Rekening Pencairan Dana
+                  </span>
+                </Checkbox>
                 <Tooltip
                   text="Lengkapi info rekening saat registrasi untuk memudahkan pencairan dana."
                   position="right"

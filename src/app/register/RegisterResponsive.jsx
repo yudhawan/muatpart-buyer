@@ -1,9 +1,11 @@
 import { useHeader } from "@/common/ResponsiveContext";
 import InformasiPendaftarDanRekeningResponsive from "@/containers/Register/InformasiPendaftarDanRekeningResponsive";
+import { OtpResponsive } from "@/containers/Register/OtpResponsive";
 import React, { useEffect } from "react";
 
 function RegisterResponsive({
-  step
+  step,
+  bankOptions
 }) {
   const {
     appBarType, //pilih salah satu : 'titleSecondary' || 'searchSecondary' || 'navbarMobileDefaultScreen' || 'search' || 'title'
@@ -70,7 +72,7 @@ function RegisterResponsive({
     );
   if (step === "2")
     return (
-      <InformasiPendaftarDanRekeningResponsive />
+      <InformasiPendaftarDanRekeningResponsive bankOptions={bankOptions}/>
     );
   if (screen === "example3")
     return (
@@ -84,11 +86,9 @@ function RegisterResponsive({
         </button>
       </div>
     );
-  if (screen === "example4")
+  if (step === "4")
     return (
-      <div className=" flex flex-col">
-        <p>Example 4</p>
-      </div>
+      <OtpResponsive />
     );
   // main screen
   return (

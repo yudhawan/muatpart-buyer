@@ -18,6 +18,10 @@ function RegisterWeb({
   hasVerifiedLegality,
   hasVerifiedRekening,
   remainingTime,
+  verifyOtp,
+  errorVerifyOtp,
+  expiresIn,
+  resendOtp
 }) {
   const { prevStep, formData } = registerForm();
   const router = useRouter();
@@ -43,7 +47,13 @@ function RegisterWeb({
   return (
     <div>
       {step === "4" ? (
-        <Otp remainingTime={remainingTime} />
+        <Otp
+          remainingTime={remainingTime}
+          verifyOtp={verifyOtp}
+          errorVerifyOtp={errorVerifyOtp}
+          expiresIn={expiresIn}
+          resendOtp={resendOtp}
+        />
       ) : (
         <div className="max-w-[758px] mx-auto mt-[108px] pb-5">
           <div

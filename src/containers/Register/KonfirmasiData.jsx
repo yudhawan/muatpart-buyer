@@ -61,7 +61,7 @@ const KonfirmasiData = () => {
       case "No. Rekening":
         return (
           <span className="font-medium text-xs text-neutral-900">
-            {formData[0]?.rekening?.[0]?.rekeningNumber || "-"}
+            {formData[0]?.rekening?.[0]?.accountNumber || "-"}
           </span>
         );
       case "No. KTP Pendaftar":
@@ -149,7 +149,7 @@ const KonfirmasiData = () => {
               },
               {
                 title: "No. Rekening",
-                value: formData[0]?.rekening?.[0]?.rekeningNumber,
+                value: formData[0]?.rekening?.[0]?.accountNumber,
               },
             ],
           },
