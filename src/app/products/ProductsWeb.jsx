@@ -4,7 +4,6 @@ import style from './Products.module.scss';
 import IconComponent from '@/components/IconComponent/IconComponent';
 import Dropdown from '@/components/Dropdown/Dropdown';
 import FilterProductsWeb from '@/containers/FilterProductsWeb/FilterProductsWeb';
-import { hightlightText } from '@/libs/TypographServices';
 import { mockProductsData } from '@/containers/HomePage/mock';
 import ProductComponent from '@/components/ProductComponent/ProductComponent';
 import GarasiCardComponent from '@/components/GarasiCardComponent/GarasiCardComponent';
@@ -17,7 +16,7 @@ function ProductsWeb({getFilterProduct, handleInput}) {
     return (
         <div className={`${style.main} ${style.web}`}>
             {/* Filter */}
-            <FilterProductsWeb/>
+            <FilterProductsWeb menu={getMenuActive} />
 
             {/* List Products */}
             <div className="flex flex-col w-full gap-4">

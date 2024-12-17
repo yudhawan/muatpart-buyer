@@ -9,8 +9,7 @@ import { filterProduct } from '@/store/products/filter'
 import ZustandHandler from '@/libs/handleZustand'
 import { useHeader } from '@/common/ResponsiveContext'
 import { brands, models, types,  years } from './screens/mockcdata'
-function Products({allCategories}) {
-  console.log(allCategories)
+function Products({allCategories,searchParams}) {
   const [state,setState]=useState()
   const {useSWRHook,useSWRMutateHook}=new SWRHandler()
   // const {data:fetchCategories} = useSWRHook(process.env.NEXT_PUBLIC_GLOBAL_API+'muatparts/product/category')

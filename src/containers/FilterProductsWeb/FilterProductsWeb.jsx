@@ -1,6 +1,6 @@
 
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import style from './FilterProductsWeb.module.scss'
 import IconComponent from '@/components/IconComponent/IconComponent';
 import Dropdown from '@/components/Dropdown/Dropdown';
@@ -8,8 +8,8 @@ import Checkbox from '@/components/Checkbox/Checkbox';
 import { filterProduct } from '@/store/products/filter';
 import ZustandHandler from '@/libs/handleZustand';
 import Button from '@/components/Button/Button';
-function FilterProductsWeb() {
-    const [getExpanded, setExpanded] = useState(['Kendaraan','Garasi','Jarak','Lokasi','PenjualTerakhirAktif','Brand','Rating']);
+function FilterProductsWeb({menu}) {
+    const [getExpanded, setExpanded] = useState(['Kendaraan','Garasi','Jarak','Lokasi','PenjualTerakhirAktif','Brand','Rating','Kategori',  'JenisPenjualan','Promo','JenisProduk','Pengiriman']);
     const getFilterProduct=filterProduct()
     const {handleInput} = new ZustandHandler(getFilterProduct)
     function handleExpanded(id) {
@@ -140,6 +140,35 @@ function FilterProductsWeb() {
                         <span onClick={()=>{}} className='font-medium text-xs text-primary-700 select-none cursor-pointer'>Lihat Selengkapnya</span>
                     </div>
                 </div>
+                {/* Pengiriman */}
+                {menu==='produk'&&<div className="flex flex-col w-full gap-4 pt-4">
+                    <div
+                        className="flex items-center w-full justify-between cursor-pointer"
+                        onClick={() => handleExpanded('Pengiriman')}
+                    >
+                        <span className="text-xs text-neutral-900 font-semibold">Pengiriman</span>
+                        <IconComponent
+                            src={`${
+                                getExpanded.some(a => a === 'Pengiriman')
+                                    ? '/icons/chevron-up.svg'
+                                    : '/icons/chevron-down.svg'
+                            }`}
+                        />
+                    </div>
+                    <div
+                        style={{
+                            maxHeight: getExpanded.some(a => a === 'Pengiriman') ? '300px' : '0px',
+                            overflow: 'hidden',
+                        }}
+                        className="transition-all duration-300 ease-in-out flex flex-col gap-4"
+                    >
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Pengiriman oleh Penjual' />
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Instant' />
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Express' />
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Regular' />
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Kargo' />
+                    </div>
+                </div>}
                 {/* Penjual Terakhir Aktif */}
                 <div className="flex flex-col w-full gap-4 pt-4">
                     <div
@@ -167,6 +196,34 @@ function FilterProductsWeb() {
                         <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Paling lama 1 hari yang lalu' />
                     </div>
                 </div>
+                {/* Kategori */}
+                {menu==='produk'&&<div className="flex flex-col w-full gap-4 pt-4">
+                    <div
+                        className="flex items-center w-full justify-between cursor-pointer"
+                        onClick={() => handleExpanded('Kategori')}
+                    >
+                        <span className="text-xs text-neutral-900 font-semibold">Kategori</span>
+                        <IconComponent
+                            src={`${
+                                getExpanded.some(a => a === 'Kategori')
+                                    ? '/icons/chevron-up.svg'
+                                    : '/icons/chevron-down.svg'
+                            }`}
+                        />
+                    </div>
+                    <div
+                        style={{
+                            maxHeight: getExpanded.some(a => a === 'Kategori') ? '300px' : '0px',
+                            overflow: 'hidden',
+                        }}
+                        className="transition-all duration-300 ease-in-out flex flex-col gap-4"
+                    >
+                        <div className='flex items-center gap-2 select-none cursor-pointer'>
+                            <IconComponent src={'/icons/chevron-down.svg'} />
+                            <span className='text-xs font-medium text-neutral-900'>Knalpot</span>
+                        </div>
+                    </div>
+                </div>}
                 {/* Brand */}
                 <div className="flex flex-col w-full gap-4 pt-4">
                     <div
@@ -197,6 +254,94 @@ function FilterProductsWeb() {
                         <span onClick={()=>{}} className='font-medium text-xs text-primary-700 select-none cursor-pointer'>Lihat Selengkapnya</span>
                     </div>
                 </div>
+                {/* Jenis Penjualan */}
+                {menu==='produk'&&<div className="flex flex-col w-full gap-4 pt-4">
+                    <div
+                        className="flex items-center w-full justify-between cursor-pointer"
+                        onClick={() => handleExpanded('JenisPenjualan')}
+                    >
+                        <span className="text-xs text-neutral-900 font-semibold">Jenis Penjualan</span>
+                        <IconComponent
+                            src={`${
+                                getExpanded.some(a => a === 'JenisPenjualan')
+                                    ? '/icons/chevron-up.svg'
+                                    : '/icons/chevron-down.svg'
+                            }`}
+                        />
+                    </div>
+                    <div
+                        style={{
+                            maxHeight: getExpanded.some(a => a === 'JenisPenjualan') ? '300px' : '0px',
+                            overflow: 'hidden',
+                        }}
+                        className="transition-all duration-300 ease-in-out flex flex-col gap-4"
+                    >
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Pengiriman oleh Penjual' />
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Instant' />
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Express' />
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Regular' />
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Kargo' />
+                    </div>
+                </div>}
+                {/* Promo */}
+                {menu==='produk'&&<div className="flex flex-col w-full gap-4 pt-4">
+                    <div
+                        className="flex items-center w-full justify-between cursor-pointer"
+                        onClick={() => handleExpanded('Promo')}
+                    >
+                        <span className="text-xs text-neutral-900 font-semibold">Promo</span>
+                        <IconComponent
+                            src={`${
+                                getExpanded.some(a => a === 'Promo')
+                                    ? '/icons/chevron-up.svg'
+                                    : '/icons/chevron-down.svg'
+                            }`}
+                        />
+                    </div>
+                    <div
+                        style={{
+                            maxHeight: getExpanded.some(a => a === 'Promo') ? '300px' : '0px',
+                            overflow: 'hidden',
+                        }}
+                        className="transition-all duration-300 ease-in-out flex flex-col gap-4"
+                    >
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Pengiriman oleh Penjual' />
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Instant' />
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Express' />
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Regular' />
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Kargo' />
+                    </div>
+                </div>}
+                {/* Jenis Produk */}
+                {menu==='produk'&&<div className="flex flex-col w-full gap-4 pt-4">
+                    <div
+                        className="flex items-center w-full justify-between cursor-pointer"
+                        onClick={() => handleExpanded('JenisProduk')}
+                    >
+                        <span className="text-xs text-neutral-900 font-semibold">Jenis Produk</span>
+                        <IconComponent
+                            src={`${
+                                getExpanded.some(a => a === 'JenisProduk')
+                                    ? '/icons/chevron-up.svg'
+                                    : '/icons/chevron-down.svg'
+                            }`}
+                        />
+                    </div>
+                    <div
+                        style={{
+                            maxHeight: getExpanded.some(a => a === 'JenisProduk') ? '300px' : '0px',
+                            overflow: 'hidden',
+                        }}
+                        className="transition-all duration-300 ease-in-out flex flex-col gap-4"
+                    >
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Pengiriman oleh Penjual' />
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Instant' />
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Express' />
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Regular' />
+                        <Checkbox classname={'text-xs font-medium text-neutral-900'} label='Kargo' />
+                    </div>
+                </div>}
+
                 {/* Rating */}
                 <div className="flex flex-col w-full gap-4 pt-4">
                     <div
