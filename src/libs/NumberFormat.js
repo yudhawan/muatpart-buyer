@@ -1,8 +1,11 @@
 export const numberFormatMoney = (val)=>{
-    const currency = new Intl.NumberFormat('id-ID',{
+    let currency = new Intl.NumberFormat('id-ID',{
         style:'currency',
         currency:'IDR',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
     }).format(val)
+    currency = currency.replace(/\s/g, '')
     return currency
 }
 
