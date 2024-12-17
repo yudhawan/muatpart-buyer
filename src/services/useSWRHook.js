@@ -19,7 +19,6 @@ class SWRHandler {
   }
 
   useSWRHook(url, customFetch, cbError, option, ...props) {
-    console.log(this)
     const fetcher = customFetch 
     ? (url) => customFetch(url, option) 
     : (url) => SWRHandler.defaultFetcher(url, option);

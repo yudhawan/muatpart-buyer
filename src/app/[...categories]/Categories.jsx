@@ -12,7 +12,7 @@ function Categories({params,searchParams}) {
   const {isMobile} = viewport()
   if(typeof isMobile!=='boolean') return <></> //buat skeleton
   if(isMobile) return <CategoriesResponsive/>
-  return <CategoriesWeb/>
+  return <CategoriesWeb params={params} searchParams={searchParams} />
 }
 
 export default Categories

@@ -1,4 +1,19 @@
 
 .main{
-    display:'flex'
+    display:flex;
+    max-width: 1280px;
+    width: 100%;
+    margin: auto;
+    padding-top: 24px;
+    flex-direction: column;
+    height: 100vh;
+}
+.breadcrumb{
+    div{
+        color:var(--neutral-600) !important;
+    }
+    div:last-child{
+        color:var(--primary-700) !important;
+    }
+    
 }
