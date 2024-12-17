@@ -4,8 +4,8 @@ import React, { useEffect, useState } from 'react'
 import ProductComponent from '@/components/ProductComponent/ProductComponent'
 import style from './HomePage.module.scss'
 import Bubble from '@/components/Bubble/Bubble'
-import categories from './mock'
 import ScreenCategories from './ScreenCategories'
+import { categoriesZustand } from '@/store/products/categoriesZustand'
 function HomePageResponsive({lastSeenProducts}) {
   const {
     setAppBar, 
@@ -14,6 +14,8 @@ function HomePageResponsive({lastSeenProducts}) {
     screen, // get screen,
     setGlobalPadding
   }=useHeader()
+  const {categories}=categoriesZustand()
+  const [getSelectedCategory,setSelectedCategory]=useState()
   useEffect(()=>{
     setGlobalPadding(false)
   },[])
@@ -34,15 +36,15 @@ function HomePageResponsive({lastSeenProducts}) {
             setScreen('screenCategories')
             setAppBar({
               appBarType:'header_title_modal_secondary',
-              title:'Kategori '+val.name,
+              title:'Kategori '+val.value,
               onBack:()=>clearScreen(),
               renderActionButton:<span className='w-4 bg-transparent'></span>
             })
           }}>
             <div className='border border-[#d7d7d7] rounded-md overflow-hidden w-12 h-12'>
-              <Image src={'/img/gojek.png'} width={48} height={48} className='w-full h-full object-contain' alt={val.name} />
+              <Image src={'/img/gojek.png'} width={48} height={48} className='w-full h-full object-contain' alt={val.value} />
             </div>
-            <span className='text-[#1b1b1b] h-7 text-[10px] font-medium line-clamp-2 text-center'>{val.name}</span>
+            <span className='text-[#1b1b1b] h-7 text-[10px] font-medium line-clamp-2 text-center'>{val.value}</span>
           </div>)}
         </div>
       </section>

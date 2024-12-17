@@ -113,7 +113,7 @@ export function HeaderTitleSearchMobile({appBar,type,title,onBack,searchPlacehol
         </span>:''
         }
         {(type==='header_search' || type==='header_search_secondary')&&<Input classname={style.inputSearchMobile} placeholder={searchPlaceholder} value={searchValue} changeEvent={e=>setSearch({value:e.target.value})} />}
-        {((type==='header_title' || type==='header_title_secondary')&&typeof title==='string')?<span className={`font-bold text-base ${isBgSecondary?'text-[#176cf7]':'text-neutral-50'}`}>{title}</span>:((type==='header_title' || type==='header_title_secondary')&&typeof title==='string')?title:''}
+        {((type==='header_title' || type==='header_title_secondary')&&typeof title==='string')?<span className={`font-bold text-base ${isBgSecondary?'text-[#176cf7]':'text-neutral-50'}`}>{title}</span>:((type==='header_title' || type==='header_title_secondary')&&typeof title!=='string')?title:''}
         {
           ActionButton?ActionButton:''
         }

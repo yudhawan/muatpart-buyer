@@ -12,30 +12,8 @@ import { ProfileHover, tips } from "./constanta";
 import Bubble from "@/components/Bubble/Bubble";
 import { authZustand } from "@/store/auth/authZustand";
 import Button from "@/components/Button/Button";
-const categories = [
-  {
-    icon: "/img/chopper.png",
-    id: "939129dad",
-    name: "One Piece",
-    data: [
-      { id: "ajd9dsa8jj", name: "Luffy" },
-      { id: "ajd98eqwejj", name: "Zoro" },
-      { id: "ajd98dasdjj", name: "Sanji" },
-      { id: "ajd9das8jj", name: "Jinbe" },
-    ],
-  },
-  {
-    icon: "/img/facebook.png",
-    id: "939134eqw29dad",
-    name: "Company",
-    data: [
-      { id: "ajdy56y98jj", name: "Facebook" },
-      { id: "ajd76u98jj", name: "Apple" },
-      { id: "ajdg98rejj", name: "Samsung" },
-      { id: "ajdrgegert98jj", name: "BYD" },
-    ],
-  },
-];
+import { categoriesZustand } from "@/store/products/categoriesZustand";
+
 function HeaderContainerWeb({ renderAppBar }) {
   const headerRef = useRef(null);
   const inputRef = useRef(null);
@@ -47,6 +25,7 @@ function HeaderContainerWeb({ renderAppBar }) {
   const [showListLocation, setShowListLocation] = useState(false);
   const [getCategory, setCategory] = useState();
   const { setHeaderHeight } = headerProps();
+  const {categories}=categoriesZustand()
   const {token} = authZustand()
   useEffect(() => {
     if (getProfile.length) {
@@ -88,15 +67,15 @@ function HeaderContainerWeb({ renderAppBar }) {
           {categories.map((val, i) => (
             <li key={i}>
               <div
-                onClick={() => setCategory(val)}
+                onMouseEnter={() => setCategory(val)}
                 className={`${
                   getCategory?.id === val.id ? "bg-neutral-200" : ""
                 } flex w-full justify-between items-center hover:bg-neutral-200 py-1 px-[10px] rounded-md cursor-pointer`}
               >
                 <div className="flex items-center gap-3">
-                  <Image width={24} height={24} src={val.icon} alt="chopper" />
+                  <Image width={24} height={24} src={val.icon??'/img/chopper.png'} alt="chopper" />
                   <span className="font-medium text-xs text-neutral-900">
-                    {val.name}
+                    {val.value}
                   </span>
                 </div>
                 <IconComponent src={"/icons/chevron-right.svg"} />
@@ -108,25 +87,27 @@ function HeaderContainerWeb({ renderAppBar }) {
         <div className="pl-3 w-[578px] flex flex-col gap-3 h-full border-l border-neutral-400">
           {getCategory?.name && (
             <span className="font-bold text-sm text-neutral-900">
-              Kategori {getCategory.name}
+              Kategori {getCategory.value}
             </span>
           )}
           {getCategory?.name && (
             <span className="h-[1px] w-full bg-neutral-400"></span>
           )}
           <div className="grid grid-cols-2 gap-2 w-full pl-[10px] h-fit">
-            {getCategory?.data?.map((val) => (
-              <span
+            {getCategory?.children?.map((val) => (
+              <Link
+                href={`/categories/${getCategory?.id}/${val?.id}`}
                 className="w-50% font-medium text-xs text-neutral-900 cursor-pointer"
                 key={val.id}
+                onClick={()=>setShowCategory(false)}
               >
-                {val.name}
-              </span>
+                {val.value}
+              </Link>
             ))}
           </div>
         </div>
         {/* banner */}
-        <Image width={176} height={264} src="/img/ads_category.png" />
+        <Image width={176} height={264} src="/img/ads_category.png" alt="ads" />
       </ModalComponent>
       <ModalComponent
         hideHeader
@@ -257,7 +238,7 @@ function HeaderContainerWeb({ renderAppBar }) {
               <span className='text-neutral-400 text-xs'>atau</span>
               <span className='bg-neutral-400 w-full h-[1px] self-center'></span>
           </span>
-          <span className="text-xs font-medium text-neutral-900"><span className="text-primary-400">Masuk</span> untuk melihat alamat yang telah kamu simpan</span></>}
+          <span className="text-xs font-medium text-neutral-900"><span className="text-primary-700">Masuk</span> untuk melihat alamat yang telah kamu simpan</span></>}
         </div>
       </ModalComponent>
       {
@@ -523,7 +504,7 @@ function HeaderContainerWeb({ renderAppBar }) {
                 >
                   <Image
                     src="/icons/tips-white.svg"
-                    alt=""
+                    alt="tips"
                     width={16}
                     height={16}
                   />
@@ -538,7 +519,7 @@ function HeaderContainerWeb({ renderAppBar }) {
                 >
                   <Image
                     src="/icons/garasi.svg"
-                    alt=""
+                    alt="garasi"
                     width={16}
                     height={16}
                   />
