@@ -136,6 +136,9 @@ module.exports = {
           900: "#770000",
         },
       },
+      boxShadow: {
+        'muatmuat': '0px 4px 11px 0px rgba(65, 65, 65, 0.25)'
+      },
     },
   },
   plugins: [
