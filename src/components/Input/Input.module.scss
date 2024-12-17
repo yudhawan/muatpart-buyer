@@ -3,8 +3,15 @@
   font-size: 12px;
   border-radius: 6px;
   padding: 8px;
+  padding-inline: 12px;
+  height: 32px;
   font-weight: 500;
+  background-color: #fff;
   color: var(--neutral-900);
+}
+
+.input::placeholder {
+  color: var(--neutral-600);
 }
 
 .input_style:hover {
@@ -32,7 +39,6 @@
 .input:focus {
   outline: none;
   border: none;
-  width: 100%;
 }
 
 .input_disabled,

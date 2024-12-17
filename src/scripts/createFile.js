@@ -39,18 +39,38 @@ function ${name}() {
 export default ${name}
   `;
 }
+function createStyle(name) {
+  return `
+.main{
+    display:'flex'
+}
+`;
+}
 
 function createNameWeb(name) {
   return `
 'use client';
-
+import style from './${name}.module.scss'
 function ${name}Web() {
     return (
-        <div>${name} Web</div>
+        <div className={style.main}>${name} Web</div>
     );
 }
 
 export default ${name}Web;
+  `;
+}
+function createNameOther(name) {
+  return `
+'use client';
+import style from './${name}.module.scss'
+function ${name}() {
+    return (
+        <div className={style.main}>${name} </div>
+    );
+}
+
+export default ${name};
   `;
 }
 
@@ -58,10 +78,10 @@ function createNameResponsive(name) {
   return `
 import { useHeader } from '@/common/ResponsiveContext'
 import React, { useEffect } from 'react'
-
+import style from './${name}.module.scss'
 function ${name}Responsive() {
   const {
-    appBarType, //pilih salah satu : 'titleSecondary' || 'searchSecondary' || 'navbarMobileDefaultScreen' || 'search' || 'title'
+    appBarType, //pilih salah satu : 'header_title_secondary' || 'header_search_secondary' || 'default_search_navbar_mobile' || 'header_search' || 'header_title'
     appBar, // muncul ini : {onBack:null,title:'',showBackButton:true,appBarType:'',appBar:null,header:null}
     renderAppBarMobile, // untuk render komponen header mobile dengan memasukkanya ke useEffect atau by trigger function / closer
     setAppBar, // tambahkan payload seperti ini setAppBar({onBack:()=>setScreen('namaScreen'),title:'Title header',appBarType:'type'})
@@ -77,12 +97,12 @@ function ${name}Responsive() {
     if(screen==='example2'){
       setAppBar({
         title:'Example 2',
-        appBarType:'search',
+        appBarType:'header_search',
         onBack:()=>{
         setScreen('example')
           setAppBar({
             title:'Example',
-            appBarType:'title',
+            appBarType:'header_title',
             onBack:()=>clearScreen()
           })
         }
@@ -94,14 +114,14 @@ function ${name}Responsive() {
     if(screen==='example3'){
       setAppBar({
         title:'Example 3',
-        appBarType:'titleSecondary',
+        appBarType:'header_title_secondary',
         onBack:()=>setScreen('example2')
       })
     }
     if(screen==='example4'){
       setAppBar({
         title:'Example 4',
-        appBarType:'searchSecondary',
+        appBarType:'header_search_secondary',
         onBack:()=>setScreen('example3')
       })
       setSearch({
@@ -134,12 +154,12 @@ function ${name}Responsive() {
   )
   // main screen
   return (
-    <div>
+    <div className={style.main}>
       <button className='bg-primary-600' onClick={()=>{
         setScreen('example')
         setAppBar({
           title:'Example',
-          appBarType:'title',
+          appBarType:'header_title',
           onBack:()=>clearScreen()
         })
       }} >To example Screen</button>
@@ -187,26 +207,35 @@ async function scanDir(pathDir) {
       console.log(`You choose: ${chosenDir}`);
 
       rl.question('Write Name of File: ', async (name) => {
-        const dirPath = path.join(chosenDirPath, name);
-        const fileWeb = path.join(dirPath, `${name}Web.jsx`);
-        const fileMobile = path.join(dirPath, `${name}Responsive.jsx`);
-        const fileName = path.join(dirPath, `${name}.jsx`);
+        const dirPath = path.join(chosenDirPath, name==='app'?name.toLowerCase():name);
+        const fileWeb = path.join(dirPath, `${name.charAt(0).toUpperCase()+name.slice(1)}Web.jsx`);
+        const fileMobile = path.join(dirPath, `${name.charAt(0).toUpperCase()+name.slice(1)}Responsive.jsx`);
+        const fileName = path.join(dirPath, `${name.charAt(0).toUpperCase()+name.slice(1)}.jsx`);
+        const fileStyle = path.join(dirPath, `${name.charAt(0).toUpperCase()+name.slice(1)}.module.scss`);
         const filePage = path.join(dirPath, `page.jsx`);
+        const fileIndex = path.join(dirPath, `${name.charAt(0).toUpperCase()+name.slice(1)}.jsx`);
 
         try {
-          await fs.mkdir(dirPath, { recursive: true });
-          console.log(`Directory ${dirPath} created.`);
+            await fs.mkdir(dirPath, { recursive: true });
+            console.log(`Directory ${dirPath} created.`);
+            if(chosenDir==='app'){
+                await Promise.all([
+                    fs.writeFile(filePage, createPage(name.charAt(0).toUpperCase()+name.slice(1)), 'utf8'),
+                    fs.writeFile(fileName, createName(name.charAt(0).toUpperCase()+name.slice(1)), 'utf8'),
+                    fs.writeFile(fileWeb, createNameWeb(name.charAt(0).toUpperCase()+name.slice(1)), 'utf8'),
+                    fs.writeFile(fileStyle, createStyle(name.charAt(0).toUpperCase()+name.slice(1)), 'utf8'),
+                    fs.writeFile(fileMobile, createNameResponsive(name.charAt(0).toUpperCase()+name.slice(1)), 'utf8'),
+                ]);
+            }else{
+                await Promise.all([
+                    fs.writeFile(fileStyle, createStyle(name), 'utf8'),
+                    fs.writeFile(fileIndex, createNameOther(name), 'utf8'),
+                ]);
+            }
 
-          await Promise.all([
-            fs.writeFile(filePage, createPage(name), 'utf8'),
-            fs.writeFile(fileName, createName(name), 'utf8'),
-            fs.writeFile(fileWeb, createNameWeb(name), 'utf8'),
-            fs.writeFile(fileMobile, createNameResponsive(name), 'utf8'),
-          ]);
-
-          console.log('Files created successfully!');
+            console.log('Files created successfully!');
         } catch (err) {
-          console.error('Error creating files:', err.message);
+            console.error('Error creating files:', err.message);
         }
 
         rl.close();

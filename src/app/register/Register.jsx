@@ -12,6 +12,7 @@ import toast from "@/store/toast";
 
 const api = process.env.NEXT_PUBLIC_API_HASYIM;
 
+
 function Register() {
   const router = useRouter();
   const step = useSearchParams().get("step") || "1";

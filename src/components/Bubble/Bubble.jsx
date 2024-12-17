@@ -22,7 +22,7 @@ const Bubble = ({
           : "bg-neutral-50 text-primary-700"
       } ${classname}`}
     >
-      {iconLeft && (
+      {typeof iconLeft==='string' ? (
         <IconComponent
           src={iconLeft}
           height={14}
@@ -32,9 +32,9 @@ const Bubble = ({
           }`}
           onclick={onClickLeft}
         />
-      )}
+      ):iconLeft}
       {children}
-      {iconRight && (
+      {typeof iconRight==='string' ? (
         <IconComponent
           src={iconRight}
           height={14}
@@ -44,7 +44,7 @@ const Bubble = ({
           }`}
           onclick={onClickRight}
         />
-      )}
+      ):iconRight}
     </div>
   );
 };

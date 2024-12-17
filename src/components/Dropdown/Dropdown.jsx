@@ -52,7 +52,7 @@ const Dropdown = forwardRef(
     useEffect(() => {
       setIsOpen(false)
     }, [datepicker])
-    
+
     useEffect(() => {
       if (dateRange[1] !== null) {
         onSelected(dateRange.map((item) => formatDateAPI(item)))
@@ -158,8 +158,8 @@ const Dropdown = forwardRef(
           <span className={`${style.list} select-none border-y border-neutral-400 cursor-default hover:unset`}>{optionsOtherText?optionsOtherText:'Opsi Lainnya'}</span>
           {
             optionsOther?.map(val=>{
-              return <li 
-                className={`${style.list} select-none ter`} 
+              return <li
+                className={`${style.list} select-none ter`}
                 key={val.name}
                 onClick={(e) =>{
                     if(!isMultipleSelected){
@@ -258,7 +258,7 @@ const Dropdown = forwardRef(
                 </div>
               )}
               {onCustom && (
-                <div 
+                <div
                 onClick={onCustom} className="flex cursor-pointer w-full justify-start items-center gap-2 border-b border-neutral-400 pb-3">
                   <IconComponent
                     src={"/icons/Plus.svg"}
