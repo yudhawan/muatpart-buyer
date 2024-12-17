@@ -5,6 +5,8 @@ import IconComponent from '@/components/IconComponent/IconComponent';
 import style from "./UpdateEmailModal.module.scss"
 import SWRHandler from '@/services/useSWRHook';
 import registerForm from '@/store/registerForm';
+import toast from '@/store/toast';
+import { viewport } from '@/store/viewport';
 // import { useSWRConfig } from 'swr';
 
 const UpdateEmailModal = ({ 
@@ -20,6 +22,8 @@ const UpdateEmailModal = ({
     formData,
     setFormData
   } = registerForm();
+  const { setShowToast, setDataToast } = toast();
+  const { isMobile } = viewport();
 
   // const { mutate } = useSWRConfig()
   const { useSWRMutateHook } = new SWRHandler();
@@ -30,9 +34,18 @@ const UpdateEmailModal = ({
 
   useEffect(() => {
     if (dataChangeEmail) {
-      console.log("useeffectchangeemail")
       setFormData([{ ...formData[0], email: dataChangeEmail.data.Data.newEmail }, formData[1]])
-      setNotification({ type: "success", message: "Berhasil mengubah email" })
+      const type = "success"
+      const message = "Berhasil mengubah email"
+      if (isMobile) {
+        setShowToast(true)
+        setDataToast({
+          message,
+          type,
+        });
+      } else {
+        setNotification({ type, message })
+      }
       setEmail("")
       setIsOpen(false)
     }

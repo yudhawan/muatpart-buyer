@@ -100,12 +100,20 @@
         width: 100%;
     }
 
-    .modal-apps-az-header-big{
+    .modal-apps-az-header-red-big{
+        background-image: url('./assets/header-big.svg');
+    }
+
+    .modal-apps-az-header-blue-big{
         background-image: url('/img/header_modal_blue.png');
     }
 
-    .modal-apps-az-header-small{
-        background-image: url('./assets//header-small.svg');
+    .modal-apps-az-header-red-small{
+        background-image: url('./assets/header-small.svg');
+    }
+
+    .modal-apps-az-header-blue-small{
+        background-image: url('/img/header_modal_blue_small.svg');
     }
 
     .modal-apps-az{

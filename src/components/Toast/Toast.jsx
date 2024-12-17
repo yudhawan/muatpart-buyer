@@ -18,7 +18,7 @@ const Toast = ({
     if (showToast) {
       const timer = setTimeout(() => {
         setShowToast(false);
-      }, 6000);
+      }, 60000);
       return () => clearTimeout(timer);
     }
   }, [showToast, onclick]);

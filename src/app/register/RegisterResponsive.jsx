@@ -1,4 +1,3 @@
-import { useHeader } from "@/common/ResponsiveContext";
 import InformasiPendaftarDanRekeningResponsive from "@/containers/Register/InformasiPendaftarDanRekeningResponsive";
 import { OtpResponsive } from "@/containers/Register/OtpResponsive";
 import React, { useEffect } from "react";
@@ -18,6 +17,10 @@ function RegisterResponsive({
   hasVerifiedLegality,
   hasVerifiedRekening,
   remainingTime,
+  verifyOtp,
+  errorVerifyOtp,
+  expiresIn,
+  resendOtp
 }) {
   const { prevStep, formData, currentStep } = registerForm();
   const router = useRouter();
@@ -50,10 +53,6 @@ function RegisterResponsive({
         </button>
       </div>
     );
-  if (step === "2")
-    return (
-      <InformasiPendaftarDanRekeningResponsive bankOptions={bankOptions}/>
-    );
   if (screen === "example3")
     return (
       <div className=" flex flex-col">
@@ -65,10 +64,6 @@ function RegisterResponsive({
           Go to Example 4
         </button>
       </div>
-    );
-  if (step === "4")
-    return (
-      <OtpResponsive />
     );
 
   const handleGoBack = () => {
@@ -126,6 +121,17 @@ function RegisterResponsive({
     console.log(formData);
   }, [formData]);
 
+  if (step === "4")
+    return (
+      <OtpResponsive
+        verifyOtp={verifyOtp}
+        errorVerifyOtp={errorVerifyOtp}
+        expiresIn={expiresIn}
+        resendOtp={resendOtp}
+        remainingTime={remainingTime}
+      />
+    );
+
   return (
     <>
       <NavbarCount
@@ -158,6 +164,13 @@ function RegisterResponsive({
       </button>
       <p>register Responsive</p> */}
         {currentStep + 1 === 1 && <InformasiTokoAkunResponsive />}
+        {currentStep + 1 === 2 && (
+          <InformasiPendaftarDanRekeningResponsive
+            bankOptions={bankOptions}
+            hasVerifiedLegality={hasVerifiedLegality}
+            hasVerifiedRekening={hasVerifiedRekening}
+          />
+        )}
         {currentStep + 1 === 3 && <KonfirmasiDataResponsive />}
       </div>
       <NavSelectedMobile classname="left-0 flex items-center gap-2 justify-end">

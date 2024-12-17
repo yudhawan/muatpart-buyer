@@ -3,7 +3,6 @@ import Image from "next/image";
 import OtpInput from "./OtpInput";
 import UpdateEmailModal from "./UpdateEmailModal";
 import Button from "@/components/Button/Button";
-import SWRHandler from '@/services/useSWRHook';
 import { useRouter } from 'next/navigation';
 import styles from "./Otp.module.scss"
 import registerForm from '@/store/registerForm';
@@ -60,7 +59,6 @@ const Otp = ({
 
   useEffect(() => {
     if (expiresIn) {
-      console.log("expires",expiresIn)
       setTimeLeft(expiresIn)
       setIsTimerActive(true)
       setNotification({ type: "success", message: "Berhasil mengirim ulang OTP" })
@@ -250,7 +248,7 @@ const Otp = ({
       </div>
 
       {/* Email Update Modal */}
-      <UpdateEmailModal 
+      <UpdateEmailModal
         isOpen={isEmailModalOpen}
         setIsOpen={setIsEmailModalOpen}
         setNotification={setNotification}

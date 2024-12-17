@@ -35,6 +35,7 @@ export default function Modal({
     class: "",
   },
   children,
+  headerColor = "red"
 }) {
   let close = useClose();
 
@@ -61,8 +62,8 @@ export default function Modal({
           <div
             className={`${styles["modal-apps-az-header"]} ${
               isBig
-                ? styles["modal-apps-az-header-big"]
-                : styles["modal-apps-az-header-small"]
+                ? styles[`modal-apps-az-header-${headerColor}-big`]
+                : styles[`modal-apps-az-header-${headerColor}-small`]
             } p-[8px] justify-end items-start rounded-t-[10px]`}
           >
             {closeBtn && (
