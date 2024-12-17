@@ -2,7 +2,6 @@
 'use client';
 import BreadCrumb from '@/components/Breadcrumb/Breadcrumb';
 import style from './Categories.module.scss'
-import ImageSlider from '@/components/ImageSlider/ImageSlider';
 import { useState } from 'react';
 import IconComponent from '@/components/IconComponent/IconComponent';
 import Link from 'next/link';
