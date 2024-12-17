@@ -5,6 +5,7 @@ import style from "./Dropdown.module.scss";
 
 const Dropdown = (
     {
+      id,
       options = [],
       classname,
       onSearchValue,
@@ -87,6 +88,7 @@ const Dropdown = (
     return (
       <div ref={dropdownRef} className={`${style.main} ${classname}`}>
         <button
+          id={id}
           onClick={handleToggle}
           className={`${style.buttonPlace} ${
             !selected.length && "!text-neutral-600"
@@ -210,4 +212,5 @@ Dropdown.propTypes = {
   onCustom: PropTypes.func,
   textCustom: PropTypes.string,
   defaultValue: PropTypes.shape(PropTypes.object),
+  id: PropTypes.string,
 };

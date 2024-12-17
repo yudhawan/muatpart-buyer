@@ -10,6 +10,8 @@ import ModalComponent from "@/components/Modals/ModalComponent";
 import { ResponsiveContext } from "@/common/ResponsiveContext";
 import { ProfileHover, tips } from "./constanta";
 import Bubble from "@/components/Bubble/Bubble";
+import { authZustand } from "@/store/auth/authZustand";
+import Button from "@/components/Button/Button";
 const categories = [
   {
     icon: "/img/chopper.png",
@@ -42,8 +44,10 @@ function HeaderContainerWeb({ renderAppBar }) {
   const [showTips, setShowTips] = useState(false);
   const [showLocation, setShowLocation] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [showListLocation, setShowListLocation] = useState(false);
   const [getCategory, setCategory] = useState();
   const { setHeaderHeight } = headerProps();
+  const {token} = authZustand()
   useEffect(() => {
     if (getProfile.length) {
       const newProfileUpdate = getProfile.map((val) => {
@@ -142,7 +146,7 @@ function HeaderContainerWeb({ renderAppBar }) {
             {tips.map((val, i) => {
               if (i == 0)
                 return (
-                  <div className="w-full py-3 px-6 border-t border-neutral-400 flex ">
+                  <div key={i} className="w-full py-3 px-6 border-t border-neutral-400 flex ">
                     <span className="text-primary-700 text-xs font-bold w-1/2">
                       {val.left}
                     </span>
@@ -153,7 +157,7 @@ function HeaderContainerWeb({ renderAppBar }) {
                 );
               if (i == tips.length - 1)
                 return (
-                  <div className="w-full py-3 px-6 border-y border-neutral-400 flex ">
+                  <div key={i} className="w-full py-3 px-6 border-y border-neutral-400 flex ">
                     <span className="text-neutral-900 text-[10px] font-medium w-1/2">
                       {val.left}
                     </span>
@@ -163,7 +167,7 @@ function HeaderContainerWeb({ renderAppBar }) {
                   </div>
                 );
               return (
-                <div className="w-full py-3 px-6 border-t border-neutral-400 flex ">
+                <div key={i} className="w-full py-3 px-6 border-t border-neutral-400 flex ">
                   <span className="text-neutral-900 text-[10px] font-medium w-1/2">
                     {val.left}
                   </span>
@@ -176,7 +180,86 @@ function HeaderContainerWeb({ renderAppBar }) {
           </div>
         </div>
       </ModalComponent>
-
+      <ModalComponent hideHeader isOpen={showLocation} setClose={()=>{
+        setShowLocation(false)
+        setShowListLocation(false)
+        }}>
+        <div className="py-6 px-4 flex flex-col gap-6">
+          {token?<h1 className="font-bold text-base text-neutral-900">Pilih Alamat Tujuan</h1>:<h1 className="font-bold text-base text-neutral-900">Ke mana pesanan mau dikirim?</h1>}
+          {token?
+          <div className="flex flex-col gap-4">
+            <Input placeholder="Cari nama alamat yang disimpan" focusEvent={()=>setShowListLocation(true)} icon={{left:'icons/search.svg'}} />
+            <ul className="flex flex-col list-none gap-2">
+              <li>
+                <div className="bg-primary-50 p-3 flex flex-col gap-4">
+                  <div className="flex justify-between items-center">
+                    <span className="flex items-center gap-2">
+                      <span className="text-xs text-neutral-900 font-bold">Gudang Bumi Cipta Karya</span>
+                      <span className="rounded p-1 bg-primary-700 text-neutral-50 text-xs font-semibold">Utama</span>
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-xs text-primary-700">Ubah</span>
+                      <IconComponent src={'/icons/pencil-blue.svg'} />
+                    </div>
+                  </div>
+                  <div className="flex justify-between h-auto relative">
+                    <div className="flex flex-col gap-3 w-[60%]">
+                      <span className="font-medium text-[10px] text-neutral-900">Joko (0811-2312-3123)</span>
+                      <span className="font-medium text-[10px] text-neutral-900">Jl. Pahlawan no. 18, Kota Kediri, Jawa Timur, 61665</span>
+                      <span className="font-medium text-[10px] text-neutral-900">Detail Alamat : Gudang Bumi Cipta Jaya</span>
+                    </div>
+                    <Button Class="absolute right-0 bottom-0" disabled>Terpilih</Button>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          :<><div className="flex flex-col gap-3">
+            <p className="text-xs font-medium text-neutral-900">Masukkan alamat/kelurahan/kota pengiriman kamu</p>
+            <div className="relative">
+              <Input placeholder="Cari Lokasi Kamu" focusEvent={()=>setShowListLocation(true)} icon={{left:'icons/search.svg'}} />
+              {showListLocation&&<ul className="absolute top-9 left-0 list-none bg-neutral-50 rounded-md shadow-xl w-full py-2 px-[10px] flex flex-col gap-4 border border-neutral-300">
+                <li>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1 cursor-pointer text-neutral-900 font-medium text-xs" onClick={()=>{
+                      setShowListLocation(false)
+                    }}>
+                      <IconComponent src={"/icons/marker-outline.svg"} />
+                      <span className="w-full line-clamp-1 cursor-pointer">Lokasi belum integrasi</span>
+                    </div>
+                    <span className="cursor-pointer" onClick={()=>{
+                      setShowListLocation(false)
+                    }}>
+                      <IconComponent src={"/icons/bookmark-outline.svg"} />
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1 text-neutral-900 font-medium text-xs" onClick={()=>{
+                      setShowListLocation(false)
+                    }}>
+                      <IconComponent src={"/icons/marker-outline.svg"} />
+                      <span className="w-full line-clamp-1">Lokasi belum integrasi</span>
+                    </div>
+                    <span onClick={()=>{
+                      setShowListLocation(false)
+                    }}>
+                      <IconComponent src={"/icons/bookmark-outline.svg"} />
+                    </span>
+                  </div>
+                </li>
+              </ul>}
+            </div>
+          </div>
+          <span className='w-full gap-3 flex item-center justify-between'>
+              <span className='bg-neutral-400 w-full h-[1px] self-center'></span>
+              <span className='text-neutral-400 text-xs'>atau</span>
+              <span className='bg-neutral-400 w-full h-[1px] self-center'></span>
+          </span>
+          <span className="text-xs font-medium text-neutral-900"><span className="text-primary-400">Masuk</span> untuk melihat alamat yang telah kamu simpan</span></>}
+        </div>
+      </ModalComponent>
       {
         <>
           {!renderAppBar && (
@@ -256,9 +339,10 @@ function HeaderContainerWeb({ renderAppBar }) {
                     <div className="hidden absolute group-hover:flex top-2 right-0 pt-4">
                       <div className="bg-white z-[91] w-[327px] p-4 cursor-default h-[192px] flex rounded-lg p4 divide-x-2 divide-neutral-500 shadow-xl">
                         <div className="flex flex-col gap-4 pr-3">
-                          {getProfile.map((val) => {
+                          {getProfile.map((val,i) => {
                             return (
                               <Link
+                                key={i}
                                 href={val.url}
                                 className="flex items-center justify-between gap-4 w-full"
                               >

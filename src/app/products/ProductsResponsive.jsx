@@ -5,7 +5,6 @@ import style from './Products.module.scss'
 import Button from '@/components/Button/Button'
 import IconComponent from '@/components/IconComponent/IconComponent'
 import FilterScreenProduct from './screens/FilterScreenProduct'
-import LokasiScreenProduct from './screens/LokasiScreenProduct'
 import CategoryScreenProduct from './screens/CategoryScreenProduct'
 import ButtonBottomMobile from '@/components/ButtonBottomMobile/ButtonBottomMobile'
 import BrandScreenProduct from './screens/BrandScreenProduct'
@@ -14,7 +13,20 @@ import Input from '@/components/Input/Input'
 import { mockProductsData } from '@/containers/HomePage/mock'
 import ProductComponent from '@/components/ProductComponent/ProductComponent'
 import GarasiCardComponent from '@/components/GarasiCardComponent/GarasiCardComponent'
-function ProductsResponsive({products}) {
+import { categoriesDummy } from './screens/mockcdata'
+import GarageScreenProduct from './screens/GarageScreenProduct'
+import LocationScreenProduct from './screens/LocationScreenProduct'
+import VehicleTypeScreenProduct from './screens/VehicleTypeScreenProduct'
+function ProductsResponsive(
+  {
+    products,
+    getFilterProduct,
+    handleInput,
+    search,
+    setSearch,
+    kompabilitas,
+    allCategories
+  }) {
   const menus=[
     {
         id:'produk',
@@ -29,7 +41,6 @@ function ProductsResponsive({products}) {
     appbar,
     setAppBar, 
     clearScreen,
-    setSearch,
     setScreen,
     screen
   }=useHeader()
@@ -39,9 +50,7 @@ function ProductsResponsive({products}) {
     desc:''
   })
   
-  const actionFilter = useMemo(()=>{
-    return <ButtonBottomMobile textLeft={'Reset'} textRight={'Terapkan'} onClickLeft={()=>{}} onClickRight={()=>{}} />
-  },[screen])
+
   useEffect(()=>{
     setAppBar({
       appBarType:'main_compact',
@@ -53,7 +62,7 @@ function ProductsResponsive({products}) {
   },[])
   
   useEffect(()=>{
-    if(screen==='location') {
+    if(screen==='location' | screen==='garasi') {
       setAppBar({
         appBarType:'header_search_secondary',
         onBack:()=> setScreen('filter'),
@@ -86,13 +95,21 @@ function ProductsResponsive({products}) {
         onBack:()=> setScreen('filter'),
         shadow:true
       })
+    }if(screen==='kendaraan') {
+      setAppBar({
+        appBarType:'header_search_secondary',
+        onBack:()=> setScreen('filter'),
+        shadow:true
+      })
     }
   },[screen])
 
   if(screen==='filter') return <FilterScreenProduct isToko={getMenu?.id==='toko'} textLeft={getMenu?.id==='toko'?'Reset':''} textRight={getMenu?.id==='toko'?'Terapkan':''} />
-  if(screen==='location') return <LokasiScreenProduct actionFilter={actionFilter} />
-  if(screen==='category') return <CategoryScreenProduct actionFilter={actionFilter} />
-  if(screen==='brand') return <BrandScreenProduct actionFilter={actionFilter} />
+  if(screen==='garasi') return <GarageScreenProduct data={[]} getFilterProduct={getFilterProduct} handleInput={handleInput} search={search} setSearch={setSearch} />
+  if(screen==='location') return <LocationScreenProduct />
+  if(screen==='category') return <CategoryScreenProduct categories={categoriesDummy} />
+  if(screen==='brand') return <BrandScreenProduct />
+  if(screen==='kendaraan') return <VehicleTypeScreenProduct data={kompabilitas} getFilterProduct={getFilterProduct} handleInput={handleInput} search={search} setSearch={setSearch} />
   // main screen
   return (
     <div className={style.main}>
@@ -113,19 +130,19 @@ function ProductsResponsive({products}) {
             setSearch({
               placeholder:'Cari Produk'
             })
-          }} className={`${style.filterButton} ${!products?'!text-neutral-600':''}`} >
+          }} className={`${style.filterButton} ${!products?.length?'!text-neutral-600':''}`} >
             <span>Filter</span>
-            <IconComponent classname={`${products?style.iconFilter:style.iconFilterDisable}`} src='/icons/filter.svg' />
+            <IconComponent classname={`${products?.length?style.iconFilter:style.iconFilterDisable}`} src='/icons/filter.svg' />
           </button>
-          <button  className={`${style.filterButton} ${!products?'!text-neutral-600':''}`} >
+          <button  className={`${style.filterButton} ${!products?.length?'!text-neutral-600':''}`} >
             <span>Urutkan</span>
-            <IconComponent classname={`${products?style.iconFilter:style.iconFilterDisable}`} src='/icons/sorting.svg' />
+            <IconComponent classname={`${products?.length?style.iconFilter:style.iconFilterDisable}`} src='/icons/sorting.svg' />
           </button>
       </div>
       <div className='mt-4 flex flex-col gap-2 pb-5'>
         {/* list products */}
         {
-          products?
+          products?.length?
           <></>
           :<>
           <DataNotFound textClass={'!font-semibold !text-sm !text-neutral-600 !w-[111px]'} title='Keyword 
@@ -138,7 +155,7 @@ function ProductsResponsive({products}) {
               </div>
               <div className={`${getMenu?.id==='produk'?'flex-col':'flex-col-reverse'} flex gap-6`}>
                 <div className='flex flex-col gap-4'>
-                  <p className='font-semibold text-sm text-neutral-900 flex gap-1'>Email <p className='text-[10px]'>{'(Optional)'}</p></p>
+                  <span className='font-semibold text-sm text-neutral-900 flex gap-1'>Email <p className='text-[10px]'>{'(Optional)'}</p></span>
                   <Input placeholder='Contoh : brikobatubata@mail.com' value={getState.email} changeEvent={(e)=>setState(prev=>({...prev,email:e.target.value}))} />
                 </div>
                 <div className='flex flex-col gap-4'>

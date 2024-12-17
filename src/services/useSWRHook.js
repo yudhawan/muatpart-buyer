@@ -4,10 +4,9 @@ import useSWRMutation from "swr/mutation";
 import { useToken } from "@/store/zustand/token";
 
 class SWRHandler {
-  interceptor = null;
   constructor(defaultFetcher = SWRHandler.defaultFetcher.bind(this)) {
     this.defaultFetcher = defaultFetcher;
-    this.interceptor - null;
+    this.interceptor = null;
   }
   static defaultFetcher(url, option) {
     return axios({ url, ...option }).then((res) => res.data);
@@ -25,7 +24,7 @@ class SWRHandler {
     : (url) => SWRHandler.defaultFetcher(url, option);
     const result = useSWR(url, fetcher, {
       onError: (err) => {
-        this.interceptor = err.status;
+        // this.interceptor = err?.status;
         if (cbError) cbError(err);
         else {
           if (err.status === 401 || err.status === 403) {
@@ -54,7 +53,7 @@ class SWRHandler {
       },
       {
         onError: (err) => {
-          this.interceptor = err.status;
+          // this.interceptor = err.status;
           if (cbError) cbError(err);
           else {
             if (err.status === 401 || err.status === 403) {
@@ -68,14 +67,14 @@ class SWRHandler {
   }
 }
 
-class InterceptorHook extends SWRHandler {
-  authorize = false
-  constructor() {
-    this.authorize = !!super.getInterceptor();
-  }
-  getUnauthorized() {
-    return this.authorize;
-  }
-}
+// class InterceptorHook extends SWRHandler {
+//   authorize = false
+//   constructor() {
+//     this.authorize = !!super.getInterceptor();
+//   }
+//   getUnauthorized() {
+//     return this.authorize;
+//   }
+// }
 
 export default SWRHandler;

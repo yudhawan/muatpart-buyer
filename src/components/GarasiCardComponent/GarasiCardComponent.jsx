@@ -14,7 +14,7 @@ function GarasiCardComponent({image,name,timeStatus,trucks,products,location,sta
                     <div className='flex flex-col gap-2'>
                         <p className='font-bold text-neutral-900 text-xs'>{name}</p>
                         <p className='font-medium text-xs text-neutral-700'>{timeStatus}</p>
-                        <div className='flex gap-1 items-center'>
+                        <div className={style.truckMobile+' flex gap-1 items-center'}>
                             <Image width={16} height={16} src={'/icons/mini-truck.svg'} alt='truck' />
                             <p className='font-medium text-xs text-neutral-700'>{trucks}</p>
                         </div>
@@ -26,11 +26,11 @@ function GarasiCardComponent({image,name,timeStatus,trucks,products,location,sta
             </div>
             <div className='flex gap-2'>
                 {
-                    products?.map(val=>{
+                    products?.map((val,i)=>{
                         return(
-                            <div className='rounded-md overflow-hidden flex flex-col border border-neutral-400 w-24 bg-neutral-50'>
+                            <div key={i} className='rounded-md overflow-hidden flex flex-col border border-neutral-400 w-24 bg-neutral-50'>
                                 <div className='w-full h-24'>
-                                    <Image src={val?.image?val?.image:'/img/chopper.png'} width={96} height={96} className='w-full' />
+                                    <Image src={val?.image?val?.image:'/img/chopper.png'} width={96} height={96} className='w-full' alt={name} />
                                 </div>
                                 <div className='py-3 px-2 text-[10px] font-medium'>
                                     {
@@ -50,6 +50,10 @@ function GarasiCardComponent({image,name,timeStatus,trucks,products,location,sta
                 <div className='flex gap-1 items-center'>
                     <Image src={'/icons/product-star.svg'} width={16} height={16} alt='star' />
                     <span className='text-neutral-700 font-medium text-[12px]'>{star} &#183; Terjual {soldCount}</span>
+                </div>
+                <div className={style.truckWeb+' flex gap-1 items-center'}>
+                    <Image width={16} height={16} src={'/icons/mini-truck.svg'} alt='truck' />
+                    <p className='font-medium text-xs text-neutral-700'>{trucks}</p>
                 </div>
             </div>
         </div>
