@@ -7,7 +7,7 @@ import Input from "@/components/Input/Input";
 import Dropdown from "@/components/Dropdown/Dropdown";
 import Button from "@/components/Button/Button";
 import ProductComponent from "@/components/ProductComponent/ProductComponent";
-import ImageSlider from "@/components/ImageSlider/ImageSlider";
+import MultipleItems from "@/components/ReactSlick/MultipleItems";
 
 function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
   const [filter, setVehicle] = useState({
@@ -34,7 +34,6 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
     keyword: "",
   });
 
-  // reset state
   const resetFilter = () => {
     setVehicle({
       vehicle: {
@@ -90,53 +89,39 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
   });
 
   const headerImages = [
-    {
-      src: "https://placehold.co/500x250/orange/white",
-      alt: "Slider image 1",
-    },
-    {
-      src: "https://placehold.co/500x250/purple/white",
-      alt: "Slider image 2",
-    },
-    {
-      src: "https://placehold.co/500x250/green/white",
-      alt: "Slider image 3",
-    },
+    "https://placehold.co/500x250/red/white.png",
+    "https://placehold.co/500x250/green/white.png",
+    "https://placehold.co/500x250/blue/white.png",
   ];
 
   const bannerImages = [
-    {
-      src: "https://placehold.co/1000x250/blue/white",
-      alt: "Promotion image 1",
-    },
-    {
-      src: "https://placehold.co/1000x250/red/white",
-      alt: "Promotion image 2",
-    },
-    {
-      src: "https://placehold.co/1000x250/brown/white",
-      alt: "Promotion image 3",
-    },
+    "https://placehold.co/1000x250/red/white.png",
+    "https://placehold.co/1000x250/green/white.png",
+    "https://placehold.co/1000x250/blue/white.png",
   ];
 
   const promotionImages = [
-    {
-      src: "https://placehold.co/500x250/blue/white",
-      alt: "Promotion image 1",
-    },
-    {
-      src: "https://placehold.co/500x250/red/white",
-      alt: "Promotion image 2",
-    },
-    {
-      src: "https://placehold.co/500x250/brown/white",
-      alt: "Promotion image 3",
-    },
+    "https://placehold.co/1000x500/red/white.png",
+    "https://placehold.co/1000x500/green/white.png",
+    "https://placehold.co/1000x500/blue/white.png",
   ];
 
   const handleInputChange = (e) => {
     setVehicle({ ...filter, keyword: e.target.value });
   };
+
+  const joinedSellers = [
+    "https://cdn-icons-png.flaticon.com/512/732/732212.png",
+    "https://cdn-icons-png.flaticon.com/512/145/145807.png",
+    "https://cdn-icons-png.flaticon.com/512/2111/2111370.png",
+    "https://cdn-icons-png.flaticon.com/512/733/733579.png",
+    "https://cdn-icons-png.flaticon.com/512/888/888859.png",
+    "https://cdn-icons-png.flaticon.com/512/732/732200.png",
+    "https://cdn-icons-png.flaticon.com/512/888/888879.png",
+    "https://cdn-icons-png.flaticon.com/512/888/888846.png",
+    "https://cdn-icons-png.flaticon.com/512/888/888853.png",
+    "https://cdn-icons-png.flaticon.com/512/888/888847.png",
+  ];
 
   return (
     <div>
@@ -146,7 +131,19 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
       <section className="bg-neutral-100 py-6">
         <div className="flex justify-center gap-10 max-w-7xl mx-auto">
           <div className="max-w-[500px]">
-            <ImageSlider baseImages={headerImages} />
+            <MultipleItems
+              items={headerImages}
+              settings={{
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 3000,
+                dots: true,
+                arrows: false,
+              }}
+              size={500}
+              className="rounded-xl"
+            />
           </div>
           <div className="w-[380px] space-y-3">
             <div className="flex justify-between items-center">
@@ -273,7 +270,18 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
       </section>
       <section className="bg-white py-6">
         <div className="w-[1000px] mx-auto">
-          <ImageSlider baseImages={bannerImages} />
+          <MultipleItems
+            items={bannerImages}
+            settings={{
+              slidesToShow: 1,
+              slidesToScroll: 1,
+              autoplay: true,
+              autoplaySpeed: 3000,
+              dots: true,
+            }}
+            size={1000}
+            className="rounded-xl"
+          />
         </div>
       </section>
       <section className="bg-white py-6">
@@ -287,26 +295,41 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
               .flat()
               .slice(0, 18)
               .map((val) => {
-                return <ProductComponent key={val.id} {...val} />;
+                return (
+                  <ProductComponent
+                    key={val.id}
+                    {...val}
+                    image={`https://prd.place/170?id=${Math.floor(
+                      Math.random() * 46
+                    )}`}
+                  />
+                );
               })}
           </div>
 
           <Button Class="place-self-center">Muat Lebih Banyak</Button>
         </div>
       </section>
-
       <section className="bg-white py-6">
         <div className="w-[1080px] mx-auto space-y-7">
           <h1 className="text-neutral-900 font-bold text-lg">
             Mungkin Kamu Juga Suka
           </h1>
           <div className="w-full grid grid-cols-6 gap-3">
-            {Array(Math.ceil(18 / mostVisitedProducts.products.length))
-              .fill(mostVisitedProducts.products)
+            {Array(Math.ceil(18 / youMightLike.products.length))
+              .fill(youMightLike.products)
               .flat()
               .slice(0, 18)
               .map((val) => {
-                return <ProductComponent key={val.id} {...val} />;
+                return (
+                  <ProductComponent
+                    key={val.id}
+                    {...val}
+                    image={`https://prd.place/170?id=${Math.floor(
+                      Math.random() * 46
+                    )}`}
+                  />
+                );
               })}
           </div>
 
@@ -319,10 +342,17 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
           <h1 className="text-neutral-900 font-bold text-lg">
             Promo muatparts Mart
           </h1>
-          <div className="flex gap-3">
-            <ImageSlider baseImages={promotionImages} />
-            <ImageSlider baseImages={promotionImages} />
-          </div>
+          <MultipleItems
+            items={promotionImages}
+            settings={{
+              slidesToShow: 2,
+              slidesToScroll: 1,
+              autoplay: true,
+              autoplaySpeed: 3000,
+            }}
+            size={500}
+            className="rounded-xl"
+          />
         </div>
       </section>
 
@@ -333,7 +363,15 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
           </h1>
           <div className="w-full grid grid-cols-6 gap-3">
             {lastSeenProducts.products.map((val) => {
-              return <ProductComponent key={val.id} {...val} />;
+              return (
+                <ProductComponent
+                  key={val.id}
+                  {...val}
+                  image={`https://prd.place/170?id=${Math.floor(
+                    Math.random() * 46
+                  )}`}
+                />
+              );
             })}
           </div>
         </div>
@@ -395,11 +433,21 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
       </section>
 
       <section className="bg-white py-16">
-        <h1 className="text-neutral-900 my-10 font-bold text-[28px] text-center">
-          Penjual yang Telah Bergabung
-        </h1>
-        <div className="w-[1120px] mx-auto">
-          <ImageSlider baseImages={bannerImages} />
+        <div className="w-[1080px] mx-auto">
+          <h1 className="text-neutral-900 mt-10 mb-24 font-bold text-[28px] text-center">
+            Penjual yang Telah Bergabung
+          </h1>
+          <MultipleItems
+            items={joinedSellers}
+            settings={{
+              slidesToShow: joinedSellers.length < 8 ? joinedSellers.length : 8,
+              slidesToScroll: 1,
+              autoplay: false,
+            }}
+            size={64}
+            arrowPadding="32px"
+            className="mx-auto"
+          />
         </div>
       </section>
     </div>
