@@ -1,0 +1,23 @@
+.manlokContainer {
+  margin: 0 !important;
+  div {
+    div.space-y-4.my-4 {
+      // ini space-y-4
+      margin: 0 !important;
+      div.flex.items-baseline {
+        // ini flex items-baseline
+        gap: 46px !important;
+        align-items: center;
+        width: 100%;
+        padding: 1rem 2rem !important;
+        label {
+          width: 300px !important;
+          padding: 0 !important;;
+        }
+        div {
+
+        }
+      }
+    }
+  }
+}

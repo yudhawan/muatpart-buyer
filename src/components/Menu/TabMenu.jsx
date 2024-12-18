@@ -1,6 +1,6 @@
 import { Fragment, useRef } from "react";
 import { useRouter } from "next/navigation";
-import menuZus from "../../store/zustand/menu";
+import menuZus from "@/store/menu";
 
 const TabMenu = ({ menu, onclick }) => {
   const router = useRouter();
