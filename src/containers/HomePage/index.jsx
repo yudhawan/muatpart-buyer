@@ -17,6 +17,7 @@ function HomePage() {
     <HomePageWeb
       lastSeenProducts={mockProductsData}
       mostVisitedProducts={mockProductsData}
+      youMightLike={mockProductsData}
     />
   );
 }

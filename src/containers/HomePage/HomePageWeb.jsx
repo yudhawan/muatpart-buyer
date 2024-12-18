@@ -7,32 +7,58 @@ import Input from "@/components/Input/Input";
 import Dropdown from "@/components/Dropdown/Dropdown";
 import Button from "@/components/Button/Button";
 import ProductComponent from "@/components/ProductComponent/ProductComponent";
-import ImageSlider from "@/components/ImageSlider/ImageSlider";
+import MultipleItems from "@/components/ReactSlick/MultipleItems";
 
 function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
   const [filter, setVehicle] = useState({
     vehicle: {
-      name: "Semua Jenis Kendaraan",
       value: "",
+      name: "",
     },
     brand: {
-      name: "Semua Brand",
       value: "",
+      name: "",
     },
     year: {
-      name: "Semua Tahun",
       value: "",
+      name: "",
     },
     model: {
-      name: "Semua Model",
       value: "",
+      name: "",
     },
     type: {
-      name: "Semua Tipe",
       value: "",
+      name: "",
     },
     keyword: "",
   });
+
+  const resetFilter = () => {
+    setVehicle({
+      vehicle: {
+        value: "",
+        name: "",
+      },
+      brand: {
+        value: "",
+        name: "",
+      },
+      year: {
+        value: "",
+        name: "",
+      },
+      model: {
+        value: "",
+        name: "",
+      },
+      type: {
+        value: "",
+        name: "",
+      },
+      keyword: "",
+    });
+  };
 
   const [options, setOptions] = useState({
     vehicle: [
@@ -63,61 +89,61 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
   });
 
   const headerImages = [
-    {
-      src: "https://placehold.co/500x250/orange/white",
-      alt: "Slider image 1",
-    },
-    {
-      src: "https://placehold.co/500x250/purple/white",
-      alt: "Slider image 2",
-    },
-    {
-      src: "https://placehold.co/500x250/green/white",
-      alt: "Slider image 3",
-    },
+    "https://placehold.co/500x250/red/white.png",
+    "https://placehold.co/500x250/green/white.png",
+    "https://placehold.co/500x250/blue/white.png",
   ];
 
   const bannerImages = [
-    {
-      src: "https://placehold.co/1000x250/blue/white",
-      alt: "Promotion image 1",
-    },
-    {
-      src: "https://placehold.co/1000x250/red/white",
-      alt: "Promotion image 2",
-    },
-    {
-      src: "https://placehold.co/1000x250/brown/white",
-      alt: "Promotion image 3",
-    },
+    "https://placehold.co/1000x250/red/white.png",
+    "https://placehold.co/1000x250/green/white.png",
+    "https://placehold.co/1000x250/blue/white.png",
   ];
 
   const promotionImages = [
-    {
-      src: "https://placehold.co/500x250/blue/white",
-      alt: "Promotion image 1",
-    },
-    {
-      src: "https://placehold.co/500x250/red/white",
-      alt: "Promotion image 2",
-    },
-    {
-      src: "https://placehold.co/500x250/brown/white",
-      alt: "Promotion image 3",
-    },
+    "https://placehold.co/1000x500/red/white.png",
+    "https://placehold.co/1000x500/green/white.png",
+    "https://placehold.co/1000x500/blue/white.png",
   ];
 
   const handleInputChange = (e) => {
     setVehicle({ ...filter, keyword: e.target.value });
   };
 
+  const joinedSellers = [
+    "https://cdn-icons-png.flaticon.com/512/732/732212.png",
+    "https://cdn-icons-png.flaticon.com/512/145/145807.png",
+    "https://cdn-icons-png.flaticon.com/512/2111/2111370.png",
+    "https://cdn-icons-png.flaticon.com/512/733/733579.png",
+    "https://cdn-icons-png.flaticon.com/512/888/888859.png",
+    "https://cdn-icons-png.flaticon.com/512/732/732200.png",
+    "https://cdn-icons-png.flaticon.com/512/888/888879.png",
+    "https://cdn-icons-png.flaticon.com/512/888/888846.png",
+    "https://cdn-icons-png.flaticon.com/512/888/888853.png",
+    "https://cdn-icons-png.flaticon.com/512/888/888847.png",
+  ];
+
   return (
     <div>
-      <pre>{/* <code>{JSON.stringify(filter, null, 2)}</code> */}</pre>
+      {/* <pre>
+        <code>{JSON.stringify(filter, null, 2)}</code>
+      </pre> */}
       <section className="bg-neutral-100 py-6">
-        <div className="flex justify-center gap-10 max-w-[1280px] mx-auto">
+        <div className="flex justify-center gap-10 max-w-7xl mx-auto">
           <div className="max-w-[500px]">
-            <ImageSlider baseImages={headerImages} />
+            <MultipleItems
+              items={headerImages}
+              settings={{
+                slidesToShow: 1,
+                slidesToScroll: 1,
+                autoplay: true,
+                autoplaySpeed: 3000,
+                dots: true,
+                arrows: false,
+              }}
+              size={500}
+              className="rounded-xl"
+            />
           </div>
           <div className="w-[380px] space-y-3">
             <div className="flex justify-between items-center">
@@ -129,13 +155,14 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
                 width={16}
                 height={16}
                 alt="reset"
-                onClick={() => {}}
+                onClick={() => resetFilter()}
                 className="cursor-pointer hover:rotate-45 transition-transform"
               />
             </div>
 
             <div className="grid grid-flow-row-dense grid-cols-4 grid-rows-3 gap-3">
               <Dropdown
+                defaultValue={filter.vehicle}
                 options={options.vehicle}
                 placeholder="Pilih Jenis Kendaraan"
                 classname="!w-full col-span-4"
@@ -152,6 +179,7 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
                 onSelected={(val) => setVehicle({ ...filter, vehicle: val[0] })}
               />
               <Dropdown
+                defaultValue={filter.brand}
                 options={options.brand}
                 placeholder="Pilih Brand"
                 classname="!w-full col-span-2"
@@ -168,6 +196,7 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
                 onSelected={(val) => setVehicle({ ...filter, brand: val[0] })}
               />
               <Dropdown
+                defaultValue={filter.year}
                 options={options.year}
                 placeholder="Pilih Tahun"
                 classname="!w-full col-span-2"
@@ -184,6 +213,7 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
                 onSelected={(val) => setVehicle({ ...filter, year: val[0] })}
               />
               <Dropdown
+                defaultValue={filter.model}
                 options={options.model}
                 placeholder="Pilih Model"
                 classname="!w-full col-span-2"
@@ -200,6 +230,7 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
                 onSelected={(val) => setVehicle({ ...filter, model: val[0] })}
               />
               <Dropdown
+                defaultValue={filter.type}
                 options={options.type}
                 placeholder="Pilih Tipe"
                 classname="!w-full col-span-2"
@@ -239,7 +270,18 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
       </section>
       <section className="bg-white py-6">
         <div className="w-[1000px] mx-auto">
-          <ImageSlider baseImages={bannerImages} />
+          <MultipleItems
+            items={bannerImages}
+            settings={{
+              slidesToShow: 1,
+              slidesToScroll: 1,
+              autoplay: true,
+              autoplaySpeed: 3000,
+              dots: true,
+            }}
+            size={1000}
+            className="rounded-xl"
+          />
         </div>
       </section>
       <section className="bg-white py-6">
@@ -253,26 +295,41 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
               .flat()
               .slice(0, 18)
               .map((val) => {
-                return <ProductComponent key={val.id} {...val} />;
+                return (
+                  <ProductComponent
+                    key={val.id}
+                    {...val}
+                    image={`https://prd.place/170?id=${Math.floor(
+                      Math.random() * 46
+                    )}`}
+                  />
+                );
               })}
           </div>
 
           <Button Class="place-self-center">Muat Lebih Banyak</Button>
         </div>
       </section>
-
       <section className="bg-white py-6">
         <div className="w-[1080px] mx-auto space-y-7">
           <h1 className="text-neutral-900 font-bold text-lg">
             Mungkin Kamu Juga Suka
           </h1>
           <div className="w-full grid grid-cols-6 gap-3">
-            {Array(Math.ceil(18 / mostVisitedProducts.products.length))
-              .fill(mostVisitedProducts.products)
+            {Array(Math.ceil(18 / youMightLike.products.length))
+              .fill(youMightLike.products)
               .flat()
               .slice(0, 18)
               .map((val) => {
-                return <ProductComponent key={val.id} {...val} />;
+                return (
+                  <ProductComponent
+                    key={val.id}
+                    {...val}
+                    image={`https://prd.place/170?id=${Math.floor(
+                      Math.random() * 46
+                    )}`}
+                  />
+                );
               })}
           </div>
 
@@ -285,10 +342,17 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
           <h1 className="text-neutral-900 font-bold text-lg">
             Promo muatparts Mart
           </h1>
-          <div className="flex gap-3">
-            <ImageSlider baseImages={promotionImages} />
-            <ImageSlider baseImages={promotionImages} />
-          </div>
+          <MultipleItems
+            items={promotionImages}
+            settings={{
+              slidesToShow: 2,
+              slidesToScroll: 1,
+              autoplay: true,
+              autoplaySpeed: 3000,
+            }}
+            size={500}
+            className="rounded-xl"
+          />
         </div>
       </section>
 
@@ -299,9 +363,91 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
           </h1>
           <div className="w-full grid grid-cols-6 gap-3">
             {lastSeenProducts.products.map((val) => {
-              return <ProductComponent key={val.id} {...val} />;
+              return (
+                <ProductComponent
+                  key={val.id}
+                  {...val}
+                  image={`https://prd.place/170?id=${Math.floor(
+                    Math.random() * 46
+                  )}`}
+                />
+              );
             })}
           </div>
+        </div>
+      </section>
+
+      <section className="bg-neutral-100 relative">
+        <h1 className="text-neutral-900 my-10 font-bold text-[28px] text-center">
+          Keuntungan belanja di muatparts
+        </h1>
+        <div className="absolute flex flex-col items-center max-w-7xl left-0 right-0 bottom-0 mx-auto">
+          <div className="grid grid-cols-4 gap-14">
+            <div className="max-w-[200px] space-y-3">
+              <Image
+                src={"/img/web-keuntungan-1.png"}
+                alt="image"
+                width={185.4}
+                height={178}
+              />
+              <div className="text-center font-bold leading-5">
+                Layanan pengembalian 7 hari setelah pesanan selesai
+              </div>
+            </div>
+            <div className="max-w-[200px] space-y-3">
+              <Image
+                src={"/img/web-keuntungan-2.png"}
+                alt="image"
+                width={200}
+                height={200}
+              />
+              <div className="text-center font-bold leading-5">
+                Keamanan Pembayaran
+              </div>
+            </div>
+            <div className="max-w-[200px] space-y-3">
+              <Image
+                src={"/img/web-keuntungan-3.png"}
+                alt="image"
+                width={200}
+                height={200}
+              />
+              <div className="text-center font-bold leading-5">
+                Gratis Pengiriman
+              </div>
+            </div>
+            <div className="max-w-[200px] space-y-3">
+              <Image
+                src={"/img/web-keuntungan-4.png"}
+                alt="image"
+                width={200}
+                height={200}
+              />
+              <div className="text-center font-bold leading-5">
+                Sparepart Terlengkap
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white h-[200px] mt-24 w-full rounded-t-[40px]"></div>
+      </section>
+
+      <section className="bg-white py-16">
+        <div className="w-[1080px] mx-auto">
+          <h1 className="text-neutral-900 mt-10 mb-24 font-bold text-[28px] text-center">
+            Penjual yang Telah Bergabung
+          </h1>
+          <MultipleItems
+            items={joinedSellers}
+            settings={{
+              slidesToShow: joinedSellers.length < 8 ? joinedSellers.length : 8,
+              slidesToScroll: 1,
+              autoplay: false,
+            }}
+            size={64}
+            arrowPadding="32px"
+            className="mx-auto"
+          />
         </div>
       </section>
     </div>
