@@ -5,19 +5,23 @@ import IconComponent from "../IconComponent/IconComponent";
 import { numberFormatMoney } from "@/libs/NumberFormat";
 
 function ProductComponent({
-  id,
-  image,
-  favorite,
-  productName,
-  storeName,
-  price,
-  stock,
-  discount,
-  star,
-  quality,
-  location,
-  soldCount,
-  warranty,
+  ID,
+  Photo,
+  Favorite,
+  Name,
+  Store,
+  PriceBeforeDiscount,
+  PriceAfterDiscount,
+  Discount,
+  Rating,
+  ReviewCount,
+  SalesType,
+  Views,
+  Quality,
+  City,
+  SoldCount,
+  Bonus,
+  CreatedAt,
 }) {
   return (
     <div className={style.main}>
@@ -25,42 +29,42 @@ function ProductComponent({
         <span className="absolute right-0 m-2 w-7 h-7 rounded-full bg-neutral-50 grid place-content-center">
           <IconComponent
             src={"/icons/heart-outline.svg"}
-            classname={favorite ? style.favorite : ""}
+            classname={Favorite ? style.Favorite : ""}
           />
         </span>
         <Image
-          src={image ? image : "/img/chopper.png"}
+          src={Photo ? Photo : "/img/chopper.png"}
           width={168}
           height={168}
-          alt={productName}
+          alt={Name}
           className="rounded-t-md object-contain aspect-square"
         />
       </div>
       <div className={style.sectionBottom}>
         <span className="bg-warning-100 py-1 px-3 my-2 w-fit rounded-r-[20px] text-xs font-semibold text-warning-900">
-          Kualitas : {quality}
+          Kualitas : {Quality}
         </span>
 
         <div className="px-2">
           <h1 className="text-xs font-medium text-neutral-900 w-full line-clamp-2 leading-tight mb-1">
-            {productName}
+            {Name}
           </h1>
-          {discount ? (
+          {Discount ? (
             <>
               <div className="flex gap-1 items-center">
                 <strike className="text-neutral-600 text-[10px] font-medium">
-                  {price}
+                  {PriceBeforeDiscount}
                 </strike>
 
-                <p className={style.discount}>{discount}% OFF</p>
+                <p className={style.discount}>{Discount}</p>
               </div>
               <h1 className="text-neutral-900 text-sm font-bold">
-                {numberFormatMoney(Math.ceil(price - (price * discount) / 100))}
+                {PriceAfterDiscount}
               </h1>
             </>
           ) : (
             <h1 className="text-neutral-900 text-sm font-bold">
-              {numberFormatMoney(price)}
+              {PriceBeforeDiscount}
             </h1>
           )}
 
@@ -72,9 +76,9 @@ function ProductComponent({
                 height={16}
                 alt="gift"
               />
-              <span className="text-neutral-700 font-medium text-[12px]">
-                {warranty}
-              </span>
+              {Bonus&&<span className="text-neutral-700 font-medium text-[12px]">
+                {typeof Bonus==='string'?Bonus:Bonus?.[0]?.['description']}
+              </span>}
             </div>
             <div className="flex gap-1 items-center">
               <Image
@@ -84,7 +88,7 @@ function ProductComponent({
                 alt="house"
               />
               <span className="text-neutral-700 font-medium text-[12px]">
-                {storeName}
+                {Store}
               </span>
             </div>
             <div className="flex gap-1 items-center">
@@ -92,10 +96,10 @@ function ProductComponent({
                 src={"/icons/product-marker.svg"}
                 width={16}
                 height={16}
-                alt="location"
+                alt="City"
               />
               <span className="text-neutral-700 font-medium text-[12px]">
-                {location}
+                {City}
               </span>
             </div>
             <div className="flex gap-1 items-center">
@@ -103,10 +107,10 @@ function ProductComponent({
                 src={"/icons/product-star.svg"}
                 width={16}
                 height={16}
-                alt="star"
+                alt="Rating"
               />
               <span className="text-neutral-700 font-medium text-[12px]">
-                {star} &#183; Terjual {soldCount}
+                {Rating} &#183; Terjual {SoldCount}
               </span>
             </div>
           </div>

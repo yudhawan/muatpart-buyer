@@ -1,7 +1,20 @@
-export async function fetchCategories() {
-    try {
-        return fetch(process.env.NEXT_PUBLIC_GLOBAL_API+'muatparts/product/category').then(a=>a.json())
-    } catch (error) {
-        return []
+import ConfigUrl from "./baseConfig"
+
+class CategoriesServices extends ConfigUrl {
+    constructor(url,options) {
+        super()
+        this.options=options
+    }
+    async fetchCategories() {
+        console.log('ASUUU :',this)
+        try {
+            const response = this.get('muatparts/product/category')
+            return (await response).data
+        } catch (error) {
+            return []
+        }
     }
 }
+
+const categoriesServices = new CategoriesServices()
+export default categoriesServices

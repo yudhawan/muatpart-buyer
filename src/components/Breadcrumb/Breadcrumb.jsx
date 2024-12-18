@@ -19,7 +19,7 @@ const BreadCrumb = ({
     onActive(data[data.length - 1]);
   }
   return (
-    <div className={`${style.main} ${classname}`}>
+    <div className={`${style.main} ${style.breadcrumb} ${classname}`}>
       {data?.map((val, idx) => {
         return (
           <div className="flex items-center gap-[5px]" key={idx}>

@@ -12,7 +12,15 @@
     text-transform: capitalize;
     // cursor: pointer;
 }
-
+.breadcrumb{
+    div{
+        color:var(--neutral-600) !important;
+    }
+    div:last-child{
+        color:var(--primary-700) !important;
+    }
+    
+}
 .Icon {
     path {
         stroke-width: 2px;

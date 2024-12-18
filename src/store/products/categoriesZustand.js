@@ -3,6 +3,7 @@ import { create } from "zustand";
 export const categoriesZustand = create((set,get)=>({
     categories:[],
     categoryFamily:[],
+    getSubAndItem:[],
     setCategories:val=>set({categories:val}),
     generateCategoryFamily:val=>{
         let index=0
@@ -26,5 +27,6 @@ export const categoriesZustand = create((set,get)=>({
             }
         }
         generate(container)
-    }
+    },
+    setSubAndItem:(val)=>set({getSubAndItem:val})
 }))
