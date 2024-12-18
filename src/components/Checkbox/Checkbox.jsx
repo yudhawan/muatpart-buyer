@@ -1,47 +1,64 @@
-"use client"
+"use client";
 
-import React, { useRef, useState } from 'react'
 import style from "./Checkbox.module.scss";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
-const Checkbox = ({onChange = () => {}, label='label', value, disabled, children, checked = false, classname,...props}) => {
+const Checkbox = ({
+  onChange = () => {},
+  label = "label",
+  value,
+  disabled,
+  children,
+  checked = false,
+  classname,
+  ...props
+}) => {
+  const handleChange = (e) => {
+    e.stopPropagation();
+    if (disabled) return;
 
-  const [checkedState, setChecked] = useState(checked)
-
-  const checkedRef = useRef(null);
-
-  const checkedClick = () => {
-
-    if (disabled) {
-      return 
-    }
     onChange({
-      checked: !checkedState,
+      checked: !checked,
       value,
-    })
-    setChecked(!checkedState)
-  }
+    });
+  };
+
+  const handleClick = () => {
+    if (disabled) return;
+
+    onChange({
+      checked: !checked,
+      value,
+    });
+  };
 
   return (
-    <div className={`${style.container_checkbox} flex gap-[8px] items-center ${classname}`} onClick={checkedClick}>
-        <input type="checkbox" ref={checkedRef} checked={checkedState} value={value} onChange={checkedClick} disabled={disabled} {...props}/>
-        <span className={`${style.checkbox_primary}`}></span>
-        <span className='select-none'>
-            {
-              children ? children : label
-            }
-        </span>
+    <div
+      className={`${style.container_checkbox} flex gap-[8px] items-center ${classname}`}
+      onClick={handleClick}
+    >
+      <input
+        type="checkbox"
+        checked={checked}
+        value={value}
+        onChange={handleChange}
+        disabled={disabled}
+        {...props}
+      />
+      <span className={`${style.checkbox_primary}`}></span>
+      <span className="select-none">{children ? children : label}</span>
     </div>
-  )
-}
-
-export default Checkbox
+  );
+};
 
 Checkbox.propTypes = {
-    onChange:PropTypes.func.isRequired,
-    label:PropTypes.string.isRequired,
-    value:PropTypes.string,
-    children:PropTypes.element,
-    disabled:PropTypes.bool,
-    classname:PropTypes.string
-}
+  onChange: PropTypes.func.isRequired,
+  label: PropTypes.string.isRequired,
+  value: PropTypes.string,
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
+  disabled: PropTypes.bool,
+  checked: PropTypes.bool,
+  classname: PropTypes.string,
+};
+
+export default Checkbox;
