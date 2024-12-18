@@ -50,7 +50,7 @@ function HeaderContainerMobile() {
                     setAppBar({
                       onBack:()=>clearScreen(),
                       title:'Cari berdasarkan',
-                      appBarType:'header_search_secondary',
+                      appBarType:'header_title_secondary',
                       defaultType:'default_search_navbar_mobile'
                     })
                     }} classname={style.inputMobile} placeholder='Cari Produk' icon={{left:'/icons/search.svg'}} />

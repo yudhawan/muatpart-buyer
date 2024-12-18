@@ -245,7 +245,7 @@ function HeaderContainerWeb({ renderAppBar }) {
         <>
           {!renderAppBar && (
             <div className="w-full h-9 bg-[#c22716] py-2 flex ">
-              <div className="w-full max-w-7xl mx-auto px-10 flex justify-between">
+              <div className="w-full max-w-7xl mx-auto flex justify-between">
                 <div className="flex items-center gap-2 cursor-pointer group relative">
                   <Image
                     src={"/icons/phone.svg"}
@@ -388,7 +388,7 @@ function HeaderContainerWeb({ renderAppBar }) {
           )}
           <div className="w-full bg-primary-700 flex py-3  h-[80px]">
             {!renderAppBar ? (
-              <div className="w-full max-w-7xl mx-auto flex items-center px-10 justify-between">
+              <div className="w-full max-w-7xl mx-auto flex items-center justify-between">
                 <Link href="/" className="mr-4">
                   <Image
                     src="/icons/muatparts.svg"
@@ -578,7 +578,7 @@ function HeaderContainerWeb({ renderAppBar }) {
           </div>
           {!renderAppBar && (
             <div className="w-full flex h-8 bg-primary-700-red-500 bg-primary-700 ">
-              <div className="w-full max-w-7xl mx-auto flex justify-between px-10 items-end">
+              <div className="w-full max-w-7xl mx-auto flex justify-between items-end">
                 <div
                   className="w-[137px] h-7 bg-[#c22716] py-[6px] px-4 rounded-tr-md rounded-tl-md flex items-center gap-2 cursor-pointer"
                   onClick={() => setShowCategory(!showCategory)}
