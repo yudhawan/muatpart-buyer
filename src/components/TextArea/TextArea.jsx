@@ -4,106 +4,66 @@ import style from "./TextArea.module.scss";
 import PropTypes from "prop-types";
 import IconComponent from "../IconComponent/IconComponent";
 
-const TextArea = ({
-  name,
-  type = "text",
-  placeholder = "Placeholder",
-  disabled = false,
-  status = null,
-  value = "",
-  supportiveText = { title: "", desc: "" },
-  width = { width: "", maxWidth: "", minWidth: "" },
-  ref = null,
-  resize = "",
-  changeEvent = () => {},
-  blurEvent = () => {},
-  maxLength = null,
-  hasCharCount = true,
-}) => {
-  const [charCount, setCharCount] = useState(value.length);
+const TextArea = ({ name, type = "text", placeholder = "Placeholder", disabled = false, status = null, value = "", supportiveText = { title: "", desc: "" }, width = { width: "", maxWidth: "", minWidth: "" }, ref = null, resize = "", changeEvent = () => {}, blurEvent = () => {}, maxLength = null, hasCharCount = true }) => {
+     const [charCount, setCharCount] = useState(value.length);
 
-  const handleChange = (e) => {
-    setCharCount(e.target.value.length);
-    changeEvent(e);
-  };
+     const handleChange = (e) => {
+          setCharCount(e.target.value.length);
+          changeEvent(e);
+     };
 
-  const handleBlur = (e) => {
-    setCharCount(e.target.value.length);
-    blurEvent(e);
-  };
+     const handleBlur = (e) => {
+          setCharCount(e.target.value.length);
+          blurEvent(e);
+     };
 
-  return (
-    <div
-      className={"flex flex-col gap-[4px]"}
-      style={{
-        width: width.width,
-        maxWidth: width.maxWidth,
-        minWidth: width.minWidth,
-      }}
-    >
-      <div
-        className={`flex w-full p-12 gap-[8px] ${
-          disabled && style.input_disabled
-        } ${style.input_style}
-            ${
-              status == "error"
-                ? style.border_red
-                : status == "success"
-                ? style.border_success
-                : ""
-            }`}
-      >
-        <textarea
-          onChange={handleChange}
-          onBlur={handleBlur}
-          ref={ref}
-          type={type}
-          name={name}
-          placeholder={placeholder}
-          className={`grow ${style.input} min-h-[80px]`}
-          disabled={disabled}
-          style={{ resize: resize }}
-          maxLength={maxLength}
-        />
-      </div>
-      {(supportiveText.title || supportiveText.desc) && (
-        <div
-          className={`flex justify-between ${style.supportive_text}
-                ${
-                  status == "error"
-                    ? style.text_danger
-                    : status == "success"
-                    ? style.text_success
-                    : ""
-                }`}
-        >
-          <span>{supportiveText.title}</span>
-          {hasCharCount ? (
-            <span className={style.char_counter}>
-              {charCount}
-              {maxLength ? `/${maxLength}` : ""}
-            </span>
-          ) : (
-            <span>{supportiveText.desc}</span>
-          )}
-        </div>
-      )}
-    </div>
-  );
+     return (
+          <div
+               className={"flex flex-col gap-[4px]"}
+               style={{
+                    width: width.width,
+                    maxWidth: width.maxWidth,
+                    minWidth: width.minWidth,
+               }}
+          >
+               <div
+                    className={`flex w-full p-12 gap-[8px] ${disabled && style.input_disabled} ${style.input_style}
+            ${status == "error" ? style.border_red : status == "success" ? style.border_success : ""}`}
+               >
+                    <textarea onChange={handleChange} onBlur={handleBlur} ref={ref} type={type} name={name} placeholder={placeholder} className={`grow ${style.input} min-h-[80px]`} disabled={disabled} style={{ resize: resize }} maxLength={maxLength} value={value} />
+               </div>
+               {(supportiveText.title || supportiveText.desc) && (
+                    <div
+                         className={`flex justify-between ${style.supportive_text}
+                ${status == "error" ? style.text_danger : status == "success" ? style.text_success : ""}`}
+                    >
+                         <span>{supportiveText.title}</span>
+                         {hasCharCount ? (
+                              <span className={style.char_counter}>
+                                   {charCount}
+                                   {maxLength ? `/${maxLength}` : ""}
+                              </span>
+                         ) : (
+                              <span>{supportiveText.desc}</span>
+                         )}
+                    </div>
+               )}
+          </div>
+     );
 };
 
 export default TextArea;
 
 TextArea.propTypes = {
-  placeholder: PropTypes.string,
-  type: PropTypes.oneOf(["text", "number", "email"]),
-  name: PropTypes.string,
-  supportiveText: PropTypes.object,
-  disabled: PropTypes.bool,
-  status: PropTypes.oneOf(["success", "error"]),
-  supportiveText: PropTypes.object,
-  width: PropTypes.object,
-  resize: PropTypes.string,
-  maxLength: PropTypes.number,
-  hasCharCount: PropTypes.bool,
+     placeholder: PropTypes.string,
+     type: PropTypes.oneOf(["text", "number", "email"]),
+     name: PropTypes.string,
+     supportiveText: PropTypes.object,
+     disabled: PropTypes.bool,
+     status: PropTypes.oneOf(["success", "error"]),
+     supportiveText: PropTypes.object,
+     width: PropTypes.object,
+     resize: PropTypes.string,
+     maxLength: PropTypes.number,
+     hasCharCount: PropTypes.bool,
 };

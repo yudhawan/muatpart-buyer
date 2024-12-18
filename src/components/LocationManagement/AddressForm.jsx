@@ -14,10 +14,9 @@ import debounce from "@/libs/debounce";
 import InputSearchLocation from "./InputSearchLocation";
 
 const AddressForm = ({ AddressData, errors, defaultValue }) => {
-  useEffect(() => console.log(defaultValue, " CHAKRAUI"), [defaultValue]);
-  // Start State Management
-  const swrHandler = new SWRHandler();
-  const locationRef = useRef(null);
+     // Start State Management
+     const swrHandler = new SWRHandler();
+     const locationRef = useRef(null);
 
      const [kecamatanList, setKecamatanList] = useState([]);
      const [postalCodeList, setPostalCodeList] = useState([]);
@@ -50,9 +49,47 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
           value: "",
      });
      const [coordinates, setCoordinates] = useState({
-          lat: null,
-          long: null,
+          lat: -7.2575,
+          long: 112.7521,
      });
+
+     useEffect(() => {
+          if (defaultValue) {
+               console.log(defaultValue);
+               setAddress(defaultValue.location.title);
+
+               setCity({
+                    name: defaultValue.city.name,
+                    id: defaultValue.city.value,
+               });
+               setProvince({
+                    name: defaultValue.province.name,
+                    id: defaultValue.province.value,
+               });
+               const newKecamatanList = defaultValue.listDistricts.map((i) => ({
+                    value: i.DistrictID,
+                    name: i.District,
+               }));
+               setKecamatanList(newKecamatanList);
+               setDistrict({
+                    name: defaultValue.district.name,
+                    value: defaultValue.district.value,
+               });
+               const newPostalCodeList = defaultValue.listPostalCodes.map((i) => ({
+                    value: i.ID,
+                    name: i.PostalCode,
+               }));
+               setPostalCodeList(newPostalCodeList);
+               setPostalCode({
+                    name: defaultValue.postalCode.name,
+                    value: defaultValue.postalCode.name,
+               });
+               setCoordinates({
+                    lat: Number(defaultValue?.coordinates?.lat),
+                    long: Number(defaultValue?.coordinates?.long),
+               });
+          }
+     }, [defaultValue]);
 
      // End State Management
 
@@ -113,7 +150,7 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
 
      // Start SWR Hooks
 
-     const { data: autocompleteData, error: autocompleteError } = swrHandler.useSWRHook(location.title.length > 2 || address.length > 2 ? `${process.env.NEXT_PUBLIC_INTERNAL_API}/get_autocomplete_street` : null, autoCompleteFetcher, (error) => {
+     const { data: autocompleteData, error: autocompleteError } = swrHandler.useSWRHook(location?.title?.length > 2 || address?.length > 2 ? `${process.env.NEXT_PUBLIC_INTERNAL_API}/get_autocomplete_street` : null, autoCompleteFetcher, (error) => {
           // console.error("Autocomplete error:", error);
      });
 
@@ -219,7 +256,6 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
 
      useEffect(() => {
           if (!districtData) return;
-
           if (districtData.Message.Code === 500) {
                setCoordinates({
                     lat: districtData.Data.lat,
@@ -311,7 +347,6 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
           //       lat: districtData.Data.Lat,
           //       long: districtData.Data.Long,
           //     };
-
           // Set all the states
           setDistrict(newDistrict);
           setCity(newCity);
@@ -359,7 +394,7 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
      useEffect(() => {
           if (latLongData) {
                // Handle the lat long data here
-               if (latLongData.Message.Code === 200) {
+               if (latLongData?.Message?.Code === 200) {
                     // Additional logic here
                }
           }
@@ -374,24 +409,24 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
           }
      }, [latLongData]);
 
-  return (
-    <div className="space-y-4 my-4 mx-12 text-xs">
-      <div className="flex items-baseline">
-        <label className="w-1/3 text-neutral-600 font-medium">Alamat*</label>
-        <div className="w-2/3">
-          <TextArea
-            status={`${errors?.address && "error"}`}
-            supportiveText={{
-              title: `${errors?.address ? errors?.address : ""}`,
-            }}
-            maxLength={60}
-            resize="none"
-            placeholder="Masukkan alamat lengkap dengan detail. Contoh : Nama Jalan (bila tidak ditemukan), Gedung, No. Rumah/Patokan, Blok/Unit"
-            value={address}
-            changeEvent={handleAddressChange}
-          />
-        </div>
-      </div>
+     return (
+          <div className="space-y-4 my-4 mx-12 text-xs">
+               <div className="flex items-baseline">
+                    <label className="w-1/3 text-neutral-600 font-medium">Alamat*</label>
+                    <div className="w-2/3">
+                         <TextArea
+                              status={`${errors?.address && "error"}`}
+                              supportiveText={{
+                                   title: `${errors?.address ? errors?.address : ""}`,
+                              }}
+                              maxLength={60}
+                              resize="none"
+                              placeholder="Masukkan alamat lengkap dengan detail. Contoh : Nama Jalan (bila tidak ditemukan), Gedung, No. Rumah/Patokan, Blok/Unit"
+                              value={address}
+                              changeEvent={handleAddressChange}
+                         />
+                    </div>
+               </div>
 
                <div className="flex items-baseline">
                     <label className="w-1/3 text-neutral-600 font-medium">Lokasi*</label>
@@ -404,7 +439,9 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
                                    });
                               }}
                               errors={errors}
-                              onSelectLocation={(val) => {}}
+                              onSelectLocation={(val) => {
+                                   console.log(val, "hello");
+                              }}
                               searchResults={searchResults?.slice(0, 3)}
                               changeEvent={handleLocationChange}
                               locationRef={locationRef}
@@ -414,32 +451,26 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
                     </div>
                </div>
 
-      <div className="flex items-baseline">
-        <label className="w-1/3 text-neutral-600 font-medium">Kecamatan*</label>
-        <div className="w-2/3">
-          <Dropdown
-            options={kecamatanList}
-            onSearchValue
-            placeholder="Pilih Kecamatan"
-            searchPlaceholder="Cari Kecamatan"
-            defaultValue={district}
-            onSelected={(val) =>
-              setDistrict({
-                name: val[0].name,
-                value: val[0].value,
-              })
-            }
-            classname={`${errors.districtID ? "!border-error-500" : ""}`}
-          />
-          {errors.districtID ? (
-            <span className="font-medium text-error-400 text-xs block mt-2">
-              {errors.districtID}
-            </span>
-          ) : (
-            ""
-          )}
-        </div>
-      </div>
+               <div className="flex items-baseline">
+                    <label className="w-1/3 text-neutral-600 font-medium">Kecamatan*</label>
+                    <div className="w-2/3">
+                         <Dropdown
+                              options={kecamatanList}
+                              onSearchValue
+                              placeholder="Pilih Kecamatan"
+                              searchPlaceholder="Cari Kecamatan"
+                              defaultValue={[district]}
+                              onSelected={(val) =>
+                                   setDistrict({
+                                        name: val[0].name,
+                                        value: val[0].value,
+                                   })
+                              }
+                              classname={`${errors.districtID ? "!border-error-500" : ""}`}
+                         />
+                         {errors.districtID ? <span className="font-medium text-error-400 text-xs block mt-2">{errors.districtID}</span> : ""}
+                    </div>
+               </div>
 
                <div className="flex items-baseline">
                     <label className="w-1/3 text-neutral-600 font-medium">Kota</label>
@@ -459,7 +490,7 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
                               onSearchValue
                               placeholder="Pilih Kode Pos"
                               searchPlaceholder="Cari Kode Pos"
-                              defaultValue={postalCode}
+                              defaultValue={[postalCode]}
                               onSelected={(val) =>
                                    setPostalCode({
                                         name: val[0].name,
@@ -472,7 +503,7 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
                <div className="flex items-baseline">
                     <label className="w-1/3 text-neutral-600 font-medium">Titik Lokasi*</label>
                     <div className="w-2/3">
-                         <MiniMap onClick={() => setOpenMap(true)} />
+                         <MiniMap lat={coordinates?.lat} lng={coordinates?.long} onClick={() => setOpenMap(true)} />
                     </div>
                </div>
 

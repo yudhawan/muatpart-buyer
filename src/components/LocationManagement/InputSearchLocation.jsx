@@ -271,7 +271,8 @@ const InputSearchLocation = ({
           try {
                const setAutoCompleteResponse = await autoCompleteFetcher(AUTOCOMPLETE_ENDPOINT, location.title);
                console.log("Auto complete data: ", setAutoCompleteResponse);
-               setAutoCompleteResponse(setAutoCompleteResponse.Data.data.Data);
+               // setAutoCompleteResponse(setAutoCompleteResponse.Data.data.Data);
+               setSearchResults(setAutoCompleteResponse);
           } catch (error) {
                console.error("Error fetching auto complete data:", error);
           }
