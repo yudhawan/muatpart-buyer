@@ -13,10 +13,13 @@ import { handleCopy, handleDownload } from "@/libs/services";
 import Input from "@/components/Input/Input";
 import LocationManagement from "@/components/LocationManagement/LocationManagement";
 import "./Profileseller.scss";
+import MiniMap from "@/containers/MapContainer/MiniMap";
+import MapContainer from "@/containers/MapContainer/MapContainer";
+import ModalComponent from "@/components/Modals/ModalComponent";
 
 const api = process.env.NEXT_PUBLIC_API_FRIDAY;
 
-function ProfilesellerWeb() {
+function ProfilesellerWeb({ handleSaveStore, handleSaveCompany }) {
   return (
     <div className={style.main}>
       <ProfileHeaderContent />
@@ -29,7 +32,10 @@ function ProfilesellerWeb() {
         <div className="border-r border-r-neutral-400"></div>
       </div>
       <div className="space-y-4">
-        <DataToko />
+        <DataToko
+          handleSaveStore={handleSaveStore}
+          handleSaveCompany={handleSaveCompany}
+        />
         <KelengkapanLegalitas />
       </div>
     </div>
@@ -49,9 +55,9 @@ export const ProfileHeaderContent = () => {
 
   const changePhotoHeader = async (val) => {
     try {
-      const formData = new FormData();
+      const formData = new URLSearchParams();
       formData.append("file", val);
-      await changeFotoProfil(formData);
+      await changeFotoProfil(formData.toString());
       mutate(`${api}v1/muatparts/profile/update_avatar_url`);
     } catch (err) {
       console.error("Upload error:", err);
@@ -160,10 +166,48 @@ const StoreSection = ({
   isEditMode,
   setIsEditMode,
   locationProps,
+  handleSaveStore,
+  handleSaveCompany,
 }) => {
-  const { updateField } = profileSeller();
+  const {
+    storeEdit,
+    updateStoreField,
+    updateCompanyField,
+    companyEdit,
+    initializeStoreEdit,
+    initializeCompanyEdit,
+    errors,
+  } = profileSeller();
+  const [isOpenMap, setOpenMap] = useState(false);
+
+  useEffect(() => {
+    if (isEditMode) {
+      if (type === "store") {
+        initializeStoreEdit();
+      } else {
+        initializeCompanyEdit();
+      }
+    }
+  }, [isEditMode, type]);
 
   const renderContent = () => {
+    if (type === "company" && !data.isCross) {
+      return [
+        {
+          label: "Nama Perusahaan",
+          value: data?.companyName || "-",
+          type: "text",
+          key: "companyName",
+        },
+        {
+          label: "Badan Usaha",
+          value: data?.businessEntity || "-",
+          type: "text",
+          key: "businessEntity",
+        },
+      ];
+    }
+
     const fields =
       type === "company"
         ? [
@@ -198,7 +242,7 @@ const StoreSection = ({
             {
               label: "Nama Toko",
               value: data?.storeName || "-",
-              type: "text",
+              type: "input",
               key: "storeName",
             },
             {
@@ -211,23 +255,57 @@ const StoreSection = ({
             },
           ];
 
-    return !isEditMode
-      ? [
-          ...fields,
-          { label: "Alamat", value: data?.address || "-", type: "text" },
-          { label: "Lokasi", value: data?.location || "-", type: "text" },
-          { label: "Kecamatan", value: data?.district || "-", type: "text" },
-          { label: "Kota", value: data?.city || "-", type: "text" },
-          { label: "Provinsi", value: data?.province || "-", type: "text" },
-          { label: "Kode Pos", value: data?.postalCode || "-", type: "text" },
-          { label: "Titik Lokasi", value: data?.latitude || "-", type: "text" },
-        ]
-      : fields;
+    // Add location fields in view mode
+    if (!isEditMode) {
+      return [
+        ...fields,
+        { label: "Alamat", value: data?.address || "-", type: "text" },
+        { label: "Lokasi", value: data?.location || "-", type: "text" },
+        { label: "Kecamatan", value: data?.district || "-", type: "text" },
+        { label: "Kota", value: data?.city || "-", type: "text" },
+        { label: "Provinsi", value: data?.province || "-", type: "text" },
+        { label: "Kode Pos", value: data?.postalCode || "-", type: "text" },
+        {
+          label: "Titik Lokasi",
+          value:
+            data?.latitude && data?.longitude
+              ? `${data.latitude}, ${data.longitude}`
+              : "-",
+          type: "map",
+          coordinates: {
+            lat: Number(data?.latitude),
+            long: Number(data?.longitude),
+          },
+          key: "coordinates",
+        },
+      ];
+    }
+
+    return fields;
+  };
+
+  const handleSave = async () => {
+    try {
+      if (type === "store") {
+        await handleSaveStore(data?.id, storeEdit.data);
+      } else {
+        await handleSaveCompany(data?.id, companyEdit.data);
+      }
+      setIsEditMode(false);
+    } catch (error) {
+      console.error("Save error:", error);
+    }
   };
 
   return (
     <CardContainerProfile
-      title={type === "company" ? null : "Data Toko"}
+      title={
+        type === "company" && !data.isCross
+          ? null
+          : type === "company"
+          ? "Data Perusahaan"
+          : "Data Toko"
+      }
       subTitle={
         <>
           {type === "company" ? (
@@ -236,12 +314,16 @@ const StoreSection = ({
                 <span className="text-neutral-900 text-lg font-semibold block">
                   Data Perusahaan
                 </span>
-                <Button
-                  onClick={() => setIsEditMode(!isEditMode)}
-                  Class="!h-8 !font-semibold !text-sm"
-                >
-                  {isEditMode ? "Simpan Data" : "Ubah Data"}
-                </Button>
+                {data.isCross && (
+                  <Button
+                    onClick={
+                      isEditMode ? handleSave : () => setIsEditMode(true)
+                    }
+                    Class="!h-8 !font-semibold !text-sm"
+                  >
+                    {isEditMode ? "Simpan Data" : "Ubah Data"}
+                  </Button>
+                )}
               </div>
               {isEditMode && (
                 <div className="flex items-center gap-2 rounded-md py-4 px-6 bg-secondary-100">
@@ -253,6 +335,53 @@ const StoreSection = ({
                 </div>
               )}
             </>
+          ) : type === "map" ? (
+            <div className="w-full">
+              <MiniMap
+                lat={field?.coordinates.lat || -7.250445}
+                lng={field?.coordinates.long || 112.768845}
+                onClick={() => setOpenMap(true)}
+                titleButton="Lihat Lokasi"
+              />
+              <ModalComponent
+                isOpen={isOpenMap}
+                setClose={() => setOpenMap(false)}
+                hideHeader
+              >
+                <div className="flex item-start gap-4 pt-[14px] px-3">
+                  <MapContainer
+                    width={600}
+                    height={390}
+                    lat={field?.coordinates.lat || -7.250445} // Change long to lng
+                    lng={field?.coordinates.long || 112.768845} // Change long to lng
+                    onPosition={(val) => {
+                      if (type === "store") {
+                        updateStoreField("latitude", Number(val.lat));
+                        updateStoreField("longitude", Number(val.lng));
+                      } else {
+                        updateCompanyField("latitude", Number(val.lat));
+                        updateCompanyField("longitude", Number(val.lng));
+                      }
+                    }}
+                  />
+                  <div className="flex flex-col gap-[22px]">
+                    <span className="text-base font-semibold text-neutral-900">
+                      Lihat Lokasi
+                    </span>
+                    <div className="relative">
+                      <IconComponent
+                        classname="absolute"
+                        size="medium"
+                        src={"/icons/marker.svg"}
+                      />
+                      <span className="flex items-center gap-2 w-[237px] font-medium text-[#868686] text-xs pl-[25px]">
+                        {data?.location}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </ModalComponent>
+            </div>
           ) : (
             <div className="flex flex-col gap-2">
               <div className="w-full justify-between items-center flex">
@@ -264,7 +393,7 @@ const StoreSection = ({
                   </span>
                 </div>
                 <Button
-                  onClick={() => setIsEditMode(!isEditMode)}
+                  onClick={isEditMode ? handleSave : () => setIsEditMode(true)}
                   Class="!h-8 !font-semibold !text-sm"
                 >
                   {isEditMode ? "Simpan Data" : "Ubah Data"}
@@ -277,16 +406,72 @@ const StoreSection = ({
     >
       <div>
         {[
-          // Render fields
           ...renderContent().map((field) => ({
             type: "basic",
             content: (
               <DivParticleProfile title={field.label}>
                 <div className="flex justify-between items-center w-full">
-                  {field.type === "logo" ? (
+                  {field.type === "map" ? (
+                    <div className="w-full">
+                      <MiniMap
+                        lat={field?.coordinates.lat || -7.250445}
+                        lng={field?.coordinates.long || 112.768845}
+                        onClick={() => setOpenMap(true)}
+                        titleButton="Lihat Lokasi"
+                      />
+                      <ModalComponent
+                        isOpen={isOpenMap}
+                        setClose={() => setOpenMap(false)}
+                        hideHeader
+                      >
+                        <div className="flex item-start gap-4 pt-[14px] px-3">
+                          <MapContainer
+                            width={600}
+                            height={390}
+                            lat={field?.coordinates.lat || -7.250445} // Change long to lng
+                            lng={field?.coordinates.long || 112.768845} // Change long to lng
+                            onPosition={(val) => {
+                              if (type === "store") {
+                                updateStoreField("latitude", Number(val.lat));
+                                updateStoreField("longitude", Number(val.lng));
+                              } else {
+                                updateCompanyField("latitude", Number(val.lat));
+                                updateCompanyField(
+                                  "longitude",
+                                  Number(val.lng)
+                                );
+                              }
+                            }}
+                          />
+                          <div className="flex flex-col gap-[22px]">
+                            <span className="text-base font-semibold text-neutral-900">
+                              Lihat Lokasi
+                            </span>
+                            <div className="relative">
+                              <IconComponent
+                                classname="absolute"
+                                size="medium"
+                                src={"/icons/marker.svg"}
+                              />
+                              <span className="flex items-center gap-2 w-[237px] font-medium text-[#868686] text-xs pl-[25px]">
+                                {data?.location}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </ModalComponent>
+                    </div>
+                  ) : field.type === "logo" ? (
+                    // Existing logo rendering logic
                     isEditMode ? (
                       <ImageUploaderRegister
-                        value={(e) => updateField(field.key, e)}
+                        value={(e) => {
+                          if (type === "store") {
+                            updateStoreField("storeLogo", e);
+                          } else {
+                            updateCompanyField("companyLogo", e);
+                          }
+                        }}
                         defaultValue={field.value}
                       />
                     ) : (
@@ -298,7 +483,37 @@ const StoreSection = ({
                         />
                       </div>
                     )
+                  ) : field.type === "input" && isEditMode ? (
+                    // Existing input rendering logic
+                    <Input
+                      classname="!min-w-[363px]"
+                      status={errors?.[field.key] ? "error" : ""}
+                      maxLength="60"
+                      supportiveText={{
+                        title: errors?.[field.key] || "",
+                        desc: `${
+                          type === "store"
+                            ? storeEdit?.data?.[field.key].length
+                            : companyEdit?.data?.[field.key].length
+                        }/60`,
+                      }}
+                      placeholder={`Masukkan ${field.label}`}
+                      value={
+                        type === "store"
+                          ? storeEdit?.data?.[field.key] || ""
+                          : companyEdit?.data?.[field.key] || ""
+                      }
+                      changeEvent={(e) => {
+                        const value = e.target.value;
+                        if (type === "store") {
+                          updateStoreField(field.key, value);
+                        } else {
+                          updateCompanyField(field.key, value);
+                        }
+                      }}
+                    />
                   ) : (
+                    // Default text rendering
                     <p className="font-medium text-xs text-neutral-900">
                       {field.value}
                     </p>
@@ -307,7 +522,6 @@ const StoreSection = ({
               </DivParticleProfile>
             ),
           })),
-          // Render LocationManagement if in edit mode
           isEditMode
             ? {
                 type: "location",
@@ -339,7 +553,7 @@ const StoreSection = ({
   );
 };
 
-export const DataToko = () => {
+export const DataToko = ({ handleSaveStore, handleSaveCompany }) => {
   const [isEditCompany, setIsEditCompany] = useState(false);
   const [isEditStore, setIsEditStore] = useState(false);
   const [manajemenLokasi, setManajemenLokasi] = useState();
@@ -351,8 +565,8 @@ export const DataToko = () => {
 
     const storeInfo =
       profileData?.profile?.accountType === "Perusahaan"
-        ? profileData?.storeInformation // ketika edit data toko
-        : profileData?.companyData; // ketika edit data bukan perusahaan
+        ? profileData?.storeInformation
+        : profileData?.companyData;
 
     if (storeInfo) {
       setDefaultManajemenLokasi({
@@ -381,24 +595,37 @@ export const DataToko = () => {
 
   return (
     <div className="space-y-4">
-      {isCompany && (
+      {isCompany && profileData?.companyData?.isCross && (
         <StoreSection
           type="company"
           data={profileData?.companyData}
           isEditMode={isEditCompany}
           setIsEditMode={setIsEditCompany}
           locationProps={locationProps}
+          handleSaveStore={handleSaveStore}
+          handleSaveCompany={handleSaveCompany}
         />
       )}
       <StoreSection
         type="store"
-        data={
-          isCompany ? profileData?.storeInformation : profileData?.companyData
-        }
+        data={profileData?.storeInformation}
         isEditMode={isEditStore}
         setIsEditMode={setIsEditStore}
         locationProps={locationProps}
+        handleSaveStore={handleSaveStore}
+        handleSaveCompany={handleSaveCompany}
       />
+      {isCompany && !profileData?.companyData?.isCross && (
+        <StoreSection
+          type="company"
+          data={profileData?.companyData}
+          isEditMode={false}
+          setIsEditMode={() => {}}
+          locationProps={locationProps}
+          handleSaveStore={handleSaveStore}
+          handleSaveCompany={handleSaveCompany}
+        />
+      )}
     </div>
   );
 };

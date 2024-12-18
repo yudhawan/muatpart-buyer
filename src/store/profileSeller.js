@@ -2,76 +2,116 @@
 import { create } from "zustand";
 
 const useProfileStore = create((set, get) => ({
+  // Main data
   profileData: null,
-  editData: {},
-  errors: {},
 
+  // Edit states
+  storeEdit: {
+    data: {
+      storeName: "",
+      storeLogo: "",
+      address: "",
+      location: "",
+      provinceID: "",
+      cityID: "",
+      districtID: "",
+      postalCode: "",
+      latitude: "",
+      longitude: "",
+    },
+    errors: {},
+  },
+
+  companyEdit: {
+    data: {
+      companyLogo: "",
+      address: "",
+      location: "",
+      provinceID: "",
+      cityID: "",
+      districtID: "",
+      postalCode: "",
+      latitude: "",
+      longitude: "",
+    },
+    errors: {},
+  },
+
+  // Setters
   setProfileData: (data) => set({ profileData: data }),
 
-  initializeEditData: () => {
+  // Initialize edit data
+  initializeStoreEdit: () => {
     const { profileData } = get();
-    const isCompany = profileData?.profile?.accountType === "Perusahaan";
     const storeInfo = profileData?.storeInformation || {};
 
-    // Common fields for both types
-    const commonFields = {
-      address: storeInfo.address || "",
-      location: storeInfo.location || "",
-      district: storeInfo.district || "",
-      city: storeInfo.city || "",
-      province: storeInfo.province || "",
-      postalCode: storeInfo.postalCode || "",
-      latitude: storeInfo.latitude || "",
-    };
-
-    // Add specific fields based on type
-    const specificFields = isCompany
-      ? {
-          companyName: storeInfo.companyName || "",
-          companyLogo: storeInfo.companyLogo || "",
-          businessEntity: storeInfo.businessEntity || "",
-          businessField: storeInfo.businessField || "",
-        }
-      : {
+    set((state) => ({
+      storeEdit: {
+        ...state.storeEdit,
+        data: {
           storeName: storeInfo.storeName || "",
           storeLogo: storeInfo.storeLogo || "",
-        };
-
-    set({ editData: { ...commonFields, ...specificFields } });
+          address: storeInfo.address || "",
+          location: storeInfo.location || "",
+          provinceID: storeInfo.provinceID || "",
+          cityID: storeInfo.cityID || "",
+          districtID: storeInfo.districtID || "",
+          postalCode: storeInfo.postalCode || "",
+          latitude: storeInfo.latitude || "",
+          longitude: storeInfo.longitude || "",
+        },
+      },
+    }));
   },
 
-  updateField: (key, value) =>
+  initializeCompanyEdit: () => {
+    const { profileData } = get();
+    const companyInfo = profileData?.companyData || {};
+
     set((state) => ({
-      editData: { ...state.editData, [key]: value },
-      errors: { ...state.errors, [key]: "" },
+      companyEdit: {
+        ...state.companyEdit,
+        data: {
+          companyLogo: companyInfo.companyLogo || "",
+          address: companyInfo.address || "",
+          location: companyInfo.location || "",
+          provinceID: companyInfo.provinceID || "",
+          cityID: companyInfo.cityID || "",
+          districtID: companyInfo.districtID || "",
+          postalCode: companyInfo.postalCode || "",
+          latitude: companyInfo.latitude || "",
+          longitude: companyInfo.longitude || "",
+        },
+      },
+    }));
+  },
+
+  // Update fields
+
+  updateStoreField: (key, value) =>
+    set((state) => ({
+      storeEdit: {
+        ...state.storeEdit,
+        data: { ...state.storeEdit.data, [key]: value },
+        errors: { ...state.storeEdit.errors, [key]: "" },
+      },
     })),
 
-  validateAndSave: () => {
-    const { profileData, editData } = get();
-    const isCompany = profileData?.profile?.accountType === "Perusahaan";
-    const errors = {};
+  updateCompanyField: (key, value) =>
+    set((state) => ({
+      companyEdit: {
+        ...state.companyEdit,
+        data: { ...state.companyEdit.data, [key]: value },
+        errors: { ...state.companyEdit.errors, [key]: "" },
+      },
+    })),
 
-    const commonRequired = ["address", "location", "district", "postalCode"];
-    const specificRequired = isCompany
-      ? ["companyName", "businessEntity", "businessField"]
-      : ["storeName"];
-
-    [...commonRequired, ...specificRequired].forEach((field) => {
-      if (!editData[field]) {
-        errors[field] = "Data harus diisi";
-      }
-    });
-
-    set({ errors });
-
-    if (Object.keys(errors).length === 0) {
-      console.log("Final data:", editData);
-      return true;
-    }
-    return false;
-  },
-
-  resetEditState: () => set({ isEditMode: false, editData: {}, errors: {} }),
+  // Reset forms
+  resetForms: () =>
+    set((state) => ({
+      storeEdit: { data: {}, errors: {} },
+      companyEdit: { data: {}, errors: {} },
+    })),
 }));
 
 export default useProfileStore;
