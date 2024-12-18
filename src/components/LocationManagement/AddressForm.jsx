@@ -13,10 +13,11 @@ import Button from "../Button/Button";
 import debounce from "@/libs/debounce";
 import InputSearchLocation from "./InputSearchLocation";
 
-const AddressForm = ({ AddressData, errors }) => {
-     // Start State Management
-     const swrHandler = new SWRHandler();
-     const locationRef = useRef(null);
+const AddressForm = ({ AddressData, errors, defaultValue }) => {
+  useEffect(() => console.log(defaultValue, " CHAKRAUI"), [defaultValue]);
+  // Start State Management
+  const swrHandler = new SWRHandler();
+  const locationRef = useRef(null);
 
      const [kecamatanList, setKecamatanList] = useState([]);
      const [postalCodeList, setPostalCodeList] = useState([]);
@@ -373,24 +374,24 @@ const AddressForm = ({ AddressData, errors }) => {
           }
      }, [latLongData]);
 
-     return (
-          <div className="space-y-4 my-4 mx-12 text-xs">
-               <div className="flex items-baseline">
-                    <label className="w-1/3 text-neutral-600 font-medium">Alamat*</label>
-                    <div className="w-2/3">
-                         <TextArea
-                              status={`${errors?.email && "error"}`}
-                              supportiveText={{
-                                   title: `${errors?.email ? errors?.email : ""}`,
-                              }}
-                              maxLength={60}
-                              resize="none"
-                              placeholder="Masukkan alamat lengkap dengan detail. Contoh : Nama Jalan (bila tidak ditemukan), Gedung, No. Rumah/Patokan, Blok/Unit"
-                              value={address}
-                              changeEvent={handleAddressChange}
-                         />
-                    </div>
-               </div>
+  return (
+    <div className="space-y-4 my-4 mx-12 text-xs">
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Alamat*</label>
+        <div className="w-2/3">
+          <TextArea
+            status={`${errors?.address && "error"}`}
+            supportiveText={{
+              title: `${errors?.address ? errors?.address : ""}`,
+            }}
+            maxLength={60}
+            resize="none"
+            placeholder="Masukkan alamat lengkap dengan detail. Contoh : Nama Jalan (bila tidak ditemukan), Gedung, No. Rumah/Patokan, Blok/Unit"
+            value={address}
+            changeEvent={handleAddressChange}
+          />
+        </div>
+      </div>
 
                <div className="flex items-baseline">
                     <label className="w-1/3 text-neutral-600 font-medium">Lokasi*</label>
@@ -413,26 +414,32 @@ const AddressForm = ({ AddressData, errors }) => {
                     </div>
                </div>
 
-               <div className="flex items-baseline">
-                    <label className="w-1/3 text-neutral-600 font-medium">Kecamatan*</label>
-                    <div className="w-2/3">
-                         <Dropdown
-                              options={kecamatanList}
-                              onSearchValue
-                              placeholder="Pilih Kecamatan"
-                              searchPlaceholder="Cari Kecamatan"
-                              defaultValue={district}
-                              onSelected={(val) =>
-                                   setDistrict({
-                                        name: val[0].name,
-                                        value: val[0].value,
-                                   })
-                              }
-                              classname={`${errors.districtID ? "!border-error-500" : ""}`}
-                         />
-                         {errors.districtID ? <span className="font-medium text-error-400 text-xs block mt-2">{errors.districtID}</span> : ""}
-                    </div>
-               </div>
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Kecamatan*</label>
+        <div className="w-2/3">
+          <Dropdown
+            options={kecamatanList}
+            onSearchValue
+            placeholder="Pilih Kecamatan"
+            searchPlaceholder="Cari Kecamatan"
+            defaultValue={district}
+            onSelected={(val) =>
+              setDistrict({
+                name: val[0].name,
+                value: val[0].value,
+              })
+            }
+            classname={`${errors.districtID ? "!border-error-500" : ""}`}
+          />
+          {errors.districtID ? (
+            <span className="font-medium text-error-400 text-xs block mt-2">
+              {errors.districtID}
+            </span>
+          ) : (
+            ""
+          )}
+        </div>
+      </div>
 
                <div className="flex items-baseline">
                     <label className="w-1/3 text-neutral-600 font-medium">Kota</label>

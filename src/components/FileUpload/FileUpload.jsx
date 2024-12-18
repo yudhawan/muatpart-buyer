@@ -4,6 +4,17 @@ import IconComponent from '../IconComponent/IconComponent';
 import SWRHandler from "@/services/useSWRHook";
 import axios from "axios";
 
+const ProgressBar = ({ progress }) => {
+  return (
+    <div className="self-center relative h-[14px] w-[168px] bg-neutral-200 rounded-[20px] overflow-hidden">
+      <div 
+        className="absolute top-0 left-0 h-full bg-primary-700 transition-all duration-200"
+        style={{ width: `${progress}%` }}
+      />
+    </div>
+  )
+}
+
 const FileUpload = ({
   className,
   label = "Unggah",
@@ -19,7 +30,7 @@ const FileUpload = ({
 
   const { useSWRMutateHook } = new SWRHandler();
   const { trigger: triggerUploadPhoto } = useSWRMutateHook(
-    process.env.NEXT_PUBLIC_DEV_LINUX_API + 'v1/muatparts/product/photo',
+    process.env.NEXT_PUBLIC_API_HASYIM_DEVLINUX + 'v1/muatparts/product/photo',
     'POST',
     (url, arg) => {
       return axios({
@@ -85,7 +96,10 @@ const FileUpload = ({
       />
       {value ? (
         <div className="flex items-center justify-between">
-          <span className="font-medium text-[12px] leading-[14.4px] text-success-400">{value.name}</span>
+          <div className="flex flex-col gap-y-2">
+            <span className="font-medium text-[12px] leading-[14.4px] text-success-400">{value.name}</span>
+            {isUploading ? <ProgressBar progress={progress} /> : null}
+          </div>
           <div className="flex items-center gap-4">
             <IconComponent
               src="/icons/silang.svg"
@@ -101,7 +115,7 @@ const FileUpload = ({
           </div>
         </div>
       ) : (
-        <div className="flex">
+        <div className="flex items-center">
           <Button
 						Class="self-center"
             name="upload"
@@ -112,11 +126,8 @@ const FileUpload = ({
           </Button>
 
           {isUploading ? (
-            <div className="self-center ml-4 relative h-[14px] w-[168px] bg-neutral-200 rounded-[20px] overflow-hidden">
-              <div 
-                className="absolute top-0 left-0 h-full bg-primary-700 transition-all duration-200"
-                style={{ width: `${progress}%` }}
-              />
+            <div className="ml-4">
+              <ProgressBar progress={progress} />
             </div>
           ) : (
             <div className="ml-2">

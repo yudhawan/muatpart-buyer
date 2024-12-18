@@ -19,8 +19,8 @@ class SWRHandler {
   }
 
   useSWRHook(url, customFetch, cbError, option, ...props) {
-    const fetcher = customFetch 
-    ? (url) => customFetch(url, option) 
+    const fetcher = customFetch
+    ? (url) => customFetch(url, option)
     : (url) => SWRHandler.defaultFetcher(url, option);
     const result = useSWR(url, fetcher, {
       onError: (err) => {
@@ -56,6 +56,7 @@ class SWRHandler {
           // this.interceptor = err.status;
           if (cbError) cbError(err);
           else {
+            console.log('nocberr')
             if (err.status === 401 || err.status === 403) {
               useToken.getState().clearToken();
             }

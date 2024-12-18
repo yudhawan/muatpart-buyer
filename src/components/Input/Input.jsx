@@ -68,7 +68,7 @@ const Input = ({
           onBlur={blurEvent}
           name={name}
           placeholder={placeholder}
-          className={`grow ${style.input}`}
+          className={`grow ${classInput} ${style.input}`}
           disabled={disabled}
         />
         {typeof icon.right === "string" ? (

@@ -142,6 +142,7 @@ module.exports = {
     },
   },
   plugins: [
+    require("tailwind-scrollbar"),
     function ({ addBase, theme }) {
       addBase({
         ":root": {
