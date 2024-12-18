@@ -13,7 +13,7 @@ const api = process.env.NEXT_PUBLIC_API_HASYIM_DEVLINUX;
 // value berupa return an value img dari komponen ini
 // defaultValue yakni default value yang akan terpasang pada komponen ini (terpasang pada img bulat sebelah tombol ubah)
 
-const ImageUploaderRegister = ({ value, defaultValue }) => {
+const ImageUploaderRegister = ({ value, defaultValue, type = 1 }) => {
   const { setModalOpen, setModalConfig, setModalContent } = modal();
   const [resultCrops, setResultCrops] = useState(
     defaultValue !== null ? defaultValue : ""
@@ -33,6 +33,7 @@ const ImageUploaderRegister = ({ value, defaultValue }) => {
       classname: "!w-[550px]",
       withHeader: true,
       withClose: true,
+      headerBg: "/img/headermodal550.svg",
     });
     setModalOpen(true);
   };
@@ -66,6 +67,27 @@ const ImageUploaderRegister = ({ value, defaultValue }) => {
     setModalOpen(true);
     setResultCrops("");
   };
+
+  if (type !== 1)
+    return (
+      <div className="flex flex-col items-center gap-2">
+        <img
+          src={
+            resultCrops
+              ? resultCrops
+              : "https://azlogistik.s3.ap-southeast-3.amazonaws.com/undefined/file-1733985462989.webp"
+          }
+          loading="lazy"
+          className="size-[72px] rounded-full"
+        />
+        <span
+          className="text-primary-700 text-[10px] font-semibold cursor-pointer"
+          onClick={handleUbah}
+        >
+          Ubah Foto
+        </span>
+      </div>
+    );
 
   return (
     <div className="flex items-center gap-4">
