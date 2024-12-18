@@ -1,6 +1,6 @@
 const { create } = require("zustand");
 
 export const viewport = create((set)=>({
-    isMobile:false,
+    isMobile:null,
     setIsmobile:val=>set({isMobile:val})
 }))

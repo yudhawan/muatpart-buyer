@@ -1,32 +1,118 @@
 import HeaderContainer from "@/containers/HeaderContainer";
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
-export const ResponsiveContext = createContext(null)
-export const ResponsiveConsumer = ResponsiveContext.Consumer
+export const ResponsiveContext = createContext(null);
 
-import React from 'react'
+import React from "react";
+import DefaultScreen from "./DefaultScreen";
+import { viewport } from "@/store/viewport";
+import { headerProps } from "@/containers/HeaderContainer/headerProps";
+import { useRouter } from "next/navigation";
+import BottomTabNavigation from "@/containers/BottomTabNavigation/BottomTabNavigation";
+import FooterContainer from "@/containers/FooterContainer/FooterContainer";
 
-function ResponsiveProvider({children}) {
-    const [component,setComponent] = useState({
-        header:null,
-        appBar:null,
-        appBarType:'',
-    })
-    const renderAppBarMobile = (elm)=> setComponent(prev=>({...prev,appBar:elm}))
-    const setAppBarTypeMobile = (val)=> setComponent(prev=>({...prev,appBarType:val}))
-    return (
-        <ResponsiveContext.Provider value={{
-            renderAppBarMobile,
-            setAppBarTypeMobile,
-        }}>
-            <HeaderContainer 
-                renderAppBarMobile={component.appBar} 
-                renderAppBar={component.header}
-                type={component.appBarType}
-            />
-            {children}
-        </ResponsiveContext.Provider>
-    )
+function ResponsiveProvider({ children }) {
+  const router = useRouter();
+  const [getHeader, setHeader] = useState({
+    onBack: null,
+    onAction: null,
+    title: "",
+    showBackButton: true,
+    appBarType: "",
+    renderBack: null,
+    renderActionButton: null,
+    renderAppBar: null,
+    renderHeader: null,
+    shadow: true,
+    showReset: true,
+    defaultType: "",
+    withSearchBottom: "",
+    blankBackground: false,
+  });
+  const [search, editSearch] = useState({
+    placeholder: "muatparts",
+    value: "",
+    type: "text",
+  });
+
+  const [screen, setScreen] = useState("");
+  const [getGlobalPadding, setGlobalPadding] = useState(true);
+  const { isMobile } = viewport();
+  const { headerHeight } = headerProps();
+  const renderAppBarMobile = (elm) =>
+    setHeader((prev) => ({ ...prev, renderAppBar: elm }));
+  const renderHeader = (elm) =>
+    setHeader((prev) => ({ ...prev, renderHeader: elm }));
+  const setAppBar = (val) => setHeader((prev) => ({ ...prev, ...val }));
+  const setSearch = (val) => editSearch((prev) => ({ ...prev, ...val }));
+  const clearScreen = () => {
+    setScreen("");
+    setAppBar({
+      onBack: null,
+      title: "",
+      showBackButton: true,
+      appBarType: "",
+      renderAppBar: null,
+      renderHeader: null,
+      renderBack: null,
+      renderActionButton: null,
+      shadow: true,
+      defaultType: "",
+      withSearchBottom: "",
+      blankBackground: false,
+    });
+  };
+  const handleBack = () => {
+    if (getHeader.onBack) {
+      getHeader.onBack();
+    } else {
+      router.back();
+    }
+  };
+  const handleAction = () => {
+    if (getHeader.onAction) {
+      getHeader.onAction();
+    } else {
+      console.log("do something");
+    }
+  };
+  return (
+    <ResponsiveContext.Provider
+      value={{
+        appBarType: getHeader.appBarType,
+        appBar: getHeader,
+        renderAppBarMobile,
+        renderHeader,
+        setAppBar,
+        clearScreen,
+        handleBack,
+        setScreen,
+        screen,
+        setSearch,
+        showReset: getHeader.showReset,
+        handleAction,
+        setGlobalPadding,
+        search,
+        shadow: getHeader.shadow,
+      }}
+    >
+      <HeaderContainer />
+      {DefaultScreen(getHeader.defaultType) ? (
+        <div
+          style={{ marginTop: `${headerHeight}px` }}
+          className={`w-full ${getGlobalPadding ? "max-w-7xl mx-auto" : ""}`}
+        >
+          {DefaultScreen(getHeader.defaultType)}
+        </div>
+      ) : (
+        children
+      )}
+      {/* <BottomTabNavigation /> */}
+      <FooterContainer />
+    </ResponsiveContext.Provider>
+  );
 }
 
-export default ResponsiveProvider
+export default ResponsiveProvider;
+
+export const useHeader = () => useContext(ResponsiveContext);
