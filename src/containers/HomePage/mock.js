@@ -1,5 +1,5 @@
 export const mockProductsData = {
-   products: [
+  products: [
     {
       id: "123e4567-e89b-12d3-a456-426614174000",
       image: "",
@@ -13,7 +13,7 @@ export const mockProductsData = {
       quality: "New",
       location: "New York",
       soldCount: 1250,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174001",
@@ -28,7 +28,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Los Angeles",
       soldCount: 3420,
-      warranty: "2 years"
+      warranty: "2 years",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174002",
@@ -43,7 +43,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Chicago",
       soldCount: 2150,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174003",
@@ -58,7 +58,7 @@ export const mockProductsData = {
       quality: "Refurbished",
       location: "Miami",
       soldCount: 890,
-      warranty: "6 months"
+      warranty: "6 months",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174004",
@@ -73,7 +73,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Seattle",
       soldCount: 1780,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174005",
@@ -88,7 +88,7 @@ export const mockProductsData = {
       quality: "New",
       location: "New York",
       soldCount: 1020,
-      warranty: "2 years"
+      warranty: "2 years",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174006",
@@ -103,7 +103,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Boston",
       soldCount: 2340,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174007",
@@ -118,7 +118,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Houston",
       soldCount: 780,
-      warranty: "2 years"
+      warranty: "2 years",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174008",
@@ -133,7 +133,7 @@ export const mockProductsData = {
       quality: "New",
       location: "San Francisco",
       soldCount: 1560,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174009",
@@ -148,7 +148,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Seattle",
       soldCount: 920,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174010",
@@ -163,7 +163,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Portland",
       soldCount: 450,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174011",
@@ -178,7 +178,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Dallas",
       soldCount: 1890,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174012",
@@ -193,7 +193,7 @@ export const mockProductsData = {
       quality: "New",
       location: "San Diego",
       soldCount: 2760,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174013",
@@ -208,7 +208,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Phoenix",
       soldCount: 3240,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174014",
@@ -223,7 +223,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Las Vegas",
       soldCount: 680,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174015",
@@ -238,7 +238,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Denver",
       soldCount: 4120,
-      warranty: "2 years"
+      warranty: "2 years",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174016",
@@ -253,7 +253,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Atlanta",
       soldCount: 890,
-      warranty: "3 years"
+      warranty: "3 years",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174017",
@@ -268,7 +268,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Seattle",
       soldCount: 5230,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174018",
@@ -283,7 +283,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Miami",
       soldCount: 1470,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174019",
@@ -298,13 +298,13 @@ export const mockProductsData = {
       quality: "New",
       location: "Chicago",
       soldCount: 760,
-      warranty: "2 years"
+      warranty: "2 years",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174020",
       image: "",
       favorite: true,
-      productName: "Samsung 49\" Odyssey G9",
+      productName: 'Samsung 49" Odyssey G9',
       storeName: "Samsung Store",
       price: 1299.99,
       stock: 8,
@@ -313,7 +313,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Houston",
       soldCount: 420,
-      warranty: "3 years"
+      warranty: "3 years",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174021",
@@ -328,7 +328,7 @@ export const mockProductsData = {
       quality: "New",
       location: "San Francisco",
       soldCount: 2890,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174022",
@@ -343,7 +343,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Boston",
       soldCount: 6740,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174023",
@@ -358,7 +358,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Austin",
       soldCount: 890,
-      warranty: "3 years"
+      warranty: "3 years",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174024",
@@ -373,13 +373,13 @@ export const mockProductsData = {
       quality: "New",
       location: "Seattle",
       soldCount: 2340,
-      warranty: "2 years"
+      warranty: "2 years",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174025",
       image: "",
       favorite: false,
-      productName: "LG 27\" 4K Monitor",
+      productName: 'LG 27" 4K Monitor',
       storeName: "Best Buy",
       price: 449.99,
       stock: 20,
@@ -388,7 +388,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Portland",
       soldCount: 1230,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174026",
@@ -403,7 +403,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Nashville",
       soldCount: 1890,
-      warranty: "2 years"
+      warranty: "2 years",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174027",
@@ -418,7 +418,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Dallas",
       soldCount: 1560,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174028",
@@ -433,7 +433,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Miami",
       soldCount: 2780,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174029",
@@ -448,7 +448,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Chicago",
       soldCount: 3450,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174030",
@@ -463,8 +463,9 @@ export const mockProductsData = {
       quality: "New",
       location: "Los Angeles",
       soldCount: 1890,
-      warranty: "1 year"
-    },{
+      warranty: "1 year",
+    },
+    {
       id: "123e4567-e89b-12d3-a456-426614174031",
       image: "",
       favorite: false,
@@ -477,7 +478,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Phoenix",
       soldCount: 2100,
-      warranty: "2 years"
+      warranty: "2 years",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174032",
@@ -492,7 +493,7 @@ export const mockProductsData = {
       quality: "New",
       location: "San Francisco",
       soldCount: 560,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174033",
@@ -507,7 +508,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Boston",
       soldCount: 1780,
-      warranty: "2 years"
+      warranty: "2 years",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174034",
@@ -522,7 +523,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Denver",
       soldCount: 890,
-      warranty: "3 years"
+      warranty: "3 years",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174035",
@@ -537,7 +538,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Seattle",
       soldCount: 1230,
-      warranty: "2 years"
+      warranty: "2 years",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174036",
@@ -552,7 +553,7 @@ export const mockProductsData = {
       quality: "New",
       location: "New York",
       soldCount: 670,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174037",
@@ -567,7 +568,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Austin",
       soldCount: 3420,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174038",
@@ -582,7 +583,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Chicago",
       soldCount: 1890,
-      warranty: "2 years"
+      warranty: "2 years",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174039",
@@ -597,7 +598,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Miami",
       soldCount: 2340,
-      warranty: "1 year"
+      warranty: "1 year",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174040",
@@ -612,7 +613,7 @@ export const mockProductsData = {
       quality: "New",
       location: "Portland",
       soldCount: 4120,
-      warranty: "2 years"
+      warranty: "2 years",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174041",
@@ -627,220 +628,216 @@ export const mockProductsData = {
       quality: "New",
       location: "Houston",
       soldCount: 780,
-      warranty: "1 year"
+      warranty: "1 year",
     },
   ],
-  
 
-    
-    // API endpoints
-    endpoints: {
-      getAllProducts: "/api/products",
-      getProductById: "/api/products/:id",
-      getFavoriteProducts: "/api/products/favorites",
-      searchProducts: "/api/products/search?query=:query",
-      filterProducts: "/api/products/filter"
+  // API endpoints
+  endpoints: {
+    getAllProducts: "/api/products",
+    getProductById: "/api/products/:id",
+    getFavoriteProducts: "/api/products/favorites",
+    searchProducts: "/api/products/search?query=:query",
+    filterProducts: "/api/products/filter",
+  },
+
+  // Pagination info
+  pagination: {
+    currentPage: 1,
+    totalPages: 1,
+    itemsPerPage: 5,
+    totalItems: 5,
+  },
+
+  // Filter options
+  filters: {
+    price: {
+      min: 0,
+      max: 2500,
     },
-    
-    // Pagination info
+    quality: ["New", "Refurbished", "Used"],
+    warranty: ["6 months", "1 year", "2 years"],
+    locations: ["New York", "Los Angeles", "Chicago", "Miami", "Seattle"],
+  },
+};
+
+// Example API response functions
+export const getProducts = () => {
+  return {
+    status: 200,
+    data: mockProductsData.products,
+    pagination: mockProductsData.pagination,
+  };
+};
+
+const getProductById = (id) => {
+  const product = mockProductsData.products.find((p) => p.id === id);
+  if (product) {
+    return {
+      status: 200,
+      data: product,
+    };
+  }
+  return {
+    status: 404,
+    error: "Product not found",
+  };
+};
+
+const getFavoriteProducts = () => {
+  const favorites = mockProductsData.products.filter((p) => p.favorite);
+  return {
+    status: 200,
+    data: favorites,
     pagination: {
-      currentPage: 1,
-      totalPages: 1,
-      itemsPerPage: 5,
-      totalItems: 5
+      ...mockProductsData.pagination,
+      totalItems: favorites.length,
     },
-    
-    // Filter options
-    filters: {
-      price: {
-        min: 0,
-        max: 2500
-      },
-      quality: ["New", "Refurbished", "Used"],
-      warranty: ["6 months", "1 year", "2 years"],
-      locations: ["New York", "Los Angeles", "Chicago", "Miami", "Seattle"]
-    }
   };
-  
-  // Example API response functions
-  export const getProducts = () => {
-    return {
-      status: 200,
-      data: mockProductsData.products,
-      pagination: mockProductsData.pagination
-    };
-  };
-  
-  const getProductById = (id) => {
-    const product = mockProductsData.products.find(p => p.id === id);
-    if (product) {
-      return {
-        status: 200,
-        data: product
-      };
-    }
-    return {
-      status: 404,
-      error: "Product not found"
-    };
-  };
-  
-  const getFavoriteProducts = () => {
-    const favorites = mockProductsData.products.filter(p => p.favorite);
-    return {
-      status: 200,
-      data: favorites,
-      pagination: {
-        ...mockProductsData.pagination,
-        totalItems: favorites.length
-      }
-    };
-  };
+};
 
 export const categories = [
-    {
-      id: 1,
-      name: "Electronics",
-      icon: "📱",
-      subCategories: [
-        {
-          id: 101,
-          name: "Smartphones",
-          items: ["iPhones", "Android Phones", "Feature Phones"]
-        },
-        {
-          id: 102,
-          name: "Laptops",
-          items: ["Gaming Laptops", "Ultrabooks", "Chromebooks"]
-        },
-        {
-          id: 103,
-          name: "Audio",
-          items: ["Headphones", "Speakers", "Microphones"]
-        }
-      ]
-    },
-    {
-      id: 2,
-      name: "Fashion",
-      icon: "👕",
-      subCategories: [
-        {
-          id: 201,
-          name: "Men's Wear",
-          items: ["Shirts", "Pants", "Suits"]
-        },
-        {
-          id: 202,
-          name: "Women's Wear",
-          items: ["Dresses", "Tops", "Skirts"]
-        },
-        {
-          id: 203,
-          name: "Accessories",
-          items: ["Watches", "Bags", "Jewelry"]
-        }
-      ]
-    },
-    {
-      id: 3,
-      name: "Home & Living",
-      icon: "🏠",
-      subCategories: [
-        {
-          id: 301,
-          name: "Furniture",
-          items: ["Sofas", "Tables", "Beds"]
-        },
-        {
-          id: 302,
-          name: "Kitchen",
-          items: ["Cookware", "Appliances", "Utensils"]
-        },
-        {
-          id: 303,
-          name: "Decor",
-          items: ["Wall Art", "Lighting", "Rugs"]
-        }
-      ]
-    },
-    {
-      id: 4,
-      name: "Sports",
-      icon: "⚽",
-      subCategories: [
-        {
-          id: 401,
-          name: "Equipment",
-          items: ["Balls", "Rackets", "Training Gear"]
-        },
-        {
-          id: 402,
-          name: "Clothing",
-          items: ["Jerseys", "Shoes", "Activewear"]
-        },
-        {
-          id: 403,
-          name: "Accessories",
-          items: ["Water Bottles", "Bags", "Protective Gear"]
-        }
-      ]
-    },
-    {
-      id: 5,
-      name: "Beauty & Health",
-      icon: "💄",
-      subCategories: [
-        {
-          id: 501,
-          name: "Skincare",
-          items: ["Cleansers", "Moisturizers", "Sunscreen"]
-        },
-        {
-          id: 502,
-          name: "Makeup",
-          items: ["Face", "Eyes", "Lips"]
-        },
-        {
-          id: 503,
-          name: "Personal Care",
-          items: ["Hair Care", "Body Care", "Oral Care"]
-        }
-      ]
-    }
-  ];
-  
-  // Example of how to use:
-  // console.log(categories[0].name); // "Electronics"
-  // console.log(categories[0].subCategories[0].name); // "Smartphones"
-  // console.log(categories[0].subCategories[0].items[0]); // "iPhones"
-  
-  // Example of finding a subcategory by ID
-  const findSubCategory = (id) => {
-    for (let category of categories) {
-      const found = category.subCategories.find(sub => sub.id === id);
-      if (found) return found;
-    }
-    return null;
-  };
-  
-  // Example of getting all items in a category
-  const getAllItemsInCategory = (categoryId) => {
-    const category = categories.find(cat => cat.id === categoryId);
-    if (!category) return [];
-    return category.subCategories.flatMap(sub => sub.items);
-  };
-  
-  export default categories;
+  {
+    id: 1,
+    name: "Electronics",
+    icon: "📱",
+    subCategories: [
+      {
+        id: 101,
+        name: "Smartphones",
+        items: ["iPhones", "Android Phones", "Feature Phones"],
+      },
+      {
+        id: 102,
+        name: "Laptops",
+        items: ["Gaming Laptops", "Ultrabooks", "Chromebooks"],
+      },
+      {
+        id: 103,
+        name: "Audio",
+        items: ["Headphones", "Speakers", "Microphones"],
+      },
+    ],
+  },
+  {
+    id: 2,
+    name: "Fashion",
+    icon: "👕",
+    subCategories: [
+      {
+        id: 201,
+        name: "Men's Wear",
+        items: ["Shirts", "Pants", "Suits"],
+      },
+      {
+        id: 202,
+        name: "Women's Wear",
+        items: ["Dresses", "Tops", "Skirts"],
+      },
+      {
+        id: 203,
+        name: "Accessories",
+        items: ["Watches", "Bags", "Jewelry"],
+      },
+    ],
+  },
+  {
+    id: 3,
+    name: "Home & Living",
+    icon: "🏠",
+    subCategories: [
+      {
+        id: 301,
+        name: "Furniture",
+        items: ["Sofas", "Tables", "Beds"],
+      },
+      {
+        id: 302,
+        name: "Kitchen",
+        items: ["Cookware", "Appliances", "Utensils"],
+      },
+      {
+        id: 303,
+        name: "Decor",
+        items: ["Wall Art", "Lighting", "Rugs"],
+      },
+    ],
+  },
+  {
+    id: 4,
+    name: "Sports",
+    icon: "⚽",
+    subCategories: [
+      {
+        id: 401,
+        name: "Equipment",
+        items: ["Balls", "Rackets", "Training Gear"],
+      },
+      {
+        id: 402,
+        name: "Clothing",
+        items: ["Jerseys", "Shoes", "Activewear"],
+      },
+      {
+        id: 403,
+        name: "Accessories",
+        items: ["Water Bottles", "Bags", "Protective Gear"],
+      },
+    ],
+  },
+  {
+    id: 5,
+    name: "Beauty & Health",
+    icon: "💄",
+    subCategories: [
+      {
+        id: 501,
+        name: "Skincare",
+        items: ["Cleansers", "Moisturizers", "Sunscreen"],
+      },
+      {
+        id: 502,
+        name: "Makeup",
+        items: ["Face", "Eyes", "Lips"],
+      },
+      {
+        id: 503,
+        name: "Personal Care",
+        items: ["Hair Care", "Body Care", "Oral Care"],
+      },
+    ],
+  },
+];
 
+// Example of how to use:
+// console.log(categories[0].name); // "Electronics"
+// console.log(categories[0].subCategories[0].name); // "Smartphones"
+// console.log(categories[0].subCategories[0].items[0]); // "iPhones"
 
-
-  // selected category
-  const selectedCategory = {
-    "id": 5,
-    "category": "Beauty & Health",
-    "sub": {
-        "id": 503,
-        "name": "Personal Care"
-    }
+// Example of finding a subcategory by ID
+const findSubCategory = (id) => {
+  for (let category of categories) {
+    const found = category.subCategories.find((sub) => sub.id === id);
+    if (found) return found;
   }
+  return null;
+};
+
+// Example of getting all items in a category
+const getAllItemsInCategory = (categoryId) => {
+  const category = categories.find((cat) => cat.id === categoryId);
+  if (!category) return [];
+  return category.subCategories.flatMap((sub) => sub.items);
+};
+
+export default categories;
+
+// selected category
+const selectedCategory = {
+  id: 5,
+  category: "Beauty & Health",
+  sub: {
+    id: 503,
+    name: "Personal Care",
+  },
+};

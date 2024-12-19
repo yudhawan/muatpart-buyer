@@ -287,12 +287,12 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
       </section>
 
       <ProductGrid
-        totalProducts={mostVisitedProducts.products}
+        totalProducts={mostVisitedProducts}
         title="Produk Yang Banyak Dikunjungi"
       />
 
       <ProductGrid
-        totalProducts={youMightLike.products}
+        totalProducts={youMightLike}
         title="Mungkin Kamu Juga Suka"
       />
 
@@ -321,7 +321,7 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
             Terakhir Dilihat
           </h1>
           <div className="w-full grid grid-cols-6 gap-3">
-            {lastSeenProducts.products.map((val) => {
+            {lastSeenProducts.map((val) => {
               return (
                 <ProductComponent
                   key={val.id}
@@ -336,7 +336,7 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
         </div>
       </section>
 
-      <section className="bg-neutral-100 relative">
+      <section className="bg-neutral-100 relative pt-px">
         <h1 className="text-neutral-900 my-10 font-bold text-[28px] text-center">
           Keuntungan belanja di muatparts
         </h1>
