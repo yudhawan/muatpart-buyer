@@ -10,6 +10,9 @@ const nextConfig = {
       },
       {
         hostname: "placehold.co"
+      },
+      {
+        hostname:'azlogistik.s3.ap-southeast-3.amazonaws.com'
       }
     ]
   }

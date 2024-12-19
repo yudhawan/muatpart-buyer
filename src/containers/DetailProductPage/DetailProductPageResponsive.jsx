@@ -1,8 +1,8 @@
 
 import { useHeader } from '@/common/ResponsiveContext'
 import React, { useEffect } from 'react'
-import style from './Categories.module.scss'
-function CategoriesResponsive() {
+import style from './DetailProductPage.module.scss'
+function DetailProductPageResponsive({product}) {
   const {
     appBarType, //pilih salah satu : 'header_title_secondary' || 'header_search_secondary' || 'default_search_navbar_mobile' || 'header_search' || 'header_title'
     appBar, // muncul ini : {onBack:null,title:'',showBackButton:true,appBarType:'',appBar:null,header:null}
@@ -86,11 +86,11 @@ function CategoriesResponsive() {
           onBack:()=>clearScreen()
         })
       }} >To example Screen</button>
-      <p>Categories Responsive</p>
+      <p>DetailProductPage Responsive</p>
 
     </div>
   )
 }
 
-export default CategoriesResponsive
+export default DetailProductPageResponsive
   

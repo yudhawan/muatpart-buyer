@@ -45,10 +45,15 @@
     div{
         height: 32px;
         background-color: var(--neutral-50);
-        // border: none;
+        border: none;
     }
     input{
         width: 100%;
+    }
+}
+.inputMobile:hover{
+    div{
+        border:none
     }
 }
 .inputMobileCompact{

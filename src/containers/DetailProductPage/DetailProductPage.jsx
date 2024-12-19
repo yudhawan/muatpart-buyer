@@ -2,18 +2,18 @@
 'use client'
 import { viewport } from '@/store/viewport'
 import React, { useState } from 'react'
-import CategoriesResponsive from './CategoriesResponsive'
-import CategoriesWeb from './CategoriesWeb'
+import DetailProductPageResponsive from './DetailProductPageResponsive'
+import DetailProductPageWeb from './DetailProductPageWeb'
 import SWRHandler from '@/services/useSWRHook'
 
-function Categories({params,searchParams}) {
+function DetailProductPage({product}) {
   const [state,setState]=useState()
   const {useSWRHook,useSWRMutateHook}=new SWRHandler()
   const {isMobile} = viewport()
   if(typeof isMobile!=='boolean') return <></> //buat skeleton
-  if(isMobile) return <CategoriesResponsive/>
-  return <CategoriesWeb params={params} searchParams={searchParams} />
+  if(isMobile) return <DetailProductPageResponsive product={product} />
+  return <DetailProductPageWeb product={product} />
 }
 
-export default Categories
+export default DetailProductPage
   

@@ -50,7 +50,7 @@ function HeaderContainerMobile() {
                     setAppBar({
                       onBack:()=>clearScreen(),
                       title:'Cari berdasarkan',
-                      appBarType:'header_search_secondary',
+                      appBarType:'header_title_secondary',
                       defaultType:'default_search_navbar_mobile'
                     })
                     }} classname={style.inputMobile} placeholder='Cari Produk' icon={{left:'/icons/search.svg'}} />
@@ -103,21 +103,25 @@ export function HeaderTitleSearchMobile({appBar,type,title,onBack,searchPlacehol
   return(
     <div className={`${isBgSecondary?'bg-neutral-50':'bg-[#c22716]'} relative w-full h-auto max-h-[88px] p-4 pb-3 flex gap-2 ${shadow? 'shadow-lg':''}`}>
       {!appBar?.blankBackground?<Image src='/img/fallinstartheader.png' width={153} height={62} alt='fallin' className='absolute right-0 bottom-0' />:''}
-      <div className='flex gap-2 w-full items-center'>
-        {
-        (appBar.showBackButton&&RenderBack)?
-        <RenderBack/>:
-        (appBar.showBackButton)?
-        <span onClick={onBack} className={`w-6 h-6 ${isBgSecondary?'bg-[#176cf7]':'bg-neutral-50'} rounded-full flex justify-center items-center cursor-pointer whitespace-nowrap`}>
-          <IconComponent width={16} height={16} classname={`${isBgSecondary?style.iconBackWhite:style.iconBackRed}`} src={'/icons/chevron-left.svg'} />
-        </span>:''
-        }
-        {(type==='header_search' || type==='header_search_secondary')&&<Input classname={style.inputSearchMobile} placeholder={searchPlaceholder} value={searchValue} changeEvent={e=>setSearch({value:e.target.value})} />}
-        {((type==='header_title' || type==='header_title_secondary')&&typeof title==='string')?<span className={`font-bold text-base ${isBgSecondary?'text-[#176cf7]':'text-neutral-50'}`}>{title}</span>:((type==='header_title' || type==='header_title_secondary')&&typeof title==='string')?title:''}
-        {
-          ActionButton?ActionButton:''
-        }
-      </div>
+      {
+        appBar?.renderAppBar?
+        appBar?.renderAppBar:
+        <div className='flex gap-2 w-full items-center'>
+          {
+          (appBar.showBackButton&&RenderBack)?
+          <RenderBack/>:
+          (appBar.showBackButton)?
+          <span onClick={onBack} className={`w-6 h-6 ${isBgSecondary?'bg-[#176cf7]':'bg-neutral-50'} rounded-full flex justify-center items-center cursor-pointer whitespace-nowrap`}>
+            <IconComponent width={16} height={16} classname={`${isBgSecondary?style.iconBackWhite:style.iconBackRed}`} src={'/icons/chevron-left.svg'} />
+          </span>:''
+          }
+          {(type==='header_search' || type==='header_search_secondary')&&<Input classname={style.inputSearchMobile} placeholder={searchPlaceholder} value={searchValue} changeEvent={e=>setSearch({value:e.target.value})} />}
+          {((type==='header_title' || type==='header_title_secondary')&&typeof title==='string')?<span className={`font-bold text-base ${isBgSecondary?'text-[#176cf7]':'text-neutral-50'}`}>{title}</span>:((type==='header_title' || type==='header_title_secondary')&&typeof title!=='string')?title:''}
+          {
+            ActionButton?ActionButton:''
+          }
+        </div>
+      }
     </div>
   )
 }
@@ -129,26 +133,30 @@ export function HeaderModalMobile({appBar,handleAction,type,title,onBack,searchP
   const isSecondary = type==='header_title_modal_secondary'|type==='header_search_modal_secondary'
   return(
     <div className={`${isSecondary?'bg-neutral-50':'bg-[#c22716]'} relative w-full h-fit p-4 pb-3 ${shadow? 'shadow-lg':''}`}>
-        <div className='flex flex-col gap-4'>
-          <div className='flex items-center justify-between gap-2'>
-            {
-              (appBar.showBackButton&&RenderBack)?
-              <RenderBack/>
-              :appBar.showBackButton?
-              <span onClick={()=>onBack()} className={`bg-none w-6 h-6 rounded-full flex justify-center items-center cursor-pointer`}>
-                <IconComponent src={'/icons/closes.svg'} classname={`${isSecondary?style.iconBackBlue:style.iconBackWhite}`} />
-              </span>:''
-            }
-            {type.includes('header_title')?
-            <span className={`font-semibold text-sm ${isSecondary?'text-neutral-900':'text-neutral-50'}`}>{title}</span>
-            :<Input changeEvent={e=>setSearch({value:e.target.value})} classname={style.inputMobile} placeholder={searchPlaceholder?searchPlaceholder:'Cari Produk'} icon={{left:'/icons/search.svg'}} />}
-            {
-              ActionButton?ActionButton:showReset?<span onClick={handleAction} className={`font-semibold text-sm cursor-pointer ${isSecondary?'text-primary-700':'text-neutral-50'}`}>Reset</span>:''
-            }
+        {
+          appBar?.renderAppBar?
+          appBar?.renderAppBar:
+          <div className='flex flex-col gap-4'>
+            <div className='flex items-center justify-between gap-2'>
+              {
+                (appBar.showBackButton&&RenderBack)?
+                <RenderBack/>
+                :appBar.showBackButton?
+                <span onClick={()=>onBack()} className={`bg-none w-6 h-6 rounded-full flex justify-center items-center cursor-pointer`}>
+                  <IconComponent src={'/icons/closes.svg'} classname={`${isSecondary?style.iconBackBlue:style.iconBackWhite}`} />
+                </span>:''
+              }
+              {type.includes('header_title')?
+              <span className={`font-semibold text-sm ${isSecondary?'text-neutral-900':'text-neutral-50'}`}>{title}</span>
+              :<Input changeEvent={e=>setSearch({value:e.target.value})} classname={style.inputMobile} placeholder={searchPlaceholder?searchPlaceholder:'Cari Produk'} icon={{left:'/icons/search.svg'}} />}
+              {
+                ActionButton?ActionButton:showReset?<span onClick={handleAction} className={`font-semibold text-sm cursor-pointer ${isSecondary?'text-primary-700':'text-neutral-50'}`}>Reset</span>:''
+              }
+            </div>
+            {appBar?.withSearchBottom===screen&&<Input changeEvent={e=>setSearch({value:e.target.value})} classname={style.inputMobile} placeholder={searchPlaceholder?searchPlaceholder:'Cari Produk'} icon={{left:'/icons/search.svg'}} />}
+            {!isSecondary&&<Image src='/img/fallinstartheader.png' width={153} height={62} alt='fallin' className='absolute right-0 bottom-0' />}
           </div>
-          {appBar?.withSearchBottom===screen&&<Input changeEvent={e=>setSearch({value:e.target.value})} classname={style.inputMobile} placeholder={searchPlaceholder?searchPlaceholder:'Cari Produk'} icon={{left:'/icons/search.svg'}} />}
-          {!isSecondary&&<Image src='/img/fallinstartheader.png' width={153} height={62} alt='fallin' className='absolute right-0 bottom-0' />}
-        </div>
+        }
       </div>
   )
 }
@@ -168,37 +176,41 @@ export function HeaderMainCompact() {
     setSearch} = useContext(ResponsiveContext)
   return (
     <div className={`bg-[#c22716] relative w-full h-auto max-h-[88px] p-4 pb-3 ${shadow? 'shadow-lg':''}`}>
-
-      <div className='flex flex-col'>
-        <div className='flex items-start justify-between gap-4'>
-          <div className='flex items-center gap-2 w-full relative'>
-            {appBar?.showBackButton&&<span onClick={()=>handleBack()} className='w-6 h-6 rounded-full bg-neutral-50 flex justify-center items-center cursor-pointer'>
-              <IconComponent src={'/icons/chevron-left.svg'} classname={style.iconBackRed} width={24} />
-            </span>}
-            <Input 
-              value={search?.value}
-              changeEvent={e=> setSearch({value:e.target.value})}
-              classname={style.inputMobileCompact+' items-center'} 
-              placeholder={search?.placeholder?search?.placeholder:'Cari produk'} 
-              icon={{left:<IconComponent width={20} height={20} src={'/icons/search.svg'}/>}} />
-              {
-                search?.value?<span className='absolute right-3 z-50' onClick={()=>setSearch({value:''})}><IconComponent width={10} height={10} src={'/icons/closes.svg'}/></span>:''
-              }
+      {
+        appBar?.renderAppBar?
+        appBar?.renderAppBar
+        :
+        <div className='flex flex-col'>
+          <div className='flex items-start justify-between gap-4'>
+            <div className='flex items-center gap-2 w-full relative'>
+              {appBar?.showBackButton&&<span onClick={()=>handleBack()} className='w-6 h-6 rounded-full bg-neutral-50 flex justify-center items-center cursor-pointer'>
+                <IconComponent src={'/icons/chevron-left.svg'} classname={style.iconBackRed} width={24} />
+              </span>}
+              <Input 
+                value={search?.value}
+                changeEvent={e=> setSearch({value:e.target.value})}
+                classname={style.inputMobileCompact+' items-center'} 
+                placeholder={search?.placeholder?search?.placeholder:'Cari produk'} 
+                icon={{left:<IconComponent width={20} height={20} src={'/icons/search.svg'}/>}} />
+                {
+                  search?.value?<span className='absolute right-3 z-50' onClick={()=>setSearch({value:''})}><IconComponent width={10} height={10} src={'/icons/closes.svg'}/></span>:''
+                }
+            </div>
+            <div className='flex gap-4 items-start'>
+              <span className='gap-[2px] flex flex-col items-center z-20'>
+                <IconComponent classname={style.iconWhiteGarasi} src={'/icons/garasi.svg'} width={20} height={20} />
+                <span className='font-semibold text-neutral-50 text-[10px]'>Garasi</span>
+              </span>
+              <span className='gap-[2px] flex flex-col items-center z-20'>
+                <IconComponent classname={style.iconCartMobile} src={'/icons/cart.svg'} width={20} height={20} />
+                <span className='font-semibold text-neutral-50 text-[10px]'>Troli</span>
+              </span>
+            </div>
           </div>
-          <div className='flex gap-4 items-start'>
-            <span className='gap-[2px] flex flex-col items-center z-20'>
-              <IconComponent classname={style.iconWhiteGarasi} src={'/icons/garasi.svg'} width={20} height={20} />
-              <span className='font-semibold text-neutral-50 text-[10px]'>Garasi</span>
-            </span>
-            <span className='gap-[2px] flex flex-col items-center z-20'>
-              <IconComponent classname={style.iconCartMobile} src={'/icons/cart.svg'} width={20} height={20} />
-              <span className='font-semibold text-neutral-50 text-[10px]'>Troli</span>
-            </span>
-          </div>
+          
+          {!appBar?.blankBackground?<Image src='/img/fallinstartheader.png' width={153} height={62} alt='fallin' className='absolute right-0 bottom-0' />:''}
         </div>
-        
-        {!appBar?.blankBackground?<Image src='/img/fallinstartheader.png' width={153} height={62} alt='fallin' className='absolute right-0 bottom-0' />:''}
-      </div>
+      }
     </div>
   )
 }

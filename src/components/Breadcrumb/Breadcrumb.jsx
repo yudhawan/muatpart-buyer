@@ -10,14 +10,16 @@ const BreadCrumb = ({
   onActive = () => {},
   classname,
   disableActive = false,
+  disableClick=false,
   maxWidth,
 }) => {
   function handleClick(val) {
+    if(disableClick) return;
     onclick(val);
     onActive(data[data.length - 1]);
   }
   return (
-    <div className={`${style.main} ${classname}`}>
+    <div className={`${style.main} ${style.breadcrumb} ${classname}`}>
       {data?.map((val, idx) => {
         return (
           <div className="flex items-center gap-[5px]" key={idx}>
@@ -25,11 +27,11 @@ const BreadCrumb = ({
               style={{ maxWidth: maxWidth ? `${maxWidth}px` : "86px" }}
               className={`${style.list + " hover:text-primary-700 "} ${
                 idx === data.length - 1 ? " !max-w-none" : "line-clamp-1"
-              } ${disableActive ? "" : "last:text-primary-700 "} select-none`}
+              } ${disableActive ? "" : "last:text-primary-700 "} select-none ${!disableClick?'cursor-pointer':''}`}
               key={idx}
               onClick={() => handleClick(val)}
             >
-              {val}
+              {val?.name?val.name:val}
             </span>
             {idx !== data.length - 1 && (
               <IconComponent
