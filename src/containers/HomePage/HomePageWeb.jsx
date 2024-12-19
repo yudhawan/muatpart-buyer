@@ -8,6 +8,7 @@ import Dropdown from "@/components/Dropdown/Dropdown";
 import Button from "@/components/Button/Button";
 import ProductComponent from "@/components/ProductComponent/ProductComponent";
 import MultipleItems from "@/components/ReactSlick/MultipleItems";
+import ProductGrid from "@/components/ProductsSectionComponent/ProductGrid";
 
 function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
   const [filter, setVehicle] = useState({
@@ -284,58 +285,16 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
           />
         </div>
       </section>
-      <section className="bg-white py-6">
-        <div className="w-[1080px] mx-auto space-y-7">
-          <h1 className="text-neutral-900 font-bold text-lg">
-            Produk Yang Banyak Dikunjungi
-          </h1>
-          <div className="w-full grid grid-cols-6 gap-3">
-            {Array(Math.ceil(18 / mostVisitedProducts.products.length))
-              .fill(mostVisitedProducts.products)
-              .flat()
-              .slice(0, 18)
-              .map((val) => {
-                return (
-                  <ProductComponent
-                    key={val.id}
-                    {...val}
-                    image={`https://prd.place/170?id=${Math.floor(
-                      Math.random() * 46
-                    )}`}
-                  />
-                );
-              })}
-          </div>
 
-          <Button Class="place-self-center">Muat Lebih Banyak</Button>
-        </div>
-      </section>
-      <section className="bg-white py-6">
-        <div className="w-[1080px] mx-auto space-y-7">
-          <h1 className="text-neutral-900 font-bold text-lg">
-            Mungkin Kamu Juga Suka
-          </h1>
-          <div className="w-full grid grid-cols-6 gap-3">
-            {Array(Math.ceil(18 / youMightLike.products.length))
-              .fill(youMightLike.products)
-              .flat()
-              .slice(0, 18)
-              .map((val) => {
-                return (
-                  <ProductComponent
-                    key={val.id}
-                    {...val}
-                    image={`https://prd.place/170?id=${Math.floor(
-                      Math.random() * 46
-                    )}`}
-                  />
-                );
-              })}
-          </div>
+      <ProductGrid
+        totalProducts={mostVisitedProducts.products}
+        title="Produk Yang Banyak Dikunjungi"
+      />
 
-          <Button Class="place-self-center">Muat Lebih Banyak</Button>
-        </div>
-      </section>
+      <ProductGrid
+        totalProducts={youMightLike.products}
+        title="Mungkin Kamu Juga Suka"
+      />
 
       <section className="bg-white py-6">
         <div className="w-[1012px] mx-auto space-y-7">
