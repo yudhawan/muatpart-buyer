@@ -133,6 +133,11 @@ input::-webkit-inner-spin-button {
     stroke: var(--neutral-50);
   }
 }
+.chevron-blue {
+  path {
+    stroke: var(--primary-700);
+  }
+}
 .input-error {
   div {
     border-color: var(--error-400);

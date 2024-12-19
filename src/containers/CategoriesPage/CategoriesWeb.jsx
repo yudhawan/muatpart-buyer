@@ -31,7 +31,7 @@ function CategoriesWeb({params,searchParams,products}) {
     return (
         <div className={style.main}>
             <div className='w-full max-w-[1280px] m-auto'>
-                <BreadCrumb disableClick classname={style.breadcrumb} data={[{id:'home',name:'Home'},...categoryFamily?.map(val=>({id:val?.id,name:val?.value}))]} onclick={a=>console.log(a)} />
+                <BreadCrumb maxWidth={'100%'} disableClick classname={style.breadcrumb} data={[{id:'home',name:'Home'},...categoryFamily?.map(val=>({id:val?.id,name:val?.value}))]} onclick={a=>console.log(a)} />
                 <div className='w-full h-auto flex justify-center'>
                     <div className='w-full max-h-[250px] max-w-[1000px] mt-4'>
                         <MultipleItems 
