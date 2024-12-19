@@ -10,6 +10,8 @@ import { numberFormatMoney } from '@/libs/NumberFormat';
 import IconComponent from '@/components/IconComponent/IconComponent';
 import Bubble from '@/components/Bubble/Bubble';
 import { useState } from 'react';
+import ProductComponent from '@/components/ProductComponent/ProductComponent';
+import ImageProductSlider from '@/components/ImageProductSlider/ImageProductSlider';
 const tabmenu = [
     {
         id:'detail_product',
@@ -29,6 +31,7 @@ const tabmenu = [
     },
 ]
 function DetailProductPageWeb({
+    product,
     ID,
     Photo,
     Favorite,
@@ -46,18 +49,19 @@ function DetailProductPageWeb({
     SoldCount,
     Bonus,
     CreatedAt,
+    Variants
 }) {
     const [getMenuTab,setMenuTab]=useState('detail_product')
-    // const categories=[product?.Categories?.['Groupcategory'],product?.Categories?.['Category'],product?.Categories?.['Subcategory'],product?.Categories?.['Item']]
+    const categories=[product?.Categories?.['Groupcategory'],product?.Categories?.['Category'],product?.Categories?.['Subcategory'],product?.Categories?.['Item']]
     return (
         <div className={style.main}>
             <div className='w-full max-w-[1280px] self-center'>
-                {/* <BreadCrumb data={[{id:'home',name:'Home'},...categories?.map(val=>{
+                <BreadCrumb data={[{id:'home',name:'Home'},...categories?.map(val=>{
                     return {
                         id:val.id,
                         name:val.name
                     }
-                })]} /> */}
+                })]} />
                 <div className='flex justify-between gap-4 mt-4 relative'>
                     <div className='flex flex-col gap-6 min-w-[898px] w-full'>
                         {/* kompabilitas */}
@@ -75,15 +79,15 @@ function DetailProductPageWeb({
                         <CardDetailProduct className='bg-neutral-50 rounded-xl shadow-xl py-5 px-8 flex justify-between'>
                             {/* pictures */}
                             <div className='flex flex-col w-[350px]'>
-                                
+                                {/* <ImageProductSlider/> */}
                             </div>
                             {/* Desc */}
                             <div className='w-full flex flex-col gap-4'>
                                 {/* title desc */}
                                 <div className='flex flex-col gap-4 border-b border-neutral-400 pb-4 text-neutral-900'>
-                                    <h1 className='font-bold text-[18px]'>Air Compessor Sparepart 44930353121 Oli Separator</h1>
+                                    <h1 className='font-bold text-[18px]'>{Name}</h1>
                                     <span className='font-medium text-xs flex'>
-                                        <span className='flex items-center gap-1'>Terjual <span className='text-neutral-700'>99+</span> &#183; <Image src={"/icons/product-star.svg"} width={16} height={16} alt="Rating"/> 5 <span className='text-neutral-700'>(16 rating)</span></span>
+                                        <span className='flex items-center gap-1'>Terjual <span className='text-neutral-700'>{SoldCount>99?'99+':SoldCount}</span> &#183; <Image src={"/icons/product-star.svg"} width={16} height={16} alt="Rating"/> {Rating} <span className='text-neutral-700'>(16 rating)</span></span>
                                     </span>
                                     {Discount ? (
                                         <>
@@ -100,18 +104,17 @@ function DetailProductPageWeb({
                                         </>
                                     ) : (
                                         <h1 className="text-neutral-900 text-sm font-bold">
-                                        {PriceBeforeDiscount}{numberFormatMoney(2000000)}
+                                        {numberFormatMoney(PriceBeforeDiscount??0)}
                                         </h1>
                                     )}
                                 </div>
-                                <div className='flex flex-col gap-2 border-b border-neutral-400 pb-4 text-neutral-900'>
+                                {Bonus&&<div className='flex flex-col gap-2 border-b border-neutral-400 pb-4 text-neutral-900'>
                                     <span className='text-xs font-medium text-neutral-600'>Bonus</span>
                                     <div className='flex overflow-auto gap-[7px]'>
-                                        <div className='bg-success-50 py-1 px-2 rounded-md text-success-400 font-semibold text-xs'>sadasda as dsadsa</div>
-                                        <div className='bg-success-50 py-1 px-2 rounded-md text-success-400 font-semibold text-xs'>sadasda as dsadsa</div>
+                                        {Bonus.map(val=><div className='bg-success-50 py-1 px-2 rounded-md text-success-400 font-semibold text-xs'>{val?.name}</div>)}
                                     </div>
-                                </div>
-                                <div className='flex flex-col gap-4 border-b border-neutral-400 pb-4 text-neutral-900'>
+                                </div>}
+                                {Variants&&<div className='flex flex-col gap-4 border-b border-neutral-400 pb-4 text-neutral-900'>
                                     <div className='flex flex-col gap-2'>
                                         <span className='text-xs font-medium text-neutral-600 gap-1 flex'>Tipe <span className='text-neutral-900'>On Road</span></span>
                                         <div className='flex overflow-auto gap-[7px]'>
@@ -126,7 +129,7 @@ function DetailProductPageWeb({
                                             <Bubble className='!h-[28px]'>sadasda as dsadsa</Bubble>
                                         </div>
                                     </div>
-                                </div>
+                                </div>}
                                 <div className='flex flex-col gap-4 border-b border-neutral-400 pb-4 text-neutral-900'>
                                     <span className='flex gap-4'>
                                         <span className='w-[100px] text-xs text-neutral-600'>Kualitas</span>
@@ -217,6 +220,18 @@ function DetailProductPageWeb({
                                 }
                             </div>
                         </CardDetailProduct>
+                        {
+                            !!(getMenuTab==='detail_product')&&<DetailProdukCard/>
+                        }
+                        {
+                            !!(getMenuTab==='kompabilitas')&&<Kompatibilitas/>
+                        }
+                        {
+                            !!(getMenuTab==='deskrisi_product')&&<DeskripsiProduk/>
+                        }
+                        {
+                            !!(getMenuTab==='ulasan_product')&&<></>
+                        }
                     </div>
 
                     <div className='flex flex-col min-w-[286px] py-6 px-5 gap-6 bg-neutral-50 rounded-xl shadow-xl text-neutral-900 h-fit sticky'>
@@ -257,6 +272,7 @@ function DetailProductPageWeb({
                         </div>
                     </div>
                 </div>
+                <RekomendasiSerupa/>
             </div>
         </div>
     );
@@ -266,4 +282,138 @@ export default DetailProductPageWeb;
 
 const CardDetailProduct = ({children,classname})=>{
     return <div className={`flex items-center justify-between  bg-neutral-50 rounded-xl shadow-xl py-6 px-5 ${classname}`}>{children}</div>
+}
+
+const DetailProdukCard=()=>{
+    return <CardDetailProduct classname={'gap-6 text-neutral-900 flex flex-col !items-start'}>
+        <p className='font-semibold text-[18px] '>Detail Produk</p>
+        <div className='grid grid-cols-2 gap-3'>
+            <div className='w-full grid grid-cols-2 gap-4'>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Nomor OEM</span>
+                <span className='font-medium text-xs'>49 303 53 121</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Nomor OE</span>
+                <span className='font-medium text-xs'>1421022, LE 29 005 x</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Asal Produksi</span>
+                <span className='font-medium text-xs'>Indonesia</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Tahun Produksi</span>
+                <span className='font-medium text-xs'>08/2017</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Garansi Merchant</span>
+                <span className='font-medium text-xs'>30 hari</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>SKU</span>
+                <span className='font-medium text-xs'>4011558192501</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Material</span>
+                <span className='font-medium text-xs'>Alumunium</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Tipe Produk</span>
+                <span className='font-medium text-xs'>Assembly</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Penempatan Dikendaraan</span>
+                <span className='font-medium text-xs'>Assembly</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Barang yang Disertakan</span>
+                <span className='font-medium text-xs'>Seal</span>
+            </div>
+            <div className='w-full grid grid-cols-2 gap-4'>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Spesifikasi 1</span>
+                <span className='font-medium text-xs'>Contoh : A</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Spesifikasi 2</span>
+                <span className='font-medium text-xs'>Contoh : A</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Spesifikasi 3</span>
+                <span className='font-medium text-xs'>Contoh : A</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Spesifikasi 4</span>
+                <span className='font-medium text-xs'>Contoh : A</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Spesifikasi 5</span>
+                <span className='font-medium text-xs'>Contoh : A</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Spesifikasi 6</span>
+                <span className='font-medium text-xs'>Contoh : A</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Spesifikasi 7</span>
+                <span className='font-medium text-xs'>Contoh : A</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Spesifikasi 8</span>
+                <span className='font-medium text-xs'>Contoh : A</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Spesifikasi 9</span>
+                <span className='font-medium text-xs'>Contoh : A</span>
+                <span className='text-neutral-600 font-medium text-xs w-[150px]'>Spesifikasi 10</span>
+                <span className='font-medium text-xs'>Contoh : A</span>
+            </div>
+        </div>
+    </CardDetailProduct>
+}
+
+const DeskripsiProduk=({desc})=>{
+    const [show,setShow]=useState(false)
+    return (
+        <CardDetailProduct classname={'flex flex-col gap-6 text-xs font-medium text-neutral-900 items-start'}>
+            <p className='text-[18px] self-start'>Deskripsi Produk</p>
+            <div className='flex flex-col items-start gap-[14px] w-full'>
+                <p className={`${show?'':'line-clamp-6'}`}>
+                {desc}
+                </p>
+                <span className='flex gap-2 items-center text-primary-700 select-none cursor-pointer' onClick={()=>setShow(!show)}>
+                    <span>Lihat {show?'Lebih Sedikit':'Selengkapnya'}</span>
+                    <IconComponent classname={'chevron-blue'} src={`${show?'/icons/chevron-up.svg':'/icons/chevron-down.svg'}`} width={12} height={12} />
+                </span>
+            </div>
+        </CardDetailProduct>
+    )
+}
+
+const Kompatibilitas=({data})=>{
+    const [getExpanded,setExpanded]=useState(['scania'])
+    function handleExpanded(id) {
+        if (getExpanded.some(val => val === id)) {
+            let tmp = getExpanded.filter(val => val !== id);
+            setExpanded(tmp);
+        } else {
+            setExpanded(prev => [...prev, id]);
+        }
+    }
+    return <CardDetailProduct classname={'flex flex-col gap-6 w-full font-medium text-xs text-neutral-900'}>
+        <span className='font-semibold text-[18px] text-'>Kompatibilitas</span>
+        <div className='flex flex-col gap-4 w-full'>
+            <div onClick={()=>handleExpanded('scania')} className='flex w-full justify-between h-6 items-center select-none cursor-pointer'>
+                <span>Scania</span>
+                <IconComponent src={'/icons/chevron-down.svg'} width={24} height={24} />
+            </div>
+            {!!(getExpanded.includes('scania'))&&
+            <div className='rounded-[12px] border border-neutral-400 py-4 px-3'>
+                <table className='border-collapse w-full'>
+                    <thead>
+                        <tr>
+                            <th className='text-left pl-6 font-bold text-neutral-600 border-b border-neutral-400'>Model</th>
+                            <th className='text-left pl-6 font-bold text-neutral-600 border-b border-neutral-400'>Tahun</th>
+                            <th className='text-left pl-6 font-bold text-neutral-600 border-b border-neutral-400'>Tipe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td className='py-4 px-6 border-b border-neutral-400'>asdsd</td>
+                            <td className='py-4 px-6 border-b border-neutral-400'>asdsd</td>
+                            <td className='py-4 px-6 border-b border-neutral-400'>asdsd</td>
+                        </tr>
+                        <tr>
+                            <td className='py-4 px-6 border-b border-neutral-400'>asdsd</td>
+                            <td className='py-4 px-6 border-b border-neutral-400'>asdsd</td>
+                            <td className='py-4 px-6 border-b border-neutral-400'>asdsd</td>
+                        </tr>
+                        <tr>
+                            <td className='py-4 px-6 border-b border-neutral-400'>asdsd</td>
+                            <td className='py-4 px-6 border-b border-neutral-400'>asdsd</td>
+                            <td className='py-4 px-6 border-b border-neutral-400'>asdsd</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            }
+        </div>
+    </CardDetailProduct>
+}
+
+const RekomendasiSerupa=({data})=>{
+    return <div className='flex flex-col gap-[25px] w-full mt-6'>
+        <span className='font-bold text-[18px] text-[#1b1b1b]'>Rekomendasi Serupa</span>
+        <div className='flex w-full overflow-auto gap-3 scrollbar-none'>
+            {
+                Array(12).fill('').map((val,i)=>{
+                    return <ProductComponent key={i}/>
+                })
+            }
+        </div>
+    </div>
 }
