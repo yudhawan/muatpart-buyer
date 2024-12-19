@@ -9,6 +9,25 @@ import ButtonPlusMinus from '@/components/ButtonPlusMinus/ButtonPlusMinus';
 import { numberFormatMoney } from '@/libs/NumberFormat';
 import IconComponent from '@/components/IconComponent/IconComponent';
 import Bubble from '@/components/Bubble/Bubble';
+import { useState } from 'react';
+const tabmenu = [
+    {
+        id:'detail_product',
+        name:'Detail Produk'
+    },
+    {
+        id:'kompabilitas',
+        name:'Kompabilitas'
+    },
+    {
+        id:'deskrisi_product',
+        name:'Deskripsi Produk'
+    },
+    {
+        id:'ulasan_product',
+        name:'Ulasan Produk'
+    },
+]
 function DetailProductPageWeb({
     ID,
     Photo,
@@ -28,6 +47,7 @@ function DetailProductPageWeb({
     Bonus,
     CreatedAt,
 }) {
+    const [getMenuTab,setMenuTab]=useState('detail_product')
     // const categories=[product?.Categories?.['Groupcategory'],product?.Categories?.['Category'],product?.Categories?.['Subcategory'],product?.Categories?.['Item']]
     return (
         <div className={style.main}>
@@ -41,7 +61,7 @@ function DetailProductPageWeb({
                 <div className='flex justify-between gap-4 mt-4 relative'>
                     <div className='flex flex-col gap-6 min-w-[898px] w-full'>
                         {/* kompabilitas */}
-                        <div className='flex items-center justify-between  bg-neutral-50 rounded-xl shadow-xl py-6 px-5'>
+                        <CardDetailProduct>
                             <div className='flex gap-3'>
                                 <Dropdown placeholder='Kendaraan Saya' options={[]} />
                                 <Button Class='!h-8'>Cek Kompatibilitas</Button>
@@ -50,9 +70,9 @@ function DetailProductPageWeb({
                                 <Image src={'/icons/reset.svg'} width={16} height={16} alt='reset' className='group-hover:rotate-45 rotate-0 transition-all ease-in-out delay-300' />
                                 <span className='text-xs font-medium text-primary-700'>Reset Pengecekan</span>
                             </div>
-                        </div>
+                        </CardDetailProduct>
                         {/* detail */}
-                        <div className='bg-neutral-50 rounded-xl shadow-xl py-5 px-8 flex justify-between'>
+                        <CardDetailProduct className='bg-neutral-50 rounded-xl shadow-xl py-5 px-8 flex justify-between'>
                             {/* pictures */}
                             <div className='flex flex-col w-[350px]'>
                                 
@@ -189,7 +209,14 @@ function DetailProductPageWeb({
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </CardDetailProduct>
+                        <CardDetailProduct classname={``}>
+                            <div className='flex '>
+                                {
+                                    tabmenu.map((val,i)=><span key={val.id} onClick={()=>setMenuTab(val.id)} className={`cursor-pointer px-6 h-10 border-b-2 text-base font-semibold ${getMenuTab===val?.id?'border-primary-700 text-primary-700':'border-neutral-50 text-neutral-900'} flex gap-2 items-center`}>{val.name}</span>)
+                                }
+                            </div>
+                        </CardDetailProduct>
                     </div>
 
                     <div className='flex flex-col min-w-[286px] py-6 px-5 gap-6 bg-neutral-50 rounded-xl shadow-xl text-neutral-900 h-fit sticky'>
@@ -237,3 +264,6 @@ function DetailProductPageWeb({
 
 export default DetailProductPageWeb;
 
+const CardDetailProduct = ({children,classname})=>{
+    return <div className={`flex items-center justify-between  bg-neutral-50 rounded-xl shadow-xl py-6 px-5 ${classname}`}>{children}</div>
+}

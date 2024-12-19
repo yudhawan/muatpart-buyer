@@ -399,10 +399,19 @@ function HeaderContainerWeb({ renderAppBar }) {
                   />
                 </Link>
                 <div></div>
+                <div></div>
                 <Dropdown
-                  classname={"!w-[164px]"}
-                  options={[{ value: "all", name: "Semua Kategori" }]}
-                />
+                  classname={"!w-[164px] relative"}
+                >
+                  <ul className="p-4 flex flex-col gap-3 text-neutral-900 font-medium text-xs">
+                    {
+                      categories?.map(val=><li key={val.id}>{val.value}</li>)
+                    }
+                  </ul>
+                  {
+                    <div className="absolute w-[160px] h-[120px] p-4 bg-neutral-50 left-[160px]">ass</div>
+                  }
+                </Dropdown>
                 <div className="relative" ref={inputRef}>
                   <Input
                     placeholder="Cari Sparepart"
