@@ -174,6 +174,7 @@ export function HeaderMainCompact() {
     search,
     shadow,
     setSearch} = useContext(ResponsiveContext)
+    const ActionButton = appBar?.renderActionButton||null
   return (
     <div className={`bg-[#c22716] relative w-full h-auto max-h-[88px] p-4 pb-3 ${shadow? 'shadow-lg':''}`}>
       {
@@ -197,14 +198,20 @@ export function HeaderMainCompact() {
                 }
             </div>
             <div className='flex gap-4 items-start'>
-              <span className='gap-[2px] flex flex-col items-center z-20'>
-                <IconComponent classname={style.iconWhiteGarasi} src={'/icons/garasi.svg'} width={20} height={20} />
-                <span className='font-semibold text-neutral-50 text-[10px]'>Garasi</span>
-              </span>
-              <span className='gap-[2px] flex flex-col items-center z-20'>
-                <IconComponent classname={style.iconCartMobile} src={'/icons/cart.svg'} width={20} height={20} />
-                <span className='font-semibold text-neutral-50 text-[10px]'>Troli</span>
-              </span>
+              {
+                ActionButton?
+                ActionButton:
+                <>
+                  <span className='gap-[2px] flex flex-col items-center z-20'>
+                    <IconComponent classname={style.iconWhiteGarasi} src={'/icons/garasi.svg'} width={20} height={20} />
+                    <span className='font-semibold text-neutral-50 text-[10px]'>Garasi</span>
+                  </span>
+                  <span className='gap-[2px] flex flex-col items-center z-20'>
+                    <IconComponent classname={style.iconCartMobile} src={'/icons/cart.svg'} width={20} height={20} />
+                    <span className='font-semibold text-neutral-50 text-[10px]'>Troli</span>
+                  </span>
+                </>
+              }
             </div>
           </div>
           
