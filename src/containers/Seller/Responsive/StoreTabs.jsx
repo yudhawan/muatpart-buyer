@@ -15,7 +15,7 @@ export default function StoreTabs({
                             <Fragment key={index}>
                                 <button
                                     onClick={() => onTabChange(index)}
-                                    className={`flex-1 shrink gap-2.5 self-stretch px-4 py-3 h-full text-[14px] leading-[15.4px] ${
+                                    className={`flex-1 shrink gap-2.5 self-stretch px-4 py-[11.5px] h-full text-[14px] leading-[15.4px] ${
                                         index === activeTab
                                         ? "font-bold text-[#C22716] border-b-2 border-solid border-b-[#C22716]"
                                         : "font-semibold"

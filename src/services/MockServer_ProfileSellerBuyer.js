@@ -1,4 +1,4 @@
-// src/services/MockServer_ProfileSellerBuyer.jsx
+// src/services/MockServer_ProfileSellerBuyer.js
 
 // Mock Data
 export const profileSellerBuyerData = {

@@ -87,7 +87,7 @@ export default function ReviewsContainer() {
   ];
 
   return (
-    <div className="flex gap-x-[38px] w-full">
+    <div className="flex gap-x-[38px] w-full mt-6">
       {/* Rating Filter - Kiri */}
       <div className="w-[264px] flex-shrink-0">
         <RatingFilter />

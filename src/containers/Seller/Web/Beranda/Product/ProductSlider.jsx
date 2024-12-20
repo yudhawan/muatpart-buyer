@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import styles from "./ProductSlider.module.scss"
 import IconComponent from '@/components/IconComponent/IconComponent';
 
@@ -19,10 +19,10 @@ export const ProductCard = ({
   isFavorited = false,
   onFavoriteClick
 }) => (
-  <div className="flex flex-col items-start w-[170px] rounded-md border border-neutral-400">
-    <div className="relative size-[170px]">
+  <div className="flex flex-col items-start sm:w-[160px] w-[170px] rounded-md border border-neutral-400">
+    <div className="relative sm:size-[160px] size-[170px]">
       <Image
-        className='rounded-se-md'
+        className='rounded-t-md sm:size-[160px]'
         src="/img/temp-product-terlaris.png"
         alt={title}
         width={170}
@@ -72,8 +72,8 @@ export const ProductCard = ({
           <div className="font-medium text-[10px] leading-[13px] text-neutral-600">
             {discountedPrice}
           </div>
-          <div className="px-1 h-[14px] bg-error-400 rounded flex">
-            <div className="font-semibold my-auto text-[8px] leading-[10.4px] text-neutral-50">
+          <div className="px-1 h-[14px] sm:bg-neutral-50 bg-error-400 rounded flex">
+            <div className="font-semibold my-auto text-[8px] leading-[10.4px] sm:text-error-400 text-neutral-50">
               10% OFF
             </div>
           </div>
@@ -95,16 +95,18 @@ export const ProductCard = ({
         <span className="font-medium text-[12px] leading-[14.4px] text-neutral-700">{seller}</span>
       </div>
         
-      <div className="flex items-center gap-1">
-        <Image src="/img/temp-location.png" alt="" width={16} height={16} />
-        <span className="font-medium text-[12px] leading-[14.4px] text-neutral-700">{location}</span>
-      </div>
-        
-      <div className="flex items-center gap-1">
-        <Image src="/img/temp-rating.png" alt="" width={16} height={16} />
-        <span className="font-medium text-[12px] leading-[14.4px] text-neutral-700">{rating}</span>
-        <div className="w-[2px] h-[2px] bg-neutral-700 rounded" />
-        <span className="font-medium text-[12px] leading-[14.4px] text-neutral-700">Terjual {sales}</span>
+      <div className='flex sm:flex-col-reverse flex-col gap-y-2'>
+        <div className="flex items-center gap-1">
+          <Image src="/img/temp-location.png" alt="" width={16} height={16} />
+          <span className="font-medium text-[12px] leading-[14.4px] text-neutral-700">{location}</span>
+        </div>
+          
+        <div className="flex items-center gap-1">
+          <Image src="/img/temp-rating.png" alt="" width={16} height={16} />
+          <span className="font-medium text-[12px] leading-[14.4px] text-neutral-700">{rating}</span>
+          <div className="w-[2px] h-[2px] bg-neutral-700 rounded" />
+          <span className="font-medium text-[12px] leading-[14.4px] text-neutral-700">Terjual {sales}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -140,7 +142,7 @@ const ProductSlider = ({ products = [], title }) => {
   // Calculate container width: 6 cards * (170px width) + 5 gaps * (12px)
   const containerWidth = (itemsPerView * itemWidth) + ((itemsPerView - 1) * itemGap);
 
-  if (!products || products.length < 3) {
+  if (!products || products.length === 0) {
     return null;
   }
 
@@ -158,8 +160,10 @@ const ProductSlider = ({ products = [], title }) => {
             className="flex gap-3 transition-transform duration-300 ease-in-out"
             style={{ transform: `translateX(-${translateX}px)` }}
           >
-            {products.map((product, index) => (
-              <ProductCard key={index} {...product} />
+            {products.map((product, key) => (
+              <Fragment key={key}>
+                <ProductCard {...product} />
+              </Fragment>
             ))}
           </div>
         </div>
