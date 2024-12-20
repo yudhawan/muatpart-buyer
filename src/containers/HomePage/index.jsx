@@ -6,6 +6,9 @@ import HomePageWeb from "./HomePageWeb";
 import SWRHandler from "@/services/useSWRHook";
 
 function HomePage() {
+  const VEHICLE_OPTIONS_ENDPOINT =
+    process.env.NEXT_PUBLIC_GLOBAL_API + "muatparts/garasi/vehicle";
+
   const PRODUCT_POPULAR_ENDPOINT =
     process.env.NEXT_PUBLIC_GLOBAL_API + "muatparts/product/popular";
 
@@ -18,6 +21,8 @@ function HomePage() {
     isLoading,
   } = useSWRHook(PRODUCT_POPULAR_ENDPOINT);
 
+  const { data: vehicleOptions } = useSWRHook(VEHICLE_OPTIONS_ENDPOINT);
+
   const { isMobile } = viewport();
   if (typeof isMobile !== "boolean") return <></>; //buat skeleton
   if (isMobile)
@@ -26,6 +31,7 @@ function HomePage() {
     );
   return (
     <HomePageWeb
+      vehicleOptions={vehicleOptions?.Data ?? []}
       lastSeenProducts={mostVisitedProducts?.Data ?? []}
       mostVisitedProducts={mostVisitedProducts?.Data ?? []}
       youMightLike={mostVisitedProducts?.Data ?? []}
