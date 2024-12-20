@@ -6,6 +6,10 @@ import { numberFormatMoney } from '@/libs/NumberFormat'
 import IconComponent from '@/components/IconComponent/IconComponent'
 import Image from 'next/image'
 import Button from '@/components/Button/Button'
+import ButtonBottomMobile from '@/components/ButtonBottomMobile/ButtonBottomMobile'
+import KompatibilitasScreen from './screens/KompatibilitasScreen'
+import KompatibilitasSearchScreen from './screens/KompatibilitasSearchScreen'
+import MultipleAlamatScreen from './screens/MultipleAlamatScreen'
 function DetailProductPageResponsive({
   product,
   ID,
@@ -25,6 +29,8 @@ function DetailProductPageResponsive({
   SoldCount,
   Bonus,
   CreatedAt,
+  getExpanded,
+  handleExpanded
 }) {
   const {
     appBarType, //pilih salah satu : 'header_title_secondary' || 'header_search_secondary' || 'default_search_navbar_mobile' || 'header_search' || 'header_title'
@@ -39,34 +45,66 @@ function DetailProductPageResponsive({
     setSearch, // tambahkan payload seperti ini {placeholder:'Pencarian',value:'',type:'text'}
   }=useHeader()
   useEffect(()=>{
-    setAppBar({
-      appBarType:'compact',
-      renderActionButton:<div className='flex gap-2'>
-        <span className='flex flex-col z-30 justify-center items-center gap-[2px] select-none cursor-pointer' onClick={()=>console.log('asuuuu')}>
-          <IconComponent classname={'chevron-white'} width={20} height={20} src={'/icons/share.svg'} />
-          <span className='font-semibold text-neutral-50 text-[10px]'>Bagikan</span>
-        </span>
-        <span className='flex flex-col z-30 justify-center items-center gap-[2px] select-none cursor-pointer' onClick={()=>console.log('asuuuu')}>
-          <IconComponent width={20} height={20} src={'/icons/cart-outline.svg'} />
-          <span className='font-semibold text-neutral-50 text-[10px]'>Troli</span>
-        </span>
-      </div>
-    })
-    setSearch({
-      placeholder:'Cari Produk'
-    })
-  },[])
- 
-  if (screen==='example4') return (
-    <div className=' flex flex-col'>
-      <p>Example 4</p>
-    </div>
-  )
+    if(!screen){
+      setAppBar({
+        appBarType:'compact',
+        renderActionButton:<div className='flex gap-2'>
+          <span className='flex flex-col z-30 justify-center items-center gap-[2px] select-none cursor-pointer' onClick={()=>console.log('asuuuu')}>
+            <IconComponent classname={'chevron-white'} width={20} height={20} src={'/icons/share.svg'} />
+            <span className='font-semibold text-neutral-50 text-[10px]'>Bagikan</span>
+          </span>
+          <span className='flex flex-col z-30 justify-center items-center gap-[2px] select-none cursor-pointer' onClick={()=>console.log('asuuuu')}>
+            <Image alt='ssd' width={20} height={20} src={'/img/cart-outline.png'} />
+            <span className='font-semibold text-neutral-50 text-[10px]'>Troli</span>
+          </span>
+        </div>
+      })
+      setSearch({
+        placeholder:'Cari Produk'
+      })
+    }
+    if (screen) {
+      setAppBar({
+        renderActionButton:null
+      })
+    }
+    if (screen==='kompatibilitas') {
+      setAppBar({
+        appBarType:'header_title',
+        title:'Kompatibilitas',
+        onBack:()=>setScreen(''),
+      })
+    }
+    if (screen==='kompatibilitas_search') {
+      setAppBar({
+        appBarType:'header_search_secondary',
+        onBack:()=>setScreen(''),
+      })
+      setSearch({
+        placeholder:'Cari di Garasi saya'
+      })
+    }
+    if (screen==='multiple_alamat'){
+      setAppBar({
+        appBarType:'header_title',
+        title:'Pilih Multi Alamat',
+        onBack:()=>setScreen(''),
+      })
+    }
+  },[screen])
+
+  if (screen==='kompatibilitas') return <KompatibilitasScreen getExpanded={getExpanded} handleExpanded={handleExpanded} />
+  if (screen==='kompatibilitas_search') return <KompatibilitasSearchScreen data={[]} />
+  if (screen==='multiple_alamat') return <MultipleAlamatScreen data={[]} />
   // main screen
   return (
-    <div className={''}>
+    <div className={'relative pb-[72px]'}>
       {/* image slider */}
       <div className='flex flex-col gap-2 text-neutral-900 bg-neutral-200'>
+        <SectionCard classname={'bg-warning-100 px-3 flex items-center gap-1 h-[38px] !flex-row'}>
+          <Image width={20} height={20} src={'/icons/warning.svg'} alt='warning' />
+          <span className='text-xs font-medium'><b>Toko sedang libur</b>. Barang ini bisa kamu beli setelah toko buka pada <b>Selasa, 10 Desember 2024</b></span>
+        </SectionCard>
         <SectionCard>
           {Discount ? (
               <div className='flex gap-2'>
@@ -102,8 +140,11 @@ function DetailProductPageResponsive({
           </div>}
         </SectionCard>
         <SectionCard>
-          <span className='text-sm font-semibold'>Cek Kompatibilitas</span>
-          <Button Class='!h-8 !p-3 !border !border-neutral-600 !rounded-md !max-w-none !w-full !text-neutral-600 !font-semibold !text-sm !bg-neutral-50 !justify-between' iconRight={'/icons/chevron-right.svg'}>Kendaraan Saya</Button>
+          <div className='flex justify-between'>
+            <span className='text-sm font-semibold'>Cek Kompatibilitas</span>
+            <span className='font-medium text-sm text-primary-700 select-none cursor-pointer'>Reset</span>
+          </div>
+          <Button onClick={()=>setScreen('kompatibilitas_search')} Class='!h-8 !p-3 !border !border-neutral-600 !rounded-md !max-w-none !w-full !text-neutral-600 !font-semibold !text-sm !bg-neutral-50 !justify-between' iconRight={'/icons/chevron-right.svg'}>Kendaraan Saya</Button>
         </SectionCard>
         <SectionCard>
           <span className='text-sm font-semibold'>Ukuran Ban : 100-R2</span>
@@ -112,7 +153,7 @@ function DetailProductPageResponsive({
           </div>
           <div className='flex w-full justify-between items-center'>
             <span className='text-sm font-semibold'>Pesan Multi-Varian/Alamat?</span>
-            <span className='text-sm font-medium text-primary-700 select-none cursor-pointer'>Klik di sini</span>
+            <span onClick={()=>setScreen('multiple_alamat')} className='text-sm font-medium text-primary-700 select-none cursor-pointer'>Klik di sini</span>
           </div>
         </SectionCard>
         <SectionCard>
@@ -171,13 +212,13 @@ Menyeimbangkan aliran udara menuju pengukur aliran udara dan menutup komponen ya
           </span>
         </SectionCard>
         <SectionCard>
-          <Button Class='!h-8 !p-3 !border-none !rounded-md !max-w-none !w-full !text-neutral-900 !font-semibold !text-sm !bg-neutral-50 !justify-between' iconRight={'/icons/chevron-right.svg'}>Kompatibilitas</Button>
+          <Button onClick={()=>setScreen('kompatibilitas')} Class='!h-8 !p-3 !border-none !rounded-md !max-w-none !w-full !text-neutral-900 !font-semibold !text-sm !bg-neutral-50 !justify-between' iconRight={'/icons/chevron-right.svg'}>Kompatibilitas</Button>
         </SectionCard>
         <SectionCard>
           <div className='flex gap-2 text-neutral-900'>
 
               <div className='w-11 h-11 rounded-full border border-neutral-500 overflow-hidden'>
-                  <Image src={'/img/chopper.png'} width={44} height={44} objectFit='cover' />
+                  <Image src={'/img/chopper.png'} width={44} height={44} objectFit='cover' alt='as' />
               </div>
               <div className='flex flex-col gap-2'>
                   <p className='font-semibold text-sm'>SparePro</p>
@@ -231,15 +272,24 @@ Menyeimbangkan aliran udara menuju pengukur aliran udara dan menutup komponen ya
           </div>
         </SectionCard>
       </div>
+      <ButtonBottomMobile classname={'flex gap-[10px] p-4 border-t border-neutral-200'}>
+        <span className='p-3 rounded-[20px] border border-primary-700 bg-neutral-50 select-none cursor-pointer h-10 grid place-content-center'>
+            <IconComponent src={'/icons/chat.svg'} width={24} height={24} classname={'chevron-blue'} />
+        </span>
+        <span className='p-3 rounded-[20px] border border-primary-700 bg-neutral-50 select-none cursor-pointer h-10 grid place-content-center'>
+            <Image alt='ds' src={'/img/cart-add-blue.png'} width={45} height={45} />
+        </span>
+        <Button Class='h-10 w-full max-w-none'>Beli Sekarang</Button>
+      </ButtonBottomMobile>
     </div>
   )
 }
 
 export default DetailProductPageResponsive
 
-export const SectionCard =({children})=>{
+export const SectionCard =({children, classname})=>{
   return (
-    <div className='py-6 px-4 bg-neutral-50 flex flex-col gap-4 text-neutral-900'>
+    <div className={`py-6 px-4 bg-neutral-50 flex flex-col gap-4 text-neutral-900 ${classname}`}>
       {children}
     </div>
   )

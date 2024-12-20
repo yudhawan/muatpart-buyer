@@ -13,6 +13,7 @@ import Bubble from "@/components/Bubble/Bubble";
 import { authZustand } from "@/store/auth/authZustand";
 import Button from "@/components/Button/Button";
 import { categoriesZustand } from "@/store/products/categoriesZustand";
+import { userZustand } from "@/store/auth/userZustand";
 
 function HeaderContainerWeb({ renderAppBar }) {
   const headerRef = useRef(null);
@@ -27,6 +28,7 @@ function HeaderContainerWeb({ renderAppBar }) {
   const { setHeaderHeight } = headerProps();
   const {categories}=categoriesZustand()
   const {token} = authZustand()
+  const user=userZustand()
   useEffect(() => {
     if (getProfile.length) {
       const newProfileUpdate = getProfile.map((val) => {
@@ -306,16 +308,16 @@ function HeaderContainerWeb({ renderAppBar }) {
                       Seller/Partenr Center
                     </p>
                   </Link>
-                  <div className="flex items-center gap-3 cursor-pointer group relative">
+                  {user?.id?<div className="flex items-center gap-3 cursor-pointer group relative">
                     <Image
-                      src={"/img/chopper.png"}
+                      src={`${user?.picture??'/img/chopper.png'}`}
                       width={20}
                       height={20}
                       alt="profil"
                       className="rounded-full"
                     />
                     <span className="text-neutral-50 font-medium  text-xs w-[104px] line-clamp-1 mt-[1px]">
-                      Ruben Coda S.I Terrrrr
+                      {user?.name}
                     </span>
                     <div className="hidden absolute group-hover:flex top-2 right-0 pt-4">
                       <div className="bg-white z-[91] w-[327px] p-4 cursor-default h-[192px] flex rounded-lg p4 divide-x-2 divide-neutral-500 shadow-xl">
@@ -381,7 +383,12 @@ function HeaderContainerWeb({ renderAppBar }) {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div>:
+                  <div className="flex gap-[1px]">
+                    <Link href={'/'}>Daftar</Link>
+                    /
+                    <Link href={'/'}>Login</Link>
+                  </div>}
                 </div>
               </div>
             </div>

@@ -49,7 +49,11 @@ function DetailProductPageWeb({
     SoldCount,
     Bonus,
     CreatedAt,
-    Variants
+    Variants,
+    getExpanded,
+    handleExpanded,
+    showDescription,
+    setShowDescription
 }) {
     const [getMenuTab,setMenuTab]=useState('detail_product')
     const categories=[product?.Categories?.['Groupcategory'],product?.Categories?.['Category'],product?.Categories?.['Subcategory'],product?.Categories?.['Item']]
@@ -224,10 +228,10 @@ function DetailProductPageWeb({
                             !!(getMenuTab==='detail_product')&&<DetailProdukCard/>
                         }
                         {
-                            !!(getMenuTab==='kompabilitas')&&<Kompatibilitas/>
+                            !!(getMenuTab==='kompabilitas')&&<Kompatibilitas getExpanded={getExpanded} handleExpanded={handleExpanded} />
                         }
                         {
-                            !!(getMenuTab==='deskrisi_product')&&<DeskripsiProduk/>
+                            !!(getMenuTab==='deskrisi_product')&&<DeskripsiProduk setShowDescription={setShowDescription} showDescription={showDescription} />
                         }
                         {
                             !!(getMenuTab==='ulasan_product')&&<></>
@@ -336,8 +340,7 @@ const DetailProdukCard=()=>{
     </CardDetailProduct>
 }
 
-const DeskripsiProduk=({desc})=>{
-    const [show,setShow]=useState(false)
+const DeskripsiProduk=({desc,showDescription,setShowDescription})=>{
     return (
         <CardDetailProduct classname={'flex flex-col gap-6 text-xs font-medium text-neutral-900 items-start'}>
             <p className='text-[18px] self-start'>Deskripsi Produk</p>
@@ -345,25 +348,17 @@ const DeskripsiProduk=({desc})=>{
                 <p className={`${show?'':'line-clamp-6'}`}>
                 {desc}
                 </p>
-                <span className='flex gap-2 items-center text-primary-700 select-none cursor-pointer' onClick={()=>setShow(!show)}>
-                    <span>Lihat {show?'Lebih Sedikit':'Selengkapnya'}</span>
-                    <IconComponent classname={'chevron-blue'} src={`${show?'/icons/chevron-up.svg':'/icons/chevron-down.svg'}`} width={12} height={12} />
+                <span className='flex gap-2 items-center text-primary-700 select-none cursor-pointer' onClick={()=>setShowDescription(!showDescription)}>
+                    <span>Lihat {showDescription?'Lebih Sedikit':'Selengkapnya'}</span>
+                    <IconComponent classname={'chevron-blue'} src={`${showDescription?'/icons/chevron-up.svg':'/icons/chevron-down.svg'}`} width={12} height={12} />
                 </span>
             </div>
         </CardDetailProduct>
     )
 }
 
-const Kompatibilitas=({data})=>{
-    const [getExpanded,setExpanded]=useState(['scania'])
-    function handleExpanded(id) {
-        if (getExpanded.some(val => val === id)) {
-            let tmp = getExpanded.filter(val => val !== id);
-            setExpanded(tmp);
-        } else {
-            setExpanded(prev => [...prev, id]);
-        }
-    }
+const Kompatibilitas=({data,getExpanded,handleExpanded})=>{
+    
     return <CardDetailProduct classname={'flex flex-col gap-6 w-full font-medium text-xs text-neutral-900'}>
         <span className='font-semibold text-[18px] text-'>Kompatibilitas</span>
         <div className='flex flex-col gap-4 w-full'>
