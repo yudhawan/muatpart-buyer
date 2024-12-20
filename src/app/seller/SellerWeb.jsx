@@ -1,15 +1,16 @@
 import NavigationTabs from "@/containers/Seller/Web/NavigationTabs";
 import ProfileSellerHeader from "@/containers/Seller/Web/ProfileSellerHeader/ProfileSellerHeader";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import mockAPI from '@/services/MockServer_ProfileSellerBuyer';
 import BerandaContainer from "@/containers/Seller/Web/Beranda/BerandaContainer";
 import EtalaseContainer from "@/containers/Seller/Web/Etalase/EtalaseContainer";
 import ReviewsContainer from "@/containers/Seller/Web/Review/ReviewsContainer";
 
-const SellerWeb = () => {
-    const [activeTab, setActiveTab] = useState(0);
-    
+const SellerWeb = ({
+    activeTab,
+    setActiveTab,
+    tabs,
+}) => {
     const [sortOrder, setSortOrder] = useState("newest");
     const [favorites, setFavorites] = useState({});
     const [storeData, setStoreData] = useState(null);
@@ -74,8 +75,6 @@ const SellerWeb = () => {
     const handleSortChange = () => {
         setSortOrder(sortOrder === "newest" ? "oldest" : "newest");
     };
-
-    const tabs = ["Beranda", "Etalase", "Ulasan"];
 
     // Tab content renderer
     const renderTabContent = () => {
