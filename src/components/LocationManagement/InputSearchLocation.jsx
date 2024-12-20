@@ -22,6 +22,7 @@ const InputSearchLocation = ({
   },
   openAddManual,
   autoFillForm,
+  sendDataToParent,
 }) => {
   const AUTOCOMPLETE_ENDPOINT = `${process.env.NEXT_PUBLIC_GLOBAL_API}/autocompleteStreet`;
   const DISTRICT_ENDPOINT = `${process.env.NEXT_PUBLIC_GLOBAL_API}/district_by_token`;
@@ -277,9 +278,7 @@ const InputSearchLocation = ({
         AUTOCOMPLETE_ENDPOINT,
         location.title
       );
-      console.log("Auto complete data: ", setAutoCompleteResponse);
-      // setAutoCompleteResponse(setAutoCompleteResponse.Data.data.Data);
-      setSearchResults(setAutoCompleteResponse);
+      setSearchResults(setAutoCompleteResponse.splice(0, 3));
     } catch (error) {
       console.error("Error fetching auto complete data:", error);
     }
@@ -291,7 +290,8 @@ const InputSearchLocation = ({
         DISTRICT_ENDPOINT,
         location.id
       );
-      console.log("District data: ", districtData);
+      sendDataToParent(districtData);
+      setLocationTes(location.title);
     } catch (error) {
       console.error("Error fetching district data:", error);
     }

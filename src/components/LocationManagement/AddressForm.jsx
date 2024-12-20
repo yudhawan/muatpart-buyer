@@ -125,20 +125,6 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
       body: districtFormData,
     }).then((res) => res.json());
   };
-  // const districtFetcher = async (url) => {
-  //   const formData = new URLSearchParams();
-  //   formData.append("placeId", location.id);
-
-  //   const response = await fetch(url, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/x-www-form-urlencoded",
-  //     },
-  //     body: formData.toString(),
-  //   });
-
-  //   return response.json();
-  // };
 
   const latLongFetcher = (url) => {
     return fetch(url, {
@@ -165,16 +151,6 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
   const searchResults = Array.isArray(autocompleteData)
     ? autocompleteData.slice(0, 3)
     : [];
-  // const { data: autocompleteData, error: autocompleteError } =
-  //   swrHandler.useSWRHook(
-  //     location.title.length > 2 || address.length > 2
-  //       ? AUTOCOMPLETE_ENDPOINT
-  //       : null,
-  //     autoCompleteFetcher,
-  //     (error) => {
-  //       // console.error("Autocomplete error:", error);
-  //     }
-  //   );
 
   const { data: districtData, error: districtError } = swrHandler.useSWRHook(
     location.id
@@ -185,13 +161,6 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
       // console.error("District fetch error:", error);
     }
   );
-  // const { data: districtData, error: districtError } = swrHandler.useSWRHook(
-  //   location.id ? DISTRICT_ENDPOINT : null,
-  //   districtFetcher,
-  //   (error) => {
-  //     // console.error("District fetch error:", error);
-  //   }
-  // );
 
   const { data: latLongData, error: latLongError } = swrHandler.useSWRHook(
     coordinates.lat && coordinates.long
@@ -276,106 +245,48 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
 
   // End Handlers
 
-  useEffect(() => {
-    if (!districtData) return;
-    if (districtData.Message.Code === 500) {
-      setCoordinates({
-        lat: districtData.Data.lat,
-        long: districtData.Data.lng,
-      });
-      setIsOpenAddManual(true);
-      return;
-    }
-    //   if (districtData.Message.Code === 400) {
-    //     setCoordinates({
-    //       lat: districtData.Data.lat,
-    //       long: districtData.Data.lng,
-    //     });
-    //     setOpenAddManual(true);
-    //     return;
-    //   }
+  const setForm = (val) => {
+    console.log("Set Form", val);
 
-    // Prepare all the new values first
     const newDistrict = {
-      name: districtData.Data.Districts[0].District,
-      value: districtData.Data.Districts[0].DistrictID,
+      name: val.Data.Districts[0].District,
+      value: val.Data.Districts[0].DistrictID,
     };
-    //   if (districtData.Message.Code === 200) {
-    //     // Prepare all the new values first
-    //     const newDistrict = {
-    //       name: districtData.Data.Districts[0].District,
-    //       value: districtData.Data.Districts[0].DistrictID,
-    //     };
 
     const newCity = {
-      name: districtData.Data.CompleteLocation.city,
-      id: districtData.Data.CompleteLocation.cityid,
+      name: val.Data.CompleteLocation.city,
+      id: val.Data.CompleteLocation.cityid,
     };
-    //     const newCity = {
-    //       name: districtData.Data.CompleteLocation.city,
-    //       id: districtData.Data.CompleteLocation.cityid,
-    //     };
 
     const newProvince = {
-      name: districtData.Data.CompleteLocation.province,
-      id: districtData.Data.CompleteLocation.provinceid,
+      name: val.Data.CompleteLocation.province,
+      id: val.Data.CompleteLocation.provinceid,
     };
-    //     const newProvince = {
-    //       name: districtData.Data.CompleteLocation.province,
-    //       id: districtData.Data.CompleteLocation.provinceid,
-    //     };
 
-    const newKecamatanList = districtData.Data.Districts[0].DistrictList.map(
-      (i) => ({
-        value: i.DistrictID,
-        name: i.District,
-      })
-    );
-    //     const newKecamatanList = districtData.Data.Districts[0].DistrictList.map(
-    //       (i) => ({
-    //         value: i.DistrictID,
-    //         name: i.District,
-    //       })
-    //     );
+    const newKecamatanList = val.Data.Districts[0].DistrictList.map((i) => ({
+      value: i.DistrictID,
+      name: i.District,
+    }));
 
-    const newPostalCodeList = districtData.Data.Districts[0].PostalCodes.map(
-      (i) => ({
-        value: i.ID,
-        name: i.PostalCode,
-      })
-    );
-    //     const newPostalCodeList = districtData.Data.Districts[0].PostalCodes.map(
-    //       (i) => ({
-    //         value: i.ID,
-    //         name: i.PostalCode,
-    //       })
-    //     );
+    const newPostalCodeList = val.Data.Districts[0].PostalCodes.map((i) => ({
+      value: i.ID,
+      name: i.PostalCode,
+    }));
 
-    const findPostalCode = districtData.Data.Districts[0].PostalCodes.find(
-      (item) => item.PostalCode === districtData.Data.CompleteLocation.postal
+    const findPostalCode = val.Data.Districts[0].PostalCodes.find(
+      (item) => item.PostalCode === val.Data.CompleteLocation.postal
     );
-    //     const findPostalCode = districtData.Data.Districts[0].PostalCodes.find(
-    //       (item) => item.PostalCode === districtData.Data.CompleteLocation.postal
-    //     );
 
     const newPostalCode = {
       name: findPostalCode.Description,
       value: findPostalCode.ID,
     };
-    //     const newPostalCode = {
-    //       name: findPostalCode.Description,
-    //       value: findPostalCode.ID,
-    //     };
 
     const newCoordinates = {
-      lat: districtData.Data.Lat,
-      long: districtData.Data.Long,
+      lat: val.Data.Lat,
+      long: val.Data.Long,
     };
-    //     const newCoordinates = {
-    //       lat: districtData.Data.Lat,
-    //       long: districtData.Data.Long,
-    //     };
-    // Set all the states
+
     setDistrict(newDistrict);
     setCity(newCity);
     setProvince(newProvince);
@@ -383,16 +294,7 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
     setPostalCodeList(newPostalCodeList);
     setPostalCode(newPostalCode);
     setCoordinates(newCoordinates);
-    //     // Set all the states
-    //     setDistrict(newDistrict);
-    //     setCity(newCity);
-    //     setProvince(newProvince);
-    //     setKecamatanList(newKecamatanList);
-    //     setPostalCodeList(newPostalCodeList);
-    //     setPostalCode(newPostalCode);
-    //     setCoordinates(newCoordinates);
 
-    // Call AddressData with the new values
     AddressData({
       address,
       location,
@@ -402,22 +304,24 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
       postalCode: newPostalCode,
       coordinates: newCoordinates,
     });
+  };
+
+  useEffect(() => {
+    if (!districtData) return;
+
+    if (districtData.Message.Code === 500) {
+      setCoordinates({
+        lat: districtData.Data.lat,
+        long: districtData.Data.lng,
+      });
+      setIsOpenAddManual(true);
+      return;
+    }
+
+    setForm(districtData);
+
+    // Prepare all the new values first
   }, [districtData, address, location]); // Add other dependencies if needed
-
-  //     // Call AddressData with the new values
-  //     AddressData({
-  //       address,
-  //       location,
-  //       district: newDistrict,
-  //       city: newCity,
-  //       province: newProvince,
-  //       postalCode: newPostalCode,
-  //       coordinates: newCoordinates,
-  //     });
-
-  //     return;
-  //   }
-  // }, [districtData, address, location]);
 
   useEffect(() => {
     if (latLongData) {
@@ -475,6 +379,9 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
             locationRef={locationRef}
             addressValue={address}
             locationValue={location}
+            sendDataToParent={(val) => {
+              setForm(val);
+            }}
           />
         </div>
       </div>
