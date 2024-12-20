@@ -8,6 +8,8 @@ import { ChevronRight, MapPin, Search } from "lucide-react";
 import { numberFormatMoney } from "@/libs/NumberFormat";
 import IconComponent from "@/components/IconComponent/IconComponent";
 import QuantityInput from "@/components/QuantityInput/QuantityInput";
+import DataEmpty from "@/components/DataEmpty/DataEmpty";
+import ModalComponent from "@/components/Modals/ModalComponent";
 
 function ProductList({ item, checked, onCheckChange }) {
   const [liked, setLiked] = useState(item.liked);
@@ -15,89 +17,97 @@ function ProductList({ item, checked, onCheckChange }) {
     item.quantity > item.stock ? item.stock : item.quantity
   );
 
+  const [modalNote, setModalNote] = useState(false);
+
   return (
-    <div className="flex gap-5 items-start py-4">
-      <Checkbox
-        label=""
-        checked={checked}
-        onChange={(e) => onCheckChange(e.checked)}
-        classname="!gap-0"
-      />
-      <div className="w-full">
-        <div className="flex gap-5 w-full mb-5">
-          <div className="relative w-[56px] h-[56px]">
-            <Image
-              src={item.image}
-              fill
-              style={{ objectFit: "cover" }}
-              alt={item.name}
-            />
-          </div>
-          <div className="flex w-full justify-between">
-            <div className="w-[450px] space-y-3 text-xs">
-              <div className="font-bold">{item.name}</div>
-              <div className="flex gap-3 items-center">
-                {item.stock < 10 && (
-                  <>
-                    <div className="text-error-400 font-bold">
-                      Tersisa {item.stock} produk
-                    </div>
-                    <div className="w-px h-2 bg-black"></div>
-                  </>
-                )}
-                <div className="font-medium text-neutral-600">
-                  {item.variant}
-                </div>
-              </div>
+    <>
+      <div className="flex gap-5 items-start py-4">
+        <Checkbox
+          label=""
+          checked={checked}
+          onChange={(e) => onCheckChange(e.checked)}
+          classname="!gap-0"
+        />
+        <div className="w-full">
+          <div className="flex gap-5 w-full mb-5">
+            <div className="relative w-[56px] h-[56px]">
+              <Image
+                src={item.image}
+                fill
+                style={{ objectFit: "cover" }}
+                alt={item.name}
+              />
             </div>
-            <div className="text-xs space-y-2">
-              {item.discount > 0 && (
-                <div className="flex gap-2 items-center">
-                  <strike className="text-neutral-600">
-                    {numberFormatMoney(item.initialPrice)}
-                  </strike>
-                  <div className="bg-error-400 rounded p-1 font-semibold text-white leading-none">
-                    {item.discount}% OFF
+            <div className="flex w-full justify-between">
+              <div className="w-[450px] space-y-3 text-xs">
+                <div className="font-bold">{item.name}</div>
+                <div className="flex gap-3 items-center">
+                  {item.stock < 10 && (
+                    <>
+                      <div className="text-error-400 font-bold">
+                        Tersisa {item.stock} produk
+                      </div>
+                      <div className="w-px h-2 bg-black"></div>
+                    </>
+                  )}
+                  <div className="font-medium text-neutral-600">
+                    {item.variant}
                   </div>
                 </div>
-              )}
-              <div className="font-bold text-right">
-                {numberFormatMoney(item.finalPrice)}
+              </div>
+              <div className="text-xs space-y-2">
+                {item.discount > 0 && (
+                  <div className="flex gap-2 items-center">
+                    <strike className="text-neutral-600">
+                      {numberFormatMoney(item.initialPrice)}
+                    </strike>
+                    <div className="bg-error-400 rounded p-1 font-semibold text-white leading-none">
+                      {item.discount}% OFF
+                    </div>
+                  </div>
+                )}
+                <div className="font-bold text-right">
+                  {numberFormatMoney(item.finalPrice)}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-
-        {item.note && (
-          <div className="text-xs text-neutral-600 w-[500px] -mb-1 line-clamp-1">
-            Catatan : {item.note}
-          </div>
-        )}
-
-        <div className="flex justify-between items-center">
-          <div className={`${style.textButtonPrimary} ${style.active}`}>
-            {item.note ? "Ubah Catatan" : "Tambah Catatan"}
-          </div>
-
-          <div className="flex gap-6 items-center">
-            <IconComponent
-              src="/icons/heart-outline.svg"
-              classname={liked ? style.liked : ""}
-              onclick={() => setLiked(!liked)}
-            />
-            <IconComponent
-              src="/icons/trash-az.svg"
-              onclick={() => console.log("delete item", item.id)}
-            />
-            <QuantityInput
-              maxStock={item.stock}
-              initialValue={quantity}
-              onChange={(val) => setQuantity(val)}
-            />
+          {item.note && (
+            <div className="text-xs text-neutral-600 w-[500px] -mb-1 line-clamp-1">
+              Catatan : {item.note}
+            </div>
+          )}
+          <div
+            className="flex justify-between items-center"
+            onClick={() => setModalNote(true)}
+          >
+            <div className={`${style.textButtonPrimary} ${style.active}`}>
+              {item.note ? "Ubah Catatan" : "Tambah Catatan"}
+            </div>
+            <div className="flex gap-6 items-center">
+              <IconComponent
+                src="/icons/heart-outline.svg"
+                classname={liked ? style.liked : ""}
+                onclick={() => setLiked(!liked)}
+              />
+              <IconComponent
+                src="/icons/trash-az.svg"
+                onclick={() => console.log("delete item", item.id)}
+              />
+              <QuantityInput
+                maxStock={item.stock}
+                initialValue={quantity}
+                onChange={(val) => setQuantity(val)}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <ModalComponent hideHeader isOpen={modalNote}>
+        Hai
+      </ModalComponent>
+    </>
   );
 }
 
@@ -274,26 +284,12 @@ function TroliWeb({ sellerItems }) {
       </div>
 
       {sellerItems.length === 0 ? (
-        <div className="w-full flex flex-col justify-center items-center rounded-xl p-6 shadow-muatmuat">
-          <Image
-            src="/img/daftarprodukicon.png"
-            width={95}
-            height={95}
-            alt="Empty cart"
-          />
-          <div className="font-semibold text-neutral-600 my-3">
-            Wah, troli belanjamu kosong
-          </div>
-          <div className="text-xs font-medium text-neutral-600 mb-5">
-            Yuk, isi dengan barang-barang impianmu!
-          </div>
-          <Button
-            iconLeft={<Search size={16} />}
-            Class="!font-semibold !gap-2 !items-center"
-          >
-            Cari Produk
-          </Button>
-        </div>
+        <DataEmpty
+          title="Wah, troli belanjamu kosong"
+          subtitle="Yuk, isi dengan barang-barang impianmu!"
+          buttonText="Cari Produk"
+          onButtonClick={() => console.log("cari produk")}
+        />
       ) : (
         <div className="flex gap-4">
           <div className="w-[846px] space-y-6">

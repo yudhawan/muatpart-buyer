@@ -46,7 +46,6 @@ const LocationManagement = ({ errors, value, defaultValue }) => {
   const [addressData, setAddressData] = useState({});
   useEffect(() => {
     value(addressData);
-    console.log(addressData);
   }, [addressData]);
 
   return (

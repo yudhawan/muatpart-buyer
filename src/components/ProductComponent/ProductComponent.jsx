@@ -33,7 +33,7 @@ function ProductComponent({
           />
         </span>
         <Image
-          src={Photo ? Photo : "/img/chopper.png"}
+          src={!Photo ? Photo : "/img/chopper.png"}
           width={168}
           height={168}
           alt={Name}
@@ -76,9 +76,13 @@ function ProductComponent({
                 height={16}
                 alt="gift"
               />
-              {Bonus&&<span className="text-neutral-700 font-medium text-[12px]">
-                {typeof Bonus==='string'?Bonus:Bonus?.[0]?.['description']}
-              </span>}
+              {Bonus && (
+                <span className="text-neutral-700 font-medium text-[12px]">
+                  {typeof Bonus === "string"
+                    ? Bonus
+                    : Bonus?.[0]?.["description"]}
+                </span>
+              )}
             </div>
             <div className="flex gap-1 items-center">
               <Image

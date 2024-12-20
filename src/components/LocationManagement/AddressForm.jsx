@@ -14,537 +14,518 @@ import debounce from "@/libs/debounce";
 import InputSearchLocation from "./InputSearchLocation";
 
 const AddressForm = ({ AddressData, errors, defaultValue }) => {
-     // Start State Management
-     const swrHandler = new SWRHandler();
-     const locationRef = useRef(null);
+  // Start State Management
+  const swrHandler = new SWRHandler();
+  const locationRef = useRef(null);
 
-     const [kecamatanList, setKecamatanList] = useState([]);
-     const [postalCodeList, setPostalCodeList] = useState([]);
+  const [kecamatanList, setKecamatanList] = useState([]);
+  const [postalCodeList, setPostalCodeList] = useState([]);
 
-     const [isOpenMap, setOpenMap] = useState(false);
-     const [isOpenAddManual, setOpenAddManual] = useState(false);
-     const [isOpenConfirmChangeLocation, setIsOpenConfirmChangeLocation] = useState(false);
+  const [isOpenMap, setOpenMap] = useState(false);
+  const [isOpenAddManual, setOpenAddManual] = useState(false);
+  const [isOpenConfirmChangeLocation, setIsOpenConfirmChangeLocation] =
+    useState(false);
 
-     const [getSearchLokasi, setSearchLokasi] = useState("");
+  const [getSearchLokasi, setSearchLokasi] = useState("");
 
-     const [address, setAddress] = useState("");
-     const [location, setLocation] = useState({
-          id: "",
-          title: "",
-     });
-     const [district, setDistrict] = useState({
-          name: "",
-          value: "",
-     });
-     const [city, setCity] = useState({
-          name: "",
-          id: null,
-     });
-     const [province, setProvince] = useState({
-          name: "",
-          id: null,
-     });
-     const [postalCode, setPostalCode] = useState({
-          name: "",
-          value: "",
-     });
-     const [coordinates, setCoordinates] = useState({
-          lat: -7.2575,
-          long: 112.7521,
-     });
+  const [address, setAddress] = useState("");
+  const [location, setLocation] = useState({
+    id: "",
+    title: "",
+  });
+  const [district, setDistrict] = useState({
+    name: "",
+    value: "",
+  });
+  const [city, setCity] = useState({
+    name: "",
+    id: null,
+  });
+  const [province, setProvince] = useState({
+    name: "",
+    id: null,
+  });
+  const [postalCode, setPostalCode] = useState({
+    name: "",
+    value: "",
+  });
+  const [coordinates, setCoordinates] = useState({
+    lat: -7.2575,
+    long: 112.7521,
+  });
 
-     useEffect(() => {
-          if (defaultValue) {
-               console.log(defaultValue);
-               setAddress(defaultValue.location.title);
+  useEffect(() => {
+    if (defaultValue) {
+      console.log(defaultValue);
+      setAddress(defaultValue.location.title);
 
-               setCity({
-                    name: defaultValue.city.name,
-                    id: defaultValue.city.value,
-               });
-               setProvince({
-                    name: defaultValue.province.name,
-                    id: defaultValue.province.value,
-               });
-               const newKecamatanList = defaultValue.listDistricts.map((i) => ({
-                    value: i.DistrictID,
-                    name: i.District,
-               }));
-               setKecamatanList(newKecamatanList);
-               setDistrict({
-                    name: defaultValue.district.name,
-                    value: defaultValue.district.value,
-               });
-               const newPostalCodeList = defaultValue.listPostalCodes.map((i) => ({
-                    value: i.ID,
-                    name: i.PostalCode,
-               }));
-               setPostalCodeList(newPostalCodeList);
-               setPostalCode({
-                    name: defaultValue.postalCode.name,
-                    value: defaultValue.postalCode.name,
-               });
-               setCoordinates({
-                    lat: Number(defaultValue?.coordinates?.lat),
-                    long: Number(defaultValue?.coordinates?.long),
-               });
-          }
-     }, [defaultValue]);
+      setCity({
+        name: defaultValue.city.name,
+        id: defaultValue.city.value,
+      });
+      setProvince({
+        name: defaultValue.province.name,
+        id: defaultValue.province.value,
+      });
+      const newKecamatanList = defaultValue.listDistricts.map((i) => ({
+        value: i.DistrictID,
+        name: i.District,
+      }));
+      setKecamatanList(newKecamatanList);
+      setDistrict({
+        name: defaultValue.district.name,
+        value: defaultValue.district.value,
+      });
+      const newPostalCodeList = defaultValue.listPostalCodes.map((i) => ({
+        value: i.ID,
+        name: i.PostalCode,
+      }));
+      setPostalCodeList(newPostalCodeList);
+      setPostalCode({
+        name: defaultValue.postalCode.name,
+        value: defaultValue.postalCode.name,
+      });
+      setCoordinates({
+        lat: Number(defaultValue?.coordinates?.lat),
+        long: Number(defaultValue?.coordinates?.long),
+      });
+    }
+  }, [defaultValue]);
 
-     // End State Management
+  // End State Management
 
-     // Start Form Data
+  // Start Form Data
 
-     const autocompleteFormData = new FormData();
-     autocompleteFormData.append("phrase", location.title || address);
-     autocompleteFormData.append("dataType", "json");
+  const autocompleteFormData = new FormData();
+  autocompleteFormData.append("phrase", location.title || address);
+  autocompleteFormData.append("dataType", "json");
 
-     const districtFormData = new FormData();
-     districtFormData.append("place_id", location.id);
-     // Start Form Data
+  const districtFormData = new FormData();
+  districtFormData.append("place_id", location.id);
+  // Start Form Data
 
-     const latLongFormData = new FormData();
-     latLongFormData.append("Lat", coordinates.lat);
-     latLongFormData.append("Long", coordinates.long);
+  const latLongFormData = new FormData();
+  latLongFormData.append("Lat", coordinates.lat);
+  latLongFormData.append("Long", coordinates.long);
 
-     // End Form Data
+  // End Form Data
 
-     // Start Fetchers
+  // Start Fetchers
 
-     const autoCompleteFetcher = (url) => {
-          return fetch(url, {
-               method: "POST",
-               body: autocompleteFormData,
-          }).then((res) => res.json());
-     };
+  const autoCompleteFetcher = (url) => {
+    return fetch(url, {
+      method: "POST",
+      body: autocompleteFormData,
+    }).then((res) => res.json());
+  };
 
-     const districtFetcher = (url) => {
-          return fetch(url, {
-               method: "POST",
-               body: districtFormData,
-          }).then((res) => res.json());
-     };
-     // const districtFetcher = async (url) => {
-     //   const formData = new URLSearchParams();
-     //   formData.append("placeId", location.id);
+  const districtFetcher = (url) => {
+    return fetch(url, {
+      method: "POST",
+      body: districtFormData,
+    }).then((res) => res.json());
+  };
 
-     //   const response = await fetch(url, {
-     //     method: "POST",
-     //     headers: {
-     //       "Content-Type": "application/x-www-form-urlencoded",
-     //     },
-     //     body: formData.toString(),
-     //   });
+  const latLongFetcher = (url) => {
+    return fetch(url, {
+      method: "POST",
+      body: latLongFormData,
+    }).then((res) => res.json());
+  };
 
-     //   return response.json();
-     // };
+  // End Fetchers
 
-     const latLongFetcher = (url) => {
-          return fetch(url, {
-               method: "POST",
-               body: latLongFormData,
-          }).then((res) => res.json());
-     };
+  // Start SWR Hooks
 
-     // End Fetchers
+  const { data: autocompleteData, error: autocompleteError } =
+    swrHandler.useSWRHook(
+      location?.title?.length > 2 || address?.length > 2
+        ? `${process.env.NEXT_PUBLIC_GLOBAL_API}/get_autocomplete_street`
+        : null,
+      autoCompleteFetcher,
+      (error) => {
+        // console.error("Autocomplete error:", error);
+      }
+    );
 
-     // Start SWR Hooks
+  const searchResults = Array.isArray(autocompleteData)
+    ? autocompleteData.slice(0, 3)
+    : [];
 
-     const { data: autocompleteData, error: autocompleteError } = swrHandler.useSWRHook(location?.title?.length > 2 || address?.length > 2 ? `${process.env.NEXT_PUBLIC_INTERNAL_API}/get_autocomplete_street` : null, autoCompleteFetcher, (error) => {
-          // console.error("Autocomplete error:", error);
-     });
+  const { data: districtData, error: districtError } = swrHandler.useSWRHook(
+    location.id
+      ? `${process.env.NEXT_PUBLIC_GLOBAL_API}/get_districts_by_token`
+      : null,
+    districtFetcher,
+    (error) => {
+      // console.error("District fetch error:", error);
+    }
+  );
 
-     const searchResults = Array.isArray(autocompleteData) ? autocompleteData.slice(0, 3) : [];
-     // const { data: autocompleteData, error: autocompleteError } =
-     //   swrHandler.useSWRHook(
-     //     location.title.length > 2 || address.length > 2
-     //       ? AUTOCOMPLETE_ENDPOINT
-     //       : null,
-     //     autoCompleteFetcher,
-     //     (error) => {
-     //       // console.error("Autocomplete error:", error);
-     //     }
-     //   );
+  const { data: latLongData, error: latLongError } = swrHandler.useSWRHook(
+    coordinates.lat && coordinates.long
+      ? `${process.env.NEXT_PUBLIC_GLOBAL_API}/get_information_location_by_lat_long`
+      : null,
+    latLongFetcher,
+    (error) => {
+      // console.error("Lat long error:", error);
+    }
+  );
 
-     const { data: districtData, error: districtError } = swrHandler.useSWRHook(location.id ? `${process.env.NEXT_PUBLIC_INTERNAL_API}/get_districts_by_token` : null, districtFetcher, (error) => {
-          // console.error("District fetch error:", error);
-     });
-     // const { data: districtData, error: districtError } = swrHandler.useSWRHook(
-     //   location.id ? DISTRICT_ENDPOINT : null,
-     //   districtFetcher,
-     //   (error) => {
-     //     // console.error("District fetch error:", error);
-     //   }
-     // );
+  // End SWR Hooks
 
-     const { data: latLongData, error: latLongError } = swrHandler.useSWRHook(coordinates.lat && coordinates.long ? `${process.env.NEXT_PUBLIC_INTERNAL_API}/get_information_location_by_lat_long` : null, latLongFetcher, (error) => {
-          // console.error("Lat long error:", error);
-     });
+  // Start Handlers
 
-     // End SWR Hooks
+  const handleAddressChange = debounce((e) => {
+    const value = e.target.value;
+    setAddress(value);
+  }, 500);
 
-     // Start Handlers
+  const handleLocationChange = debounce((e) => {
+    const value = e.target.value;
+    setLocation({
+      id: "",
+      title: value,
+    });
 
-     const handleAddressChange = debounce((e) => {
-          const value = e.target.value;
-          setAddress(value);
-     }, 500);
+    if (value.length === 0) {
+      resetAllStates();
+    }
+  }, 500);
 
-     const handleLocationChange = debounce((e) => {
-          const value = e.target.value;
-          setLocation({
-               id: "",
-               title: value,
-          });
+  const resetAllStates = () => {
+    setAddress("");
+    setLocation({
+      title: "",
+      id: null,
+    });
+    setDistrict({
+      name: "",
+      value: null,
+    });
+    setCity({
+      name: "",
+      id: null,
+    });
+    setProvince({
+      name: "",
+      id: null,
+    });
+    setPostalCode({
+      name: "",
+      value: null,
+    });
+    setCoordinates({
+      lat: null,
+      long: null,
+    });
+  };
 
-          if (value.length === 0) {
-               resetAllStates();
-          }
-     }, 500);
+  const handleAutoFillForm = (val) => {
+    console.log("Auto Fill Form", val);
 
-     const resetAllStates = () => {
-          setAddress("");
-          setLocation({
-               title: "",
-               id: null,
-          });
-          setDistrict({
-               name: "",
-               value: null,
-          });
-          setCity({
-               name: "",
-               id: null,
-          });
-          setProvince({
-               name: "",
-               id: null,
-          });
-          setPostalCode({
-               name: "",
-               value: null,
-          });
-          setCoordinates({
-               lat: null,
-               long: null,
-          });
-     };
+    setDistrict({
+      name: val.DistrictName,
+      value: val.DistrictID,
+    });
+    setCity({
+      name: val.CityName,
+      id: val.CityID,
+    });
+    setProvince({
+      name: val.ProvinceName,
+      id: val.ProvinceID,
+    });
+    setPostalCode({
+      name: val.PostalCode,
+      value: null,
+    });
+    setOpenAddManual(false);
+  };
 
-     const handleAutoFillForm = (val) => {
-          console.log("Auto Fill Form", val);
+  // End Handlers
 
-          setDistrict({
-               name: val.DistrictName,
-               value: val.DistrictID,
-          });
-          setCity({
-               name: val.CityName,
-               id: val.CityID,
-          });
-          setProvince({
-               name: val.ProvinceName,
-               id: val.ProvinceID,
-          });
-          setPostalCode({
-               name: val.PostalCode,
-               value: null,
-          });
-          setOpenAddManual(false);
-     };
+  const setForm = (val) => {
+    console.log("Set Form", val);
 
-     // End Handlers
+    const newDistrict = {
+      name: val.Data.Districts[0].District,
+      value: val.Data.Districts[0].DistrictID,
+    };
 
-     useEffect(() => {
-          if (!districtData) return;
-          if (districtData.Message.Code === 500) {
-               setCoordinates({
-                    lat: districtData.Data.lat,
-                    long: districtData.Data.lng,
-               });
-               setIsOpenAddManual(true);
-               return;
-          }
-          //   if (districtData.Message.Code === 400) {
-          //     setCoordinates({
-          //       lat: districtData.Data.lat,
-          //       long: districtData.Data.lng,
-          //     });
-          //     setOpenAddManual(true);
-          //     return;
-          //   }
+    const newCity = {
+      name: val.Data.CompleteLocation.city,
+      id: val.Data.CompleteLocation.cityid,
+    };
 
-          // Prepare all the new values first
-          const newDistrict = {
-               name: districtData.Data.Districts[0].District,
-               value: districtData.Data.Districts[0].DistrictID,
-          };
-          //   if (districtData.Message.Code === 200) {
-          //     // Prepare all the new values first
-          //     const newDistrict = {
-          //       name: districtData.Data.Districts[0].District,
-          //       value: districtData.Data.Districts[0].DistrictID,
-          //     };
+    const newProvince = {
+      name: val.Data.CompleteLocation.province,
+      id: val.Data.CompleteLocation.provinceid,
+    };
 
-          const newCity = {
-               name: districtData.Data.CompleteLocation.city,
-               id: districtData.Data.CompleteLocation.cityid,
-          };
-          //     const newCity = {
-          //       name: districtData.Data.CompleteLocation.city,
-          //       id: districtData.Data.CompleteLocation.cityid,
-          //     };
+    const newKecamatanList = val.Data.Districts[0].DistrictList.map((i) => ({
+      value: i.DistrictID,
+      name: i.District,
+    }));
 
-          const newProvince = {
-               name: districtData.Data.CompleteLocation.province,
-               id: districtData.Data.CompleteLocation.provinceid,
-          };
-          //     const newProvince = {
-          //       name: districtData.Data.CompleteLocation.province,
-          //       id: districtData.Data.CompleteLocation.provinceid,
-          //     };
+    const newPostalCodeList = val.Data.Districts[0].PostalCodes.map((i) => ({
+      value: i.ID,
+      name: i.PostalCode,
+    }));
 
-          const newKecamatanList = districtData.Data.Districts[0].DistrictList.map((i) => ({
-               value: i.DistrictID,
-               name: i.District,
-          }));
-          //     const newKecamatanList = districtData.Data.Districts[0].DistrictList.map(
-          //       (i) => ({
-          //         value: i.DistrictID,
-          //         name: i.District,
-          //       })
-          //     );
+    const findPostalCode = val.Data.Districts[0].PostalCodes.find(
+      (item) => item.PostalCode === val.Data.CompleteLocation.postal
+    );
 
-          const newPostalCodeList = districtData.Data.Districts[0].PostalCodes.map((i) => ({
-               value: i.ID,
-               name: i.PostalCode,
-          }));
-          //     const newPostalCodeList = districtData.Data.Districts[0].PostalCodes.map(
-          //       (i) => ({
-          //         value: i.ID,
-          //         name: i.PostalCode,
-          //       })
-          //     );
+    const newPostalCode = {
+      name: findPostalCode.Description,
+      value: findPostalCode.ID,
+    };
 
-          const findPostalCode = districtData.Data.Districts[0].PostalCodes.find((item) => item.PostalCode === districtData.Data.CompleteLocation.postal);
-          //     const findPostalCode = districtData.Data.Districts[0].PostalCodes.find(
-          //       (item) => item.PostalCode === districtData.Data.CompleteLocation.postal
-          //     );
+    const newCoordinates = {
+      lat: val.Data.Lat,
+      long: val.Data.Long,
+    };
 
-          const newPostalCode = {
-               name: findPostalCode.Description,
-               value: findPostalCode.ID,
-          };
-          //     const newPostalCode = {
-          //       name: findPostalCode.Description,
-          //       value: findPostalCode.ID,
-          //     };
+    setDistrict(newDistrict);
+    setCity(newCity);
+    setProvince(newProvince);
+    setKecamatanList(newKecamatanList);
+    setPostalCodeList(newPostalCodeList);
+    setPostalCode(newPostalCode);
+    setCoordinates(newCoordinates);
 
-          const newCoordinates = {
-               lat: districtData.Data.Lat,
-               long: districtData.Data.Long,
-          };
-          //     const newCoordinates = {
-          //       lat: districtData.Data.Lat,
-          //       long: districtData.Data.Long,
-          //     };
-          // Set all the states
-          setDistrict(newDistrict);
-          setCity(newCity);
-          setProvince(newProvince);
-          setKecamatanList(newKecamatanList);
-          setPostalCodeList(newPostalCodeList);
-          setPostalCode(newPostalCode);
-          setCoordinates(newCoordinates);
-          //     // Set all the states
-          //     setDistrict(newDistrict);
-          //     setCity(newCity);
-          //     setProvince(newProvince);
-          //     setKecamatanList(newKecamatanList);
-          //     setPostalCodeList(newPostalCodeList);
-          //     setPostalCode(newPostalCode);
-          //     setCoordinates(newCoordinates);
+    AddressData({
+      address,
+      location,
+      district: newDistrict,
+      city: newCity,
+      province: newProvince,
+      postalCode: newPostalCode,
+      coordinates: newCoordinates,
+    });
+  };
 
-          // Call AddressData with the new values
-          AddressData({
-               address,
-               location,
-               district: newDistrict,
-               city: newCity,
-               province: newProvince,
-               postalCode: newPostalCode,
-               coordinates: newCoordinates,
-          });
-     }, [districtData, address, location]); // Add other dependencies if needed
+  useEffect(() => {
+    if (!districtData) return;
 
-     //     // Call AddressData with the new values
-     //     AddressData({
-     //       address,
-     //       location,
-     //       district: newDistrict,
-     //       city: newCity,
-     //       province: newProvince,
-     //       postalCode: newPostalCode,
-     //       coordinates: newCoordinates,
-     //     });
+    if (districtData.Message.Code === 500) {
+      setCoordinates({
+        lat: districtData.Data.lat,
+        long: districtData.Data.lng,
+      });
+      setIsOpenAddManual(true);
+      return;
+    }
 
-     //     return;
-     //   }
-     // }, [districtData, address, location]);
+    setForm(districtData);
 
-     useEffect(() => {
-          if (latLongData) {
-               // Handle the lat long data here
-               if (latLongData?.Message?.Code === 200) {
-                    // Additional logic here
-               }
-          }
-     }, [latLongData]);
-     useEffect(() => {
-          if (latLongData) {
-               console.log("Lat Long Data", latLongData);
-               // Handle the lat long data here
-               // if (latLongData.Message.Code === 200) {
-               //   // Additional logic here
-               // }
-          }
-     }, [latLongData]);
+    // Prepare all the new values first
+  }, [districtData, address, location]); // Add other dependencies if needed
 
-     return (
-          <div className="space-y-4 my-4 mx-12 text-xs">
-               <div className="flex items-baseline">
-                    <label className="w-1/3 text-neutral-600 font-medium">Alamat*</label>
-                    <div className="w-2/3">
-                         <TextArea
-                              status={`${errors?.address && "error"}`}
-                              supportiveText={{
-                                   title: `${errors?.address ? errors?.address : ""}`,
-                              }}
-                              maxLength={60}
-                              resize="none"
-                              placeholder="Masukkan alamat lengkap dengan detail. Contoh : Nama Jalan (bila tidak ditemukan), Gedung, No. Rumah/Patokan, Blok/Unit"
-                              value={address}
-                              changeEvent={handleAddressChange}
-                         />
-                    </div>
-               </div>
+  useEffect(() => {
+    if (latLongData) {
+      // Handle the lat long data here
+      if (latLongData?.Message?.Code === 200) {
+        // Additional logic here
+      }
+    }
+  }, [latLongData]);
+  useEffect(() => {
+    if (latLongData) {
+      console.log("Lat Long Data", latLongData);
+      // Handle the lat long data here
+      // if (latLongData.Message.Code === 200) {
+      //   // Additional logic here
+      // }
+    }
+  }, [latLongData]);
 
-               <div className="flex items-baseline">
-                    <label className="w-1/3 text-neutral-600 font-medium">Lokasi*</label>
-                    <div className="w-2/3 relative" ref={locationRef}>
-                         <InputSearchLocation
-                              onClickSearchResult={(val) => {
-                                   setLocation({
-                                        id: val.id,
-                                        title: val.title,
-                                   });
-                              }}
-                              errors={errors}
-                              onSelectLocation={(val) => {
-                                   console.log(val, "hello");
-                              }}
-                              searchResults={searchResults?.slice(0, 3)}
-                              changeEvent={handleLocationChange}
-                              locationRef={locationRef}
-                              addressValue={address}
-                              locationValue={location}
-                         />
-                    </div>
-               </div>
+  return (
+    <div className="space-y-4 my-4 mx-12 text-xs">
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Alamat*</label>
+        <div className="w-2/3">
+          <TextArea
+            status={`${errors?.address && "error"}`}
+            supportiveText={{
+              title: `${errors?.address ? errors?.address : ""}`,
+            }}
+            maxLength={60}
+            resize="none"
+            placeholder="Masukkan alamat lengkap dengan detail. Contoh : Nama Jalan (bila tidak ditemukan), Gedung, No. Rumah/Patokan, Blok/Unit"
+            value={address}
+            changeEvent={handleAddressChange}
+          />
+        </div>
+      </div>
 
-               <div className="flex items-baseline">
-                    <label className="w-1/3 text-neutral-600 font-medium">Kecamatan*</label>
-                    <div className="w-2/3">
-                         <Dropdown
-                              options={kecamatanList}
-                              onSearchValue
-                              placeholder="Pilih Kecamatan"
-                              searchPlaceholder="Cari Kecamatan"
-                              defaultValue={[district]}
-                              onSelected={(val) =>
-                                   setDistrict({
-                                        name: val[0].name,
-                                        value: val[0].value,
-                                   })
-                              }
-                              classname={`${errors.districtID ? "!border-error-500" : ""}`}
-                         />
-                         {errors.districtID ? <span className="font-medium text-error-400 text-xs block mt-2">{errors.districtID}</span> : ""}
-                    </div>
-               </div>
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Lokasi*</label>
+        <div className="w-2/3 relative" ref={locationRef}>
+          <InputSearchLocation
+            onClickSearchResult={(val) => {
+              setLocation({
+                id: val.id,
+                title: val.title,
+              });
+            }}
+            errors={errors}
+            onSelectLocation={(val) => {
+              console.log(val, "hello");
+            }}
+            searchResults={searchResults?.slice(0, 3)}
+            changeEvent={handleLocationChange}
+            locationRef={locationRef}
+            addressValue={address}
+            locationValue={location}
+            sendDataToParent={(val) => {
+              setForm(val);
+            }}
+          />
+        </div>
+      </div>
 
-               <div className="flex items-baseline">
-                    <label className="w-1/3 text-neutral-600 font-medium">Kota</label>
-                    <div className="w-2/3 text-neutral-900 font-medium">{city.name ? city.name : "-"}</div>
-               </div>
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Kecamatan*</label>
+        <div className="w-2/3">
+          <Dropdown
+            options={kecamatanList}
+            onSearchValue
+            placeholder="Pilih Kecamatan"
+            searchPlaceholder="Cari Kecamatan"
+            defaultValue={[district]}
+            onSelected={(val) =>
+              setDistrict({
+                name: val[0].name,
+                value: val[0].value,
+              })
+            }
+            classname={`${errors.districtID ? "!border-error-500" : ""}`}
+          />
+          {errors.districtID ? (
+            <span className="font-medium text-error-400 text-xs block mt-2">
+              {errors.districtID}
+            </span>
+          ) : (
+            ""
+          )}
+        </div>
+      </div>
 
-               <div className="flex items-baseline">
-                    <label className="w-1/3 text-neutral-600 font-medium">Provinsi</label>
-                    <div className="w-2/3 text-neutral-900 font-medium">{province.name ? province.name : "-"}</div>
-               </div>
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Kota</label>
+        <div className="w-2/3 text-neutral-900 font-medium">
+          {city.name ? city.name : "-"}
+        </div>
+      </div>
 
-               <div className="flex items-baseline">
-                    <label className="w-1/3 text-neutral-600 font-medium">Kode Pos*</label>
-                    <div className="w-2/3">
-                         <Dropdown
-                              options={postalCodeList}
-                              onSearchValue
-                              placeholder="Pilih Kode Pos"
-                              searchPlaceholder="Cari Kode Pos"
-                              defaultValue={[postalCode]}
-                              onSelected={(val) =>
-                                   setPostalCode({
-                                        name: val[0].name,
-                                        value: val[0].value,
-                                   })
-                              }
-                         />
-                    </div>
-               </div>
-               <div className="flex items-baseline">
-                    <label className="w-1/3 text-neutral-600 font-medium">Titik Lokasi*</label>
-                    <div className="w-2/3">
-                         <MiniMap lat={coordinates?.lat} lng={coordinates?.long} onClick={() => setOpenMap(true)} />
-                    </div>
-               </div>
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Provinsi</label>
+        <div className="w-2/3 text-neutral-900 font-medium">
+          {province.name ? province.name : "-"}
+        </div>
+      </div>
 
-               <ModalComponent isOpen={isOpenMap} setClose={() => setOpenMap(false)} hideHeader>
-                    <div className="flex item-start gap-4 pt-[14px] px-3">
-                         <MapContainer width={600} height={390} lat={coordinates.lat ? coordinates.lat : -7.250445} long={coordinates.long ? coordinates.long : 112.768845} onPosition={(val) => console.log(val.lat, val.lng)} />
-                         <div className="flex flex-col gap-[22px]">
-                              <span className="text-base font-semibold text-neutral-900">Atur Pin Lokasi</span>
-                              <Input
-                                   classname={"w-[255px] max-w-none"}
-                                   value={getSearchLokasi}
-                                   changeEvent={(e) => setSearchLokasi(e.target.value)}
-                                   placeholder="Cari Lokasi"
-                                   icon={{
-                                        left: <IconComponent src={"/icons/marker.svg"} />,
-                                        right: getSearchLokasi ? (
-                                             <span className="flex items-center" onClick={() => setSearchLokasi("")}>
-                                                  <Image src={"/icons/closes.svg"} width={10} height={10} alt="closes" />
-                                             </span>
-                                        ) : (
-                                             ""
-                                        ),
-                                   }}
-                              />
-                         </div>
-                    </div>
-               </ModalComponent>
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">Kode Pos*</label>
+        <div className="w-2/3">
+          <Dropdown
+            options={postalCodeList}
+            onSearchValue
+            placeholder="Pilih Kode Pos"
+            searchPlaceholder="Cari Kode Pos"
+            defaultValue={[postalCode]}
+            onSelected={(val) =>
+              setPostalCode({
+                name: val[0].name,
+                value: val[0].value,
+              })
+            }
+          />
+        </div>
+      </div>
+      <div className="flex items-baseline">
+        <label className="w-1/3 text-neutral-600 font-medium">
+          Titik Lokasi*
+        </label>
+        <div className="w-2/3">
+          <MiniMap
+            lat={coordinates?.lat}
+            lng={coordinates?.long}
+            onClick={() => setOpenMap(true)}
+          />
+        </div>
+      </div>
 
-               <Modal isOpen={isOpenConfirmChangeLocation} setIsOpen={setIsOpenConfirmChangeLocation} closeArea={false} closeBtn={true}>
-                    <div className="space-y-6">
-                         <div className="text-center font-medium text-sm">Apakah kamu yakin ingin mengganti lokasi?</div>
-                         <div className="flex items-center justify-center gap-3">
-                              <Button color="primary_secondary" onClick={() => setIsOpenConfirmChangeLocation(false)}>
-                                   Tidak
-                              </Button>
-                              <Button>Ya</Button>
-                         </div>
-                    </div>
-               </Modal>
+      <ModalComponent
+        isOpen={isOpenMap}
+        setClose={() => setOpenMap(false)}
+        hideHeader
+      >
+        <div className="flex item-start gap-4 pt-[14px] px-3">
+          <MapContainer
+            width={600}
+            height={390}
+            lat={coordinates.lat ? coordinates.lat : -7.250445}
+            long={coordinates.long ? coordinates.long : 112.768845}
+            onPosition={(val) => console.log(val.lat, val.lng)}
+          />
+          <div className="flex flex-col gap-[22px]">
+            <span className="text-base font-semibold text-neutral-900">
+              Atur Pin Lokasi
+            </span>
+            <Input
+              classname={"w-[255px] max-w-none"}
+              value={getSearchLokasi}
+              changeEvent={(e) => setSearchLokasi(e.target.value)}
+              placeholder="Cari Lokasi"
+              icon={{
+                left: <IconComponent src={"/icons/marker.svg"} />,
+                right: getSearchLokasi ? (
+                  <span
+                    className="flex items-center"
+                    onClick={() => setSearchLokasi("")}
+                  >
+                    <Image
+                      src={"/icons/closes.svg"}
+                      width={10}
+                      height={10}
+                      alt="closes"
+                    />
+                  </span>
+                ) : (
+                  ""
+                ),
+              }}
+            />
           </div>
-     );
+        </div>
+      </ModalComponent>
+
+      <Modal
+        isOpen={isOpenConfirmChangeLocation}
+        setIsOpen={setIsOpenConfirmChangeLocation}
+        closeArea={false}
+        closeBtn={true}
+      >
+        <div className="space-y-6">
+          <div className="text-center font-medium text-sm">
+            Apakah kamu yakin ingin mengganti lokasi?
+          </div>
+          <div className="flex items-center justify-center gap-3">
+            <Button
+              color="primary_secondary"
+              onClick={() => setIsOpenConfirmChangeLocation(false)}
+            >
+              Tidak
+            </Button>
+            <Button>Ya</Button>
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
 };
 
 export default AddressForm;

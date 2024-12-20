@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import style from "./HomePage.module.scss";
 import Image from "next/image";
 import Input from "@/components/Input/Input";
@@ -10,7 +10,12 @@ import ProductComponent from "@/components/ProductComponent/ProductComponent";
 import MultipleItems from "@/components/ReactSlick/MultipleItems";
 import ProductGrid from "@/components/ProductsSectionComponent/ProductGrid";
 
-function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
+function HomePageWeb({
+  vehicleOptions,
+  lastSeenProducts,
+  mostVisitedProducts,
+  youMightLike,
+}) {
   const [filter, setVehicle] = useState({
     vehicle: {
       value: "",
@@ -88,6 +93,22 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
       { name: "Hatchback", value: "hatchback" },
     ],
   });
+
+  useEffect(() => {
+    if (vehicleOptions) {
+      const vehicle = vehicleOptions.map((val) => {
+        return {
+          name: val.value,
+          value: val.id,
+        };
+      });
+
+      setOptions({
+        ...options,
+        vehicle: [{ name: "Semua Jenis Kendaraan", value: "" }, ...vehicle],
+      });
+    }
+  }, [vehicleOptions]);
 
   const headerImages = [
     "https://placehold.co/500x250/red/white.png",
