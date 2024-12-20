@@ -33,7 +33,7 @@ function ProductComponent({
           />
         </span>
         <Image
-          src={Photo ? Photo : "/img/chopper.png"}
+          src={!Photo ? Photo : "/img/chopper.png"}
           width={168}
           height={168}
           alt={Name}
