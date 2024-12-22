@@ -6,7 +6,6 @@ import Image from "next/image";
 import Input from "@/components/Input/Input";
 import Dropdown from "@/components/Dropdown/Dropdown";
 import Button from "@/components/Button/Button";
-import ProductComponent from "@/components/ProductComponent/ProductComponent";
 import MultipleItems from "@/components/ReactSlick/MultipleItems";
 import ProductGrid from "@/components/ProductsSectionComponent/ProductGrid";
 
@@ -308,12 +307,12 @@ function HomePageWeb({
       </section>
 
       <ProductGrid
-        totalProducts={mostVisitedProducts}
+        totalProducts={Array(42).fill(mostVisitedProducts).flat().slice(0, 42)}
         title="Produk Yang Banyak Dikunjungi"
       />
 
       <ProductGrid
-        totalProducts={youMightLike}
+        totalProducts={Array(42).fill(youMightLike).flat().slice(0, 42)}
         title="Mungkin Kamu Juga Suka"
       />
 
@@ -336,26 +335,10 @@ function HomePageWeb({
         </div>
       </section>
 
-      <section className="bg-white py-6">
-        <div className="w-[1080px] mx-auto space-y-7">
-          <h1 className="text-neutral-900 font-bold text-lg">
-            Terakhir Dilihat
-          </h1>
-          <div className="w-full grid grid-cols-6 gap-3">
-            {lastSeenProducts.map((val) => {
-              return (
-                <ProductComponent
-                  key={val.id}
-                  {...val}
-                  image={`https://prd.place/170?id=${Math.floor(
-                    Math.random() * 46
-                  )}`}
-                />
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      <ProductGrid
+        totalProducts={Array(6).fill(lastSeenProducts).flat().slice(0, 6)}
+        title="Terakhir Dilihat"
+      />
 
       <section className="bg-neutral-100 relative pt-px">
         <h1 className="text-neutral-900 my-10 font-bold text-[28px] text-center">

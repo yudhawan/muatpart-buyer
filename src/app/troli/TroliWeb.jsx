@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import style from "./Troli.module.scss";
 import Checkbox from "@/components/Checkbox/Checkbox";
@@ -10,12 +10,22 @@ import IconComponent from "@/components/IconComponent/IconComponent";
 import QuantityInput from "@/components/QuantityInput/QuantityInput";
 import DataEmpty from "@/components/DataEmpty/DataEmpty";
 import ModalComponent from "@/components/Modals/ModalComponent";
+import ProductGrid from "@/components/ProductsSectionComponent/ProductGrid";
+import TextArea from "@/components/TextArea/TextArea";
 
-function ProductList({ item, checked, onCheckChange }) {
+function ProductList({
+  item,
+
+  // checkbox
+  checked,
+  onCheckChange,
+
+  // quantity
+  quantity,
+  onQuantityChange,
+}) {
   const [liked, setLiked] = useState(item.liked);
-  const [quantity, setQuantity] = useState(
-    item.quantity > item.stock ? item.stock : item.quantity
-  );
+  const [note, setNote] = useState(item.note);
 
   const [modalNote, setModalNote] = useState(false);
 
@@ -72,17 +82,17 @@ function ProductList({ item, checked, onCheckChange }) {
               </div>
             </div>
           </div>
-          {item.note && (
+          {note && (
             <div className="text-xs text-neutral-600 w-[500px] -mb-1 line-clamp-1">
-              Catatan : {item.note}
+              Catatan : {note}
             </div>
           )}
-          <div
-            className="flex justify-between items-center"
-            onClick={() => setModalNote(true)}
-          >
-            <div className={`${style.textButtonPrimary} ${style.active}`}>
-              {item.note ? "Ubah Catatan" : "Tambah Catatan"}
+          <div className="flex justify-between items-center">
+            <div
+              className={`${style.textButtonPrimary} ${style.active}`}
+              onClick={() => setModalNote(true)}
+            >
+              {note ? "Ubah Catatan" : "Tambah Catatan"}
             </div>
             <div className="flex gap-6 items-center">
               <IconComponent
@@ -97,15 +107,39 @@ function ProductList({ item, checked, onCheckChange }) {
               <QuantityInput
                 maxStock={item.stock}
                 initialValue={quantity}
-                onChange={(val) => setQuantity(val)}
+                onChange={(val) => onQuantityChange(val)}
               />
             </div>
           </div>
         </div>
       </div>
 
-      <ModalComponent hideHeader isOpen={modalNote}>
-        Hai
+      <ModalComponent
+        hideHeader
+        isOpen={modalNote}
+        setClose={() => setModalNote(false)}
+      >
+        <div className="pb-8 pt-4 px-6 space-y-4">
+          <div className="font-bold text-center">Tambah Catatan</div>
+          <TextArea
+            value={note}
+            placeholder="Tulis catatan kamu untuk produk ini"
+            maxLength={250}
+            hasCharCount
+            resize="none"
+            status={""}
+            changeEvent={(e) => setNote(e.target.value)}
+          />
+          <Button
+            Class="mx-auto"
+            onClick={() => {
+              setModalNote(false);
+              console.log("simpan catatan");
+            }}
+          >
+            Simpan Catatan
+          </Button>
+        </div>
       </ModalComponent>
     </>
   );
@@ -116,6 +150,7 @@ function SellerCard({
   selectedProducts,
   onSellerCheckChange,
   onProductCheckChange,
+  onProductQuantityChange,
 }) {
   const allProductsSelected = seller.items.every(
     (item) => selectedProducts[item.id]
@@ -162,14 +197,14 @@ function SellerCard({
         </div>
       </div>
       <div className="divide-y">
-        {seller.items.map((item) => (
+        {seller.items.map((item, index) => (
           <ProductList
             key={item.id}
             item={item}
             checked={selectedProducts[item.id] || false}
-            onCheckChange={(checked) =>
-              onProductCheckChange(seller.storeName, item.id, checked)
-            }
+            onCheckChange={(checked) => onProductCheckChange(item.id, checked)}
+            quantity={item.quantity > item.stock ? item.stock : item.quantity}
+            onQuantityChange={(val) => onProductQuantityChange(item.id, val)}
           />
         ))}
       </div>
@@ -177,7 +212,7 @@ function SellerCard({
   );
 }
 
-function TroliWeb({ sellerItems }) {
+function TroliWeb({ sellerItems, yourWishlist, recommendedProducts }) {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedProducts, setSelectedProducts] = useState(() => {
     return sellerItems.reduce((acc, seller) => {
@@ -188,6 +223,8 @@ function TroliWeb({ sellerItems }) {
     }, {});
   });
 
+  const [items, setItems] = useState(sellerItems);
+
   const calculateTotalPrice = (selectedState) => {
     return sellerItems.reduce((total, seller) => {
       return (
@@ -195,7 +232,10 @@ function TroliWeb({ sellerItems }) {
         seller.items.reduce((storeTotal, item) => {
           return (
             storeTotal +
-            (selectedState[item.id] ? item.finalPrice * item.quantity : 0)
+            (selectedState[item.id]
+              ? item.finalPrice *
+                (item.quantity > item.stock ? item.stock : item.quantity)
+              : 0)
           );
         }, 0)
       );
@@ -210,15 +250,15 @@ function TroliWeb({ sellerItems }) {
     {
       id: 1,
       name: "DISKONPENGGUNABARU",
-      value: 100000,
+      value: 200000,
       type: "muatparts",
     },
-    {
-      id: 2,
-      name: "DISKONTOKOBANGUNANBURIK",
-      value: 200000,
-      type: "seller",
-    },
+    // {
+    //   id: 2,
+    //   name: "DISKONTOKOBANGUNANBURIK",
+    //   value: 200000,
+    //   type: "seller",
+    // },
   ]);
 
   const handleSelectAll = (checked) => {
@@ -252,7 +292,7 @@ function TroliWeb({ sellerItems }) {
     setTotalPrice(calculateTotalPrice(newSelectedState));
   };
 
-  const handleProductCheckbox = (storeName, productId, checked) => {
+  const handleProductCheckbox = (productId, checked) => {
     const newSelectedState = {
       ...selectedProducts,
       [productId]: checked,
@@ -265,6 +305,36 @@ function TroliWeb({ sellerItems }) {
     );
     setSelectAll(allSelected);
     setTotalPrice(calculateTotalPrice(newSelectedState));
+  };
+
+  const handleProductQuantity = (productId, newQuantity) => {
+    // Update the items state with new quantity
+    setItems((prevItems) =>
+      prevItems.map((seller) => ({
+        ...seller,
+        items: seller.items.map((item) =>
+          item.id === productId ? { ...item, quantity: newQuantity } : item
+        ),
+      }))
+    );
+
+    // Recalculate total price for selected items with updated quantity
+    setTotalPrice(
+      items.reduce((total, seller) => {
+        return (
+          total +
+          seller.items.reduce((storeTotal, item) => {
+            return (
+              storeTotal +
+              (selectedProducts[item.id]
+                ? item.finalPrice *
+                  (item.id === productId ? newQuantity : item.quantity)
+                : 0)
+            );
+          }, 0)
+        );
+      }, 0)
+    );
   };
 
   const totalSelectedItems =
@@ -325,6 +395,7 @@ function TroliWeb({ sellerItems }) {
                 selectedProducts={selectedProducts}
                 onSellerCheckChange={handleSellerCheckbox}
                 onProductCheckChange={handleProductCheckbox}
+                onProductQuantityChange={handleProductQuantity}
               />
             ))}
           </div>
@@ -416,6 +487,15 @@ function TroliWeb({ sellerItems }) {
           </div>
         </div>
       )}
+
+      <ProductGrid
+        totalProducts={Array(6).fill(yourWishlist).flat().slice(0, 6)}
+        title="Produk di Wishlist kamu"
+      />
+      <ProductGrid
+        totalProducts={Array(6).fill(recommendedProducts).flat().slice(0, 6)}
+        title="Rekomendasi produk lain untuk kamu"
+      />
     </div>
   );
 }

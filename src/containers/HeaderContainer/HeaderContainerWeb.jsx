@@ -13,6 +13,7 @@ import Bubble from "@/components/Bubble/Bubble";
 import { authZustand } from "@/store/auth/authZustand";
 import Button from "@/components/Button/Button";
 import { categoriesZustand } from "@/store/products/categoriesZustand";
+import { useRouter } from "next/navigation";
 
 function HeaderContainerWeb({ renderAppBar }) {
   const headerRef = useRef(null);
@@ -27,6 +28,7 @@ function HeaderContainerWeb({ renderAppBar }) {
   const { setHeaderHeight } = headerProps();
   const { categories } = categoriesZustand();
   const { token } = authZustand();
+  const router = useRouter();
   useEffect(() => {
     if (getProfile.length) {
       const newProfileUpdate = getProfile.map((val) => {
@@ -615,7 +617,12 @@ function HeaderContainerWeb({ renderAppBar }) {
                   </span>
                 </Link>
                 <div className="flex items-center gap-3">
-                  <span className="relative cursor-pointer">
+                  <span
+                    className="relative cursor-pointer"
+                    onClick={() => {
+                      router.push("/troli");
+                    }}
+                  >
                     <Image
                       src={"/icons/cart.svg"}
                       width={24}

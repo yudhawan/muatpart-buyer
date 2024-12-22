@@ -5,6 +5,16 @@ import style from "./Album.module.scss";
 import { Sidebar } from "@/components/Sidebar/Sidebar";
 import ProductGrid from "@/components/ProductsSectionComponent/ProductGrid";
 
+function AlbumCard({ album }) {
+  return (
+    <>
+      <pre>
+        <code>{JSON.stringify(album, null, 2)}</code>
+      </pre>
+    </>
+  );
+}
+
 function AlbumWeb({ albumItems, lastVisited }) {
   return (
     <div className={style.main}>
@@ -22,13 +32,18 @@ function AlbumWeb({ albumItems, lastVisited }) {
               buttonText="Cari Barang yang Disukai"
             />
           ) : (
-            <div className="">Hai</div>
+            <div className="w-full grid grid-cols-3 gap-6 rounded-xl p-6 shadow-muatmuat">
+              {albumItems.map((album) => (
+                <AlbumCard key={album.id} album={album} />
+              ))}
+              <div className="">Add album</div>
+            </div>
           )}
 
           <div className="">
             <ProductGrid
               title="Terakhir Kamu Lihat"
-              totalProducts={lastVisited}
+              totalProducts={Array(5).fill(lastVisited).flat().slice(0, 5)}
             />
           </div>
         </div>
