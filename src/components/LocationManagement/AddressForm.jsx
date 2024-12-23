@@ -255,42 +255,42 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
     console.log("Set Form", val);
 
     const newDistrict = {
-      name: val.Data.Districts[0].District,
-      value: val.Data.Districts[0].DistrictID,
+      name: val?.Data?.Districts[0].District,
+      value: val?.Data?.Districts[0].DistrictID,
     };
 
     const newCity = {
-      name: val.Data.CompleteLocation.city,
-      id: val.Data.CompleteLocation.cityid,
+      name: val?.Data?.CompleteLocation.city,
+      id: val?.Data?.CompleteLocation.cityid,
     };
 
     const newProvince = {
-      name: val.Data.CompleteLocation.province,
-      id: val.Data.CompleteLocation.provinceid,
+      name: val?.Data?.CompleteLocation.province,
+      id: val?.Data?.CompleteLocation.provinceid,
     };
 
-    const newKecamatanList = val.Data.Districts[0].DistrictList.map((i) => ({
+    const newKecamatanList = val?.Data?.Districts[0].DistrictList.map((i) => ({
       value: i.DistrictID,
       name: i.District,
     }));
 
-    const newPostalCodeList = val.Data.Districts[0].PostalCodes.map((i) => ({
+    const newPostalCodeList = val?.Data?.Districts[0].PostalCodes.map((i) => ({
       value: i.ID,
       name: i.PostalCode,
     }));
 
-    const findPostalCode = val.Data.Districts[0].PostalCodes.find(
-      (item) => item.PostalCode === val.Data.CompleteLocation.postal
+    const findPostalCode = val?.Data?.Districts[0].PostalCodes.find(
+      (item) => item.PostalCode === val?.Data?.CompleteLocation.postal
     );
 
     const newPostalCode = {
-      name: findPostalCode.Description,
-      value: findPostalCode.ID,
+      name: findPostalCode?.Description,
+      value: findPostalCode?.ID,
     };
 
     const newCoordinates = {
-      lat: val.Data.Lat,
-      long: val.Data.Long,
+      lat: val?.Data?.Lat,
+      long: val?.Data?.Long,
     };
 
     setDistrict(newDistrict);
@@ -315,7 +315,7 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
   useEffect(() => {
     if (!districtData) return;
 
-    console.log(districtData, " COKROO")
+    console.log(districtData, " COKROO");
 
     // if (districtData.Message.Code === 500) {
     //   setCoordinates({
