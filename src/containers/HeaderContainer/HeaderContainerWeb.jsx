@@ -14,16 +14,19 @@ import { authZustand } from "@/store/auth/authZustand";
 import Button from "@/components/Button/Button";
 import { categoriesZustand } from "@/store/products/categoriesZustand";
 import { userZustand } from "@/store/auth/userZustand";
+import CategoryNested from "./CategoryNested";
 
 function HeaderContainerWeb({ renderAppBar }) {
   const headerRef = useRef(null);
   const inputRef = useRef(null);
   const [getProfile, setProfile] = useState(ProfileHover);
   const [showCategory, setShowCategory] = useState(false);
+  const [showAllCategory, setShowAllCategory] = useState(false);
   const [showTips, setShowTips] = useState(false);
   const [showLocation, setShowLocation] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [showListLocation, setShowListLocation] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
   const [getCategory, setCategory] = useState();
   const { setHeaderHeight } = headerProps();
   const {categories}=categoriesZustand()
@@ -243,6 +246,15 @@ function HeaderContainerWeb({ renderAppBar }) {
           <span className="text-xs font-medium text-neutral-900"><span className="text-primary-700">Masuk</span> untuk melihat alamat yang telah kamu simpan</span></>}
         </div>
       </ModalComponent>
+      <ModalComponent isOpen={showCamera} setClose={()=>setShowCamera(false)} hideHeader >
+        <div className="flex flex-col gap-3 justify-start items-center text-neutral-900 py-[30px] px-[22px]">
+          <span className="bold-base">Pencarian Gambar</span>
+          <span className="medium-xs">Temukan Produk Impianmu dengan Mudah! 
+          Hanya Foto & Cari di Aplikasi muatmuat</span>
+          <Image width={200} height={200} src={'/img/barcode.png'} alt="barcode" />
+          <Button Class="semi-xs h-7">Unduh Aplikasi muatmuat</Button>
+        </div>
+      </ModalComponent>
       {
         <>
           {!renderAppBar && (
@@ -384,7 +396,7 @@ function HeaderContainerWeb({ renderAppBar }) {
                       </div>
                     </div>
                   </div>:
-                  <div className="flex gap-[1px]">
+                  <div className="flex gap-[1px] text-neutral-50 font-medium text-xs pt-[1px]">
                     <Link href={'/'}>Daftar</Link>
                     /
                     <Link href={'/'}>Login</Link>
@@ -405,7 +417,12 @@ function HeaderContainerWeb({ renderAppBar }) {
                     className="h-8"
                   />
                 </Link>
-                <div></div>
+                <span className="h-8 p-3 medium-xs text-neutral-900 flex justify-between w-[164px] bg-neutral-50 border border-neutral-400 rounded-md items-center cursor-pointer select-none" onClick={()=>setShowAllCategory(true)}>
+                  Semua Kategori
+                  {showAllCategory?<IconComponent loader={false} src={'/icons/chevron-up.svg'} />:<IconComponent loader={false} src={'/icons/chevron-down.svg'} />}
+                </span>
+                <CategoryNested isOpen={showAllCategory} setClose={()=>setShowAllCategory(false)} />
+                {/* <div></div>
                 <div></div>
                 <Dropdown
                   classname={"!w-[164px] relative"}
@@ -418,7 +435,7 @@ function HeaderContainerWeb({ renderAppBar }) {
                   {
                     <div className="absolute w-[160px] h-[120px] p-4 bg-neutral-50 left-[160px]">ass</div>
                   }
-                </Dropdown>
+                </Dropdown> */}
                 <div className="relative" ref={inputRef}>
                   <Input
                     placeholder="Cari Sparepart"
@@ -426,10 +443,17 @@ function HeaderContainerWeb({ renderAppBar }) {
                     width={391}
                     icon={{
                       right: (
-                        <IconComponent
-                          src={"/icons/search.svg"}
-                          classname={style.iconnSearch}
-                        />
+                        <div className="flex gap-2 items-center !bg-transparent">
+                          <IconComponent
+                            src={"/icons/search.svg"}
+                            classname={style.iconnSearch}
+                            />
+                          <span onClick={()=>setShowCamera(true)} className="cursor-pointer">
+                            <IconComponent
+                              src={"/icons/camera-outline-blue.svg"}
+                              />
+                          </span>
+                        </div>
                       ),
                     }}
                     focusEvent={() => setShowSearch(true)}

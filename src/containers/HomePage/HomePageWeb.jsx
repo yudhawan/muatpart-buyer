@@ -9,6 +9,7 @@ import Button from "@/components/Button/Button";
 import ProductComponent from "@/components/ProductComponent/ProductComponent";
 import MultipleItems from "@/components/ReactSlick/MultipleItems";
 import ProductGrid from "@/components/ProductsSectionComponent/ProductGrid";
+import CategoriesHandler from "@/libs/CategoriesHandler";
 
 function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
   const [filter, setVehicle] = useState({
@@ -123,7 +124,7 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
     "https://cdn-icons-png.flaticon.com/512/888/888853.png",
     "https://cdn-icons-png.flaticon.com/512/888/888847.png",
   ];
-
+ 
   return (
     <div>
       {/* <pre>

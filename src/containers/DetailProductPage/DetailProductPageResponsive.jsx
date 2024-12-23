@@ -10,6 +10,8 @@ import ButtonBottomMobile from '@/components/ButtonBottomMobile/ButtonBottomMobi
 import KompatibilitasScreen from './screens/KompatibilitasScreen'
 import KompatibilitasSearchScreen from './screens/KompatibilitasSearchScreen'
 import MultipleAlamatScreen from './screens/MultipleAlamatScreen'
+import ListAddressContainerMobile from '../ListAddressContainerMobile/ListAddressContainerMobile'
+import AddAddressContainerMobile from '../AddAddressContainerMobile/AddAddressContainerMobile'
 function DetailProductPageResponsive({
   product,
   ID,
@@ -91,11 +93,26 @@ function DetailProductPageResponsive({
         onBack:()=>setScreen(''),
       })
     }
+    if(screen==='list_address'){
+      setAppBar({
+        appBarType:'header_title',
+        title:'Pilih Alamat Tujuan',
+        onBack:()=>setScreen('multiple_alamat')
+      })
+    }
+    if(screen==='add_address') {
+      setAppBar({
+          appBarType:'header_title',
+          title:'Detail Alamat'
+      })
+    }
   },[screen])
 
   if (screen==='kompatibilitas') return <KompatibilitasScreen getExpanded={getExpanded} handleExpanded={handleExpanded} />
   if (screen==='kompatibilitas_search') return <KompatibilitasSearchScreen data={[]} />
   if (screen==='multiple_alamat') return <MultipleAlamatScreen data={[]} />
+  if(screen==='list_address') return <ListAddressContainerMobile onAddAddress={()=>setScreen('add_address')} onSave={()=>{}} />
+  if(screen==='add_address') return <AddAddressContainerMobile/>
   // main screen
   return (
     <div className={'relative pb-[72px]'}>
