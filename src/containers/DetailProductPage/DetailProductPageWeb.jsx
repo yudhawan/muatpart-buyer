@@ -60,12 +60,12 @@ function DetailProductPageWeb({
     return (
         <div className={style.main}>
             <div className='w-full max-w-[1280px] self-center'>
-                <BreadCrumb data={[{id:'home',name:'Home'},...categories?.map(val=>{
+                {/* <BreadCrumb data={[{id:'home',name:'Home'},...categories?.map(val=>{
                     return {
-                        id:val.id,
-                        name:val.name
+                        id:val?.id,
+                        name:val?.name
                     }
-                })]} />
+                })]} /> */}
                 <div className='flex justify-between gap-4 mt-4 relative'>
                     <div className='flex flex-col gap-6 min-w-[898px] w-full'>
                         {/* kompabilitas */}
@@ -253,7 +253,7 @@ function DetailProductPageWeb({
                             <span className='font-bold text-base '>{numberFormatMoney(2000000)}</span>
                         </span>
                         <div className='flex flex-col w-full gap-3 pb-6 border-b border-neutral-400'>
-                            <Button Class='!w-full !max-w-none' color='primary_secondary' iconLeft={'/icons/cart-blue-outline.svg'}>Tambah ke Troli</Button>
+                            <Button Class='!w-full !max-w-none' color='primary_secondary' iconLeft={'/img/cart-add-blue.png'}>Tambah ke Troli</Button>
                             <Button Class='!w-full !max-w-none'>Beli Sekarang</Button>
                         </div>
                         <span className='flex gap-[5px] font-medium text-xs text-neutral-900'>
