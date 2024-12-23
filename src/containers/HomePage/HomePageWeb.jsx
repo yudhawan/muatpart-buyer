@@ -8,6 +8,7 @@ import Dropdown from "@/components/Dropdown/Dropdown";
 import Button from "@/components/Button/Button";
 import MultipleItems from "@/components/ReactSlick/MultipleItems";
 import ProductGrid from "@/components/ProductsSectionComponent/ProductGrid";
+import CategoriesHandler from "@/libs/CategoriesHandler";
 
 function HomePageWeb({
   vehicleOptions,
@@ -143,7 +144,7 @@ function HomePageWeb({
     "https://cdn-icons-png.flaticon.com/512/888/888853.png",
     "https://cdn-icons-png.flaticon.com/512/888/888847.png",
   ];
-
+ 
   return (
     <div>
       {/* <pre>

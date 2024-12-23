@@ -45,7 +45,6 @@ function ModalComponent({
         }}
         className={`${style.main}  w-full overflow-hidden z-[92] flex justify-center items-center ${classname}`}
         onClick={() => {
-          console.log('as')
           if (!preventAreaClose && type!=='BottomSheet') {
             setIsOpen(false);
             setClose?.();
