@@ -5,16 +5,19 @@ import styles from "./EtalaseContainer.module.scss"
 import BreadCrumb from "@/components/Breadcrumb/Breadcrumb";
 import Input from "@/components/Input/Input";
 import IconComponent from "@/components/IconComponent/IconComponent";
+import { useRouter } from "next/navigation";
 
 const EtalaseContainer = ({
     etalaseData,
     productsWithFavorites,
+    setActiveTab,
     // Shared search props
     search,
     setSearch,
     handleSearch,
-    handleClearSearch
+    handleClearSearch,
 }) => {
+    const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState("Terbaru");
     const options = ["Terbaru", "Terlama"];
@@ -68,7 +71,15 @@ const EtalaseContainer = ({
     };
 
     const handleClickBreadCrumb = (val) => {
-        // alert(val)
+        if (val === "Muatparts") {
+            router.push("/")
+        }
+        if (val === "Makmur Jaya") {
+            setActiveTab(0)
+        }
+        if (val === "Etalase") {
+            setSelectedEtalaseOption({ type: "showcase", value: "Semua Produk" })
+        }
     }
 
     return (

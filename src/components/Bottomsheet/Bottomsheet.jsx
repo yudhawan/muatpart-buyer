@@ -106,7 +106,7 @@ const Bottomsheet = ({
               className="w-[38px] h-1 rounded-[4px] bg-[#dddddd] mx-auto mb-3 cursor-grab active:cursor-grabbing"
               onTouchStart={handleTouchStart}
             />
-            {titleBottomsheet === ' -' && (
+            {titleBottomsheet !== ' -' && (
               <div
                 className={`flex ${
                   withReset && "justify-between"

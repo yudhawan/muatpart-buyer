@@ -79,6 +79,7 @@ function SellerWeb({
                 loading={loading}
                 etalaseData={etalaseData}
                 productsWithFavorites={productsWithFavorites}
+                setActiveTab={setActiveTab}
                 {...searchProps}
               />
             )}

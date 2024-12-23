@@ -82,11 +82,15 @@ const VoucherModal = ({ isOpen, setIsOpen, vouchers = [], onShowVoucherInfo }) =
       {/* Modal */}
       <div className="relative bg-white rounded-xl px-6 py-8 flex flex-col gap-y-4 items-center">
         {/* Header */}
-        <IconComponent
-          classname={`absolute top-[8px] right-[9px] ${styles.icon_primary}`}
-          src="/icons/silang.svg"
-          onclick={() => setIsOpen(false)}
-        />
+        <button
+          className='absolute top-[8px] right-[9px]'
+          onClick={() => setIsOpen(false)}
+        >
+          <IconComponent
+            classname={styles.icon_primary}
+            src="/icons/silang.svg"
+          />
+        </button>
         <span className="font-bold text-[16px] leading-[19.2px]">
           Pilih Voucher Toko Makmur Jaya
         </span>

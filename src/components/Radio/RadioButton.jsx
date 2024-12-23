@@ -17,7 +17,7 @@ const RadioButton = ({
   ...props
 }) => {
   const radioRef = useRef(null);
-
+console.log("checked",name,checked)
   const isLabelMissing = !label && !children;
 
   const checkedClick = () => {

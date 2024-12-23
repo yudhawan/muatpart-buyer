@@ -2,7 +2,7 @@ import { Fragment } from 'react';
 
 const Sidebar = ({ 
   categories = [], 
-  showcases = [], 
+  showcases = [],
   selectedOption = null, // Will be in format { type: 'showcase'|'category', value: string }
   onSelect
 }) => {
@@ -42,8 +42,8 @@ const Sidebar = ({
         </div>
       </div>
 
-      {/* Categories Section */}
-      <div className="flex overflow-hidden flex-col justify-center p-4 max-w-full bg-white rounded-md border border-solid border-neutral-400 w-[264px]">
+      {/* Categories Section GA JADI SAYA KECEWA SUDAH SUSAH2 BUAT!!!*/}
+      {/* <div className="flex overflow-hidden flex-col justify-center p-4 max-w-full bg-white rounded-md border border-solid border-neutral-400 w-[264px]">
         <div className="flex flex-col w-full gap-y-4">
           <div className="flex-1 shrink gap-2 self-stretch w-full font-bold text-[20px] leading-[24px] whitespace-nowrap">
             Kategori
@@ -74,7 +74,7 @@ const Sidebar = ({
             </Fragment>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

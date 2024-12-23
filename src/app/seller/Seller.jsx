@@ -31,6 +31,8 @@ function Seller() {
   const [favorites, setFavorites] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  // Filter
+  // const []
 
   // Web-specific shared search state
   const [webSearch, setWebSearch] = useState("");
