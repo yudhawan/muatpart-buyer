@@ -15,6 +15,7 @@ import Button from "@/components/Button/Button";
 import { categoriesZustand } from "@/store/products/categoriesZustand";
 import { userZustand } from "@/store/auth/userZustand";
 import CategoryNested from "./CategoryNested";
+import { useRouter } from "next/navigation";
 
 function HeaderContainerWeb({ renderAppBar }) {
   const headerRef = useRef(null);
@@ -32,6 +33,7 @@ function HeaderContainerWeb({ renderAppBar }) {
   const { categories } = categoriesZustand();
   const { token } = authZustand();
   const user = userZustand();
+  const router = useRouter();
   useEffect(() => {
     if (getProfile.length) {
       const newProfileUpdate = getProfile.map((val) => {
