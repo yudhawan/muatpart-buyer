@@ -50,6 +50,19 @@ const InformasiTokoAkunResponsive = () => {
       handleInputChange("longitude", manajemenLokasi.coordinates?.long);
     }
   }, [manajemenLokasi]);
+  
+  useEffect(() => {
+    if (defaultManajemenLokasi) {
+      handleInputChange("address", defaultManajemenLokasi.address);
+      handleInputChange("location", defaultManajemenLokasi.location?.title);
+      handleInputChange("districtID", defaultManajemenLokasi.district?.value);
+      handleInputChange("cityID", defaultManajemenLokasi.city?.id);
+      handleInputChange("provinceID", defaultManajemenLokasi.province?.id);
+      handleInputChange("postalCode", defaultManajemenLokasi.postalCode?.name);
+      handleInputChange("latitude", defaultManajemenLokasi.coordinates?.lat);
+      handleInputChange("longitude", defaultManajemenLokasi.coordinates?.long);
+    }
+  }, [defaultManajemenLokasi]);
 
   // Helper Functions
   const handleInitialData = (data) => {
@@ -74,7 +87,6 @@ const InformasiTokoAkunResponsive = () => {
   };
 
   const setBusinessEntityData = (merchantData, businessEntities) => {
-    console.log(merchantData, businessEntities, " kadal");
     if (merchantData.businessEntityID && businessEntities) {
       const entity = businessEntities.find(
         (item) => item.ID == merchantData.businessEntityID
@@ -104,7 +116,7 @@ const InformasiTokoAkunResponsive = () => {
   };
 
   return (
-    <div className="pt-14 pb-24 bg-white min-h-screen">
+    <div className="pt-8 px-4 pb-24 bg-white min-h-screen">
       <h1 className="text-sm font-semibold text-neutral-900 mb-5">
         Informasi Toko
       </h1>

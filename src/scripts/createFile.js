@@ -42,7 +42,7 @@ export default ${name}
 function createStyle(name) {
   return `
 .main{
-    display:'flex'
+    display:flex
 }
 `;
 }

@@ -13,7 +13,11 @@ const Web = ({
   handleChange,
   handleSubmit,
   isSubmitted,
-  setIsSubmitted,
+  vehicleOptions,
+  brandOptions,
+  yearOptions,
+  modelOptions,
+  typeOptions,
 }) => {
   // State untuk menyimpan dropdown mana yang error dan pesannya
   const [currentError, setCurrentError] = useState({ field: "", message: "" });
@@ -53,86 +57,56 @@ const Web = ({
     }
   };
 
-  const dropdownsConfig = [
-    {
-      key: "vehicle",
-      label: "Pilih Kendaraan",
-      options: Object.keys(vehicleData),
-    },
-    {
-      key: "brand",
-      label: "Pilih Brand",
-      options: formState.vehicle.value
-        ? Object.keys(vehicleData[formState.vehicle.value].brands)
-        : [],
-    },
-    {
-      key: "year",
-      label: "Pilih Tahun",
-      options: formState.brand.value
-        ? Object.keys(
-            vehicleData[formState.vehicle.value].brands[formState.brand.value]
-              .years
-          )
-        : [],
-    },
-    {
-      key: "model",
-      label: "Pilih Model",
-      options: formState.year.value
-        ? Object.keys(
-            vehicleData[formState.vehicle.value].brands[formState.brand.value]
-              .years[formState.year.value].models
-          )
-        : [],
-    },
-    {
-      key: "type",
-      label: "Pilih Tipe",
-      options: formState.model.value
-        ? vehicleData[formState.vehicle.value].brands[formState.brand.value]
-            .years[formState.year.value].models[formState.model.value].types
-        : [],
-    },
-  ];
+   const dropdownsConfig = [
+     {
+       key: "vehicle",
+       label: "Pilih Kendaraan",
+       options: vehicleOptions.map((option) => option.value), // Ubah dari Object.keys(vehicleData)
+       col: "full",
+     },
+     {
+       key: "brand",
+       label: "Pilih Brand",
+       options: formState.vehicle.value
+         ? brandOptions.map((option) => option.value)
+         : [], // Ubah dari Object.keys(vehicleData[formState.vehicle.value].brands)
+       col: "half",
+     },
+     {
+       key: "year",
+       label: "Pilih Tahun",
+       options: formState.brand.value
+         ? yearOptions.map((option) => option.value)
+         : [], // Ubah dari Object.keys(...)
+       col: "half",
+     },
+     {
+       key: "model",
+       label: "Pilih Model",
+       options: formState.year.value
+         ? modelOptions.map((option) => option.value)
+         : [], // Ubah dari Object.keys(...)
+       col: "half",
+     },
+     {
+       key: "type",
+       label: "Pilih Tipe",
+       options: formState.model.value
+         ? typeOptions.map((option) => option.value)
+         : [], // Ubah dari vehicleData[...].types
+       col: "half",
+     },
+   ];
 
+  // Tambah fungsi untuk handle onClick dropdown
   const handleDropdownClick = (config) => {
-    const fieldOrder = ["vehicle", "brand", "year", "model", "type"];
-    const fieldNames = {
-      vehicle: "Kendaraan",
-      brand: "Brand",
-      year: "Tahun",
-      model: "Model",
-      type: "Tipe",
-    };
-
-    const currentIndex = fieldOrder.indexOf(config.key);
-    let errorField = "";
-    let errorMessage = "";
-
-    // Reset submit state to clear previous submit errors
-    setIsSubmitted(false);
-
-    // Check prerequisites in sequence
-    for (let i = 0; i < currentIndex; i++) {
-      const prerequisiteField = fieldOrder[i];
-      if (!formState[prerequisiteField].value) {
-       errorField = config.key;
-        errorMessage = `Pilih ${fieldNames[prerequisiteField]} terlebih dahulu`;
-        break;
-      }
+    const dependencyMessage = getDependencyMessage(config);
+    if (dependencyMessage) {
+      setCurrentError({ field: config.key, message: dependencyMessage });
+      return false; // Return false untuk mencegah dropdown terbuka
     }
-
-    // Reset current error state
     setCurrentError({ field: "", message: "" });
-
-    // Set new error if found
-    if (errorMessage) {
-      setCurrentError({ field: errorField, message: errorMessage });
-      return false;
-    }
-
-    return true;
+    return true; // Return true jika boleh dibuka
   };
 
   useEffect(() => {
@@ -167,17 +141,15 @@ const Web = ({
                     }
                     onBeforeOpen={() => handleDropdownClick(config)}
                   />
-                  {/* Show dependency error (from dropdown click) */}
                   {currentError.field === config.key && (
                     <span className="text-xs font-medium text-error-400 mt-0">
                       {currentError.message}
                     </span>
                   )}
-                  {/* Show validation error (from submit) */}
                   {formState[config.key].error && !currentError.field && (
-                    <span className="text-xs font-medium text-error-400 mt-0">
-                      {`${config.label.split(" ")[1]} harus diisi`}
-                    </span>
+                    <p className="mt-1 text-xs font-medium text-error-400">
+                      {`${config.label.split(" ")[1]} wajib diisi`}
+                    </p>
                   )}
                 </div>
               ))}
@@ -278,46 +250,39 @@ export const WebModal = ({ mode = "add", initialData = null }) => {
     {
       key: "vehicle",
       label: "Pilih Kendaraan",
-      options: Object.keys(vehicleData),
-      col: "full", // tambah properti untuk menandai full width atau tidak
+      options: vehicleOptions.map((option) => option.value), // Ubah dari Object.keys(vehicleData)
+      col: "full",
     },
     {
       key: "brand",
       label: "Pilih Brand",
       options: formState.vehicle.value
-        ? Object.keys(vehicleData[formState.vehicle.value].brands)
-        : [],
+        ? brandOptions.map((option) => option.value)
+        : [], // Ubah dari Object.keys(vehicleData[formState.vehicle.value].brands)
       col: "half",
     },
     {
       key: "year",
       label: "Pilih Tahun",
       options: formState.brand.value
-        ? Object.keys(
-            vehicleData[formState.vehicle.value].brands[formState.brand.value]
-              .years
-          )
-        : [],
+        ? yearOptions.map((option) => option.value)
+        : [], // Ubah dari Object.keys(...)
       col: "half",
     },
     {
       key: "model",
       label: "Pilih Model",
       options: formState.year.value
-        ? Object.keys(
-            vehicleData[formState.vehicle.value].brands[formState.brand.value]
-              .years[formState.year.value].models
-          )
-        : [],
+        ? modelOptions.map((option) => option.value)
+        : [], // Ubah dari Object.keys(...)
       col: "half",
     },
     {
       key: "type",
       label: "Pilih Tipe",
       options: formState.model.value
-        ? vehicleData[formState.vehicle.value].brands[formState.brand.value]
-            .years[formState.year.value].models[formState.model.value].types
-        : [],
+        ? typeOptions.map((option) => option.value)
+        : [], // Ubah dari vehicleData[...].types
       col: "half",
     },
   ];
@@ -354,7 +319,7 @@ export const WebModal = ({ mode = "add", initialData = null }) => {
               onChange={(value) => handleChange(config.key, value)}
               options={config.options}
               error={
-                (formState[config.key].error && !currentError.field) ||
+                (isSubmitted && !formState[config.key].value) ||
                 currentError.field === config.key
               }
               onBeforeOpen={() => handleDropdownClick(config)}
@@ -366,12 +331,13 @@ export const WebModal = ({ mode = "add", initialData = null }) => {
                 {currentError.message}
               </span>
             )}
-            {/* Show validation error (from submit) */}
-            {formState[config.key].error && !currentError.field && (
-              <span className="text-xs font-medium text-error-400 mt-0">
-                {`${config.label.split(" ")[1]} harus diisi`}
-              </span>
-            )}
+            {isSubmitted &&
+              !formState[config.key].value &&
+              !currentError.message && (
+                <span className="text-xs font-medium text-error-400 mt-0">
+                  {config.label.split(" ")[1]} wajib dipilih
+                </span>
+              )}
           </div>
         ))}
 
@@ -380,7 +346,7 @@ export const WebModal = ({ mode = "add", initialData = null }) => {
           {halfWidthDropdowns.map((config, index) => (
             <div key={config.key}>
               <Dropdown
-                withSearch={config.key === "year" ? false : true}
+                withSearch={config.key === 'year' ? false : true}
                 customLabel={renderLabel(
                   config,
                   fullWidthDropdowns.length + index
@@ -389,7 +355,7 @@ export const WebModal = ({ mode = "add", initialData = null }) => {
                 onChange={(value) => handleChange(config.key, value)}
                 options={config.options}
                 error={
-                  (formState[config.key].error && !currentError.field) ||
+                  (isSubmitted && !formState[config.key].value) ||
                   currentError.field === config.key
                 }
                 onBeforeOpen={() => handleDropdownClick(config)}
@@ -401,12 +367,13 @@ export const WebModal = ({ mode = "add", initialData = null }) => {
                   {currentError.message}
                 </span>
               )}
-              {/* Show validation error (from submit) */}
-              {formState[config.key].error && !currentError.field && (
-                <span className="text-xs font-medium text-error-400 mt-0">
-                  {`${config.label.split(" ")[1]} harus diisi`}
-                </span>
-              )}
+              {isSubmitted &&
+                !formState[config.key].value &&
+                !currentError.message && (
+                  <span className="text-xs font-medium text-error-400 mt-0">
+                    {config.label.split(" ")[1]} wajib dipilih
+                  </span>
+                )}
             </div>
           ))}
         </div>

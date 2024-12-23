@@ -303,7 +303,7 @@ const StoreSection = ({
         type === "company" && !data.isCross
           ? null
           : type === "company"
-          ? "Data Perusahaan"
+          ? null
           : "Data Toko"
       }
       subTitle={
@@ -352,8 +352,8 @@ const StoreSection = ({
                   <MapContainer
                     width={600}
                     height={390}
-                    lat={field?.coordinates.lat || -7.250445} // Change long to lng
-                    lng={field?.coordinates.long || 112.768845} // Change long to lng
+                    lat={field?.coordinates.lat || -7.250445}
+                    lng={field?.coordinates.long || 112.768845}
                     onPosition={(val) => {
                       if (type === "store") {
                         updateStoreField("latitude", Number(val.lat));
@@ -559,6 +559,7 @@ export const DataToko = ({ handleSaveStore, handleSaveCompany }) => {
   const [manajemenLokasi, setManajemenLokasi] = useState();
   const [defaultManajemenLokasi, setDefaultManajemenLokasi] = useState(null);
   const { profileData, errors } = profileSeller();
+  const { updateStoreField } = profileSeller();
 
   useEffect(() => {
     if (!profileData) return;
@@ -582,6 +583,19 @@ export const DataToko = ({ handleSaveStore, handleSaveCompany }) => {
       });
     }
   }, [profileData, isEditStore, isEditCompany]);
+
+  useEffect(() => {
+    if (manajemenLokasi) {
+      updateStoreField("address", manajemenLokasi.address);
+      updateStoreField("location", manajemenLokasi.location?.title);
+      updateStoreField("districtID", manajemenLokasi.district?.value);
+      updateStoreField("cityID", manajemenLokasi.city?.id);
+      updateStoreField("provinceID", manajemenLokasi.province?.id);
+      updateStoreField("postalCode", manajemenLokasi.postalCode?.value);
+      updateStoreField("latitude", manajemenLokasi.coordinates?.lat);
+      updateStoreField("longitude", manajemenLokasi.coordinates?.long);
+    }
+  }, [manajemenLokasi]);
 
   if (!profileData) return <Skeleton fill={5} />;
 

@@ -36,6 +36,7 @@ const registerForm = create((set, get) => ({
   isSubmitting: false,
   formIsFilled: false, // tambahkan state baru
 
+  setCurrentStep: (value) => set({ currentStep: value }),
   setFormIsFilled: (value) => set({ formIsFilled: value }),
   setIsSubmitting: (value) => set({ isSubmitting: value }),
   setFormData: (newData) => set({ formData: newData }),

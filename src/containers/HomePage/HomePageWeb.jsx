@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import style from "./HomePage.module.scss";
 import Image from "next/image";
 import Input from "@/components/Input/Input";
@@ -8,8 +8,14 @@ import Dropdown from "@/components/Dropdown/Dropdown";
 import Button from "@/components/Button/Button";
 import ProductComponent from "@/components/ProductComponent/ProductComponent";
 import MultipleItems from "@/components/ReactSlick/MultipleItems";
+import ProductGrid from "@/components/ProductsSectionComponent/ProductGrid";
 
-function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
+function HomePageWeb({
+  vehicleOptions,
+  lastSeenProducts,
+  mostVisitedProducts,
+  youMightLike,
+}) {
   const [filter, setVehicle] = useState({
     vehicle: {
       value: "",
@@ -87,6 +93,22 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
       { name: "Hatchback", value: "hatchback" },
     ],
   });
+
+  useEffect(() => {
+    if (vehicleOptions) {
+      const vehicle = vehicleOptions.map((val) => {
+        return {
+          name: val.value,
+          value: val.id,
+        };
+      });
+
+      setOptions({
+        ...options,
+        vehicle: [{ name: "Semua Jenis Kendaraan", value: "" }, ...vehicle],
+      });
+    }
+  }, [vehicleOptions]);
 
   const headerImages = [
     "https://placehold.co/500x250/red/white.png",
@@ -284,58 +306,16 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
           />
         </div>
       </section>
-      <section className="bg-white py-6">
-        <div className="w-[1080px] mx-auto space-y-7">
-          <h1 className="text-neutral-900 font-bold text-lg">
-            Produk Yang Banyak Dikunjungi
-          </h1>
-          <div className="w-full grid grid-cols-6 gap-3">
-            {Array(Math.ceil(18 / mostVisitedProducts.products.length))
-              .fill(mostVisitedProducts.products)
-              .flat()
-              .slice(0, 18)
-              .map((val) => {
-                return (
-                  <ProductComponent
-                    key={val.id}
-                    {...val}
-                    image={`https://prd.place/170?id=${Math.floor(
-                      Math.random() * 46
-                    )}`}
-                  />
-                );
-              })}
-          </div>
 
-          <Button Class="place-self-center">Muat Lebih Banyak</Button>
-        </div>
-      </section>
-      <section className="bg-white py-6">
-        <div className="w-[1080px] mx-auto space-y-7">
-          <h1 className="text-neutral-900 font-bold text-lg">
-            Mungkin Kamu Juga Suka
-          </h1>
-          <div className="w-full grid grid-cols-6 gap-3">
-            {Array(Math.ceil(18 / youMightLike.products.length))
-              .fill(youMightLike.products)
-              .flat()
-              .slice(0, 18)
-              .map((val) => {
-                return (
-                  <ProductComponent
-                    key={val.id}
-                    {...val}
-                    image={`https://prd.place/170?id=${Math.floor(
-                      Math.random() * 46
-                    )}`}
-                  />
-                );
-              })}
-          </div>
+      <ProductGrid
+        totalProducts={mostVisitedProducts}
+        title="Produk Yang Banyak Dikunjungi"
+      />
 
-          <Button Class="place-self-center">Muat Lebih Banyak</Button>
-        </div>
-      </section>
+      <ProductGrid
+        totalProducts={youMightLike}
+        title="Mungkin Kamu Juga Suka"
+      />
 
       <section className="bg-white py-6">
         <div className="w-[1012px] mx-auto space-y-7">
@@ -362,7 +342,7 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
             Terakhir Dilihat
           </h1>
           <div className="w-full grid grid-cols-6 gap-3">
-            {lastSeenProducts.products.map((val) => {
+            {lastSeenProducts.map((val) => {
               return (
                 <ProductComponent
                   key={val.id}
@@ -377,7 +357,7 @@ function HomePageWeb({ lastSeenProducts, mostVisitedProducts, youMightLike }) {
         </div>
       </section>
 
-      <section className="bg-neutral-100 relative">
+      <section className="bg-neutral-100 relative pt-px">
         <h1 className="text-neutral-900 my-10 font-bold text-[28px] text-center">
           Keuntungan belanja di muatparts
         </h1>

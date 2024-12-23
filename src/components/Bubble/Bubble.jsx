@@ -51,19 +51,19 @@ const Bubble = ({
 
 export default Bubble;
 
-Bubble.prototype = {
-  // props classname diisi dengan string terhadap custom class/class tailwind yang anda inginkan
-  classname: PropTypes.string,
-  // props classname diisi dengan boolean, jika true akan memiliki base background berwarna biru seperti filter muat
-  fill: PropTypes.boolean,
-  // props children diisi dengan string yang terletak pada nama bubble
-  children: PropTypes.string,
-  // props iconLeft diisi base url icon
-  iconLeft: PropTypes.string,
-  // props iconRight diisi base url icon
-  iconRight: PropTypes.string,
-  // props onClickLeft diisi fungsi onclick untuk trigger icon posisi kiri
-  onClickLeft: PropTypes.func,
-  // props onClickRight diisi fungsi onclick untuk trigger icon posisi kanan
-  onClickRight: PropTypes.func,
-};
+// Bubble.prototype = {
+//   // props classname diisi dengan string terhadap custom class/class tailwind yang anda inginkan
+//   classname: PropTypes.string,
+//   // props classname diisi dengan boolean, jika true akan memiliki base background berwarna biru seperti filter muat
+//   fill: PropTypes.boolean,
+//   // props children diisi dengan string yang terletak pada nama bubble
+//   children: PropTypes.string,
+//   // props iconLeft diisi base url icon
+//   iconLeft: PropTypes.string,
+//   // props iconRight diisi base url icon
+//   iconRight: PropTypes.string,
+//   // props onClickLeft diisi fungsi onclick untuk trigger icon posisi kiri
+//   onClickLeft: PropTypes.func,
+//   // props onClickRight diisi fungsi onclick untuk trigger icon posisi kanan
+//   onClickRight: PropTypes.func,
+// };

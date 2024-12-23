@@ -55,7 +55,7 @@ function SearchNavbarMobile() {
                 menus.map(val=><div key={val.id} onClick={()=>setActive(val.id)} className={`${val.id===getActive?'text-primary-700':'text-[#676767]'} font-bold text-sm pt-[10px] pb-[14px] px-10 border-b-2 ${val.id===getActive?'border-primary-700 border-b-2':'border-neutral-200'} w-[50%] whitespace-nowrap`}>{val.name}</div>)
             }
         </div>
-        <div className='flex flex-col gap-5 containerMobile'>
+        <div className='flex flex-col gap-5 containerMobile !pt-[80px]'>
             {(getActive==='name_produk')&&<Input 
                 placeholder='Cari Produk' 
                 value={getSearch} 

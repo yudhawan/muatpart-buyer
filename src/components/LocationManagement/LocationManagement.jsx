@@ -45,8 +45,9 @@ import AddressForm from "./AddressForm";
 const LocationManagement = ({ errors, value, defaultValue }) => {
   const [addressData, setAddressData] = useState({});
   useEffect(() => {
+    console.log(addressData, " MANLOK CAKRA");
+
     value(addressData);
-    console.log(addressData);
   }, [addressData]);
 
   return (

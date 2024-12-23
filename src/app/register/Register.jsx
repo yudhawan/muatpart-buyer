@@ -20,6 +20,7 @@ function Register() {
   const { useSWRHook, useSWRMutateHook } = new SWRHandler();
   const {
     formData,
+    setCurrentStep,
     currentStep,
     validateFirstStep,
     validateSecondStep,
@@ -33,7 +34,7 @@ function Register() {
     formIsFilled,
     setFormIsFilled,
   } = registerForm();
-  const {setDataToast, setShowToast} = toast()
+  const { setDataToast, setShowToast } = toast();
 
   const { data: merchantData } = useSWRHook(
     formData[0].tipeToko === 0
@@ -63,32 +64,43 @@ function Register() {
     "PUT"
   );
 
-  const { data: dataBanks } = useSWRHook(`${process.env.NEXT_PUBLIC_API_HASYIM}v1/register/banks`)
-  const { data: dataTimerOtp } = useSWRHook(step === "4" ? `${process.env.NEXT_PUBLIC_API_HASYIM}v1/register/timer_otp?Email=${formData[0].email}&Type=18` : null)
+  const { data: dataBanks } = useSWRHook(
+    `${process.env.NEXT_PUBLIC_API_HASYIM}v1/register/banks`
+  );
+  const { data: dataTimerOtp } = useSWRHook(
+    step === "4"
+      ? `${process.env.NEXT_PUBLIC_API_HASYIM}v1/register/timer_otp?Email=${formData[0].email}&Type=18`
+      : null
+  );
 
-  const banks = dataBanks?.Data || []
-  const bankOptions = banks.map(bank => ({ name: bank.value, value: bank.id }))
-  const existingMerchantData = merchantData?.Data
-  const hasVerifiedLegality = existingMerchantData?.legality?.length > 0 && existingMerchantData?.legalityFile?.length > 0
-  const hasVerifiedRekening = existingMerchantData?.rekening?.length > 0
-  const remainingTime = dataTimerOtp?.Data.Remaining
+  const banks = dataBanks?.Data || [];
+  const bankOptions = banks.map((bank) => ({
+    name: bank.value,
+    value: bank.id,
+  }));
+  const existingMerchantData = merchantData?.Data;
+  const hasVerifiedLegality =
+    existingMerchantData?.legality?.length > 0 &&
+    existingMerchantData?.legalityFile?.length > 0;
+  const hasVerifiedRekening = existingMerchantData?.rekening?.length > 0;
+  const remainingTime = dataTimerOtp?.Data.Remaining;
 
   useEffect(() => {
     if (step === "1" && existingMerchantData) {
       setFormData([{ ...formData[0], ...existingMerchantData }, formData[1]]);
     }
     if (step === "2") {
-      let newFormDataStepTwo = {}
+      let newFormDataStepTwo = {};
       if (hasVerifiedLegality) {
         newFormDataStepTwo = {
           ...newFormDataStepTwo,
           ktpFile: {
             url: existingMerchantData?.legalityFile[0].file,
-            name: existingMerchantData?.legalityFile[0].file.split("/").at(-1)
+            name: existingMerchantData?.legalityFile[0].file.split("/").at(-1),
           },
           ktpNo: existingMerchantData?.legality[0].ktpNo,
-          ktpNama: existingMerchantData?.legality[0].namaKtpPendaftar
-        }
+          ktpNama: existingMerchantData?.legality[0].namaKtpPendaftar,
+        };
       }
       if (hasVerifiedRekening) {
         newFormDataStepTwo = {
@@ -97,15 +109,20 @@ function Register() {
           accountName: existingMerchantData?.rekening[0].namaPemilik,
           bankID: existingMerchantData?.rekening[0].bankID,
           hasBankAccount: true,
-          haveActiveRekening: existingMerchantData?.haveActiveRekening
-        }
+          haveActiveRekening: existingMerchantData?.haveActiveRekening,
+        };
       }
-      setFormData([ formData[0], { ...formData[1], ...newFormDataStepTwo }])
+      setFormData([formData[0], { ...formData[1], ...newFormDataStepTwo }]);
     }
-  }, [JSON.stringify(existingMerchantData), hasVerifiedLegality, hasVerifiedRekening, step])
+  }, [
+    JSON.stringify(existingMerchantData),
+    hasVerifiedLegality,
+    hasVerifiedRekening,
+    step,
+  ]);
 
   const handleNext = async () => {
-    console.log(currentStep, formIsFilled, " clicked nextt")
+    console.log(currentStep, formIsFilled, " clicked nextt");
     // Jika form sudah pernah diisi dan divalidasi sebelumnya
     //  if (formIsFilled && (currentStep === 0 || currentStep === 1)) {
     //    router.push("/register?step=3");
@@ -141,10 +158,13 @@ function Register() {
 
             // Check if formIsFilled
             if (formData.formIsFilled) {
-              router.push("/register?step=3");
+              // router.push("/register?step=3");
+              setCurrentStep(3);
             } else {
               nextStep();
-              router.push(`/register?step=${currentStep}`);
+              setCurrentStep(currentStep);
+
+              // router.push(`/register?step=${currentStep}`);
             }
           })
           .catch((err) => {
@@ -176,10 +196,12 @@ function Register() {
           });
           // Check if formIsFilled
           if (formData.formIsFilled) {
-            router.push("/register?step=3");
+            // router.push("/register?step=3");
+            setCurrentStep(3);
           } else {
             nextStep();
-            router.push(`/register?step=${currentStep}`);
+            // router.push(`/register?step=${currentStep}`);
+            setCurrentStep(currentStep);
           }
         })
         .catch((err) => {
@@ -199,10 +221,12 @@ function Register() {
           setIsSubmitting(false);
           // Check if formIsFilled
           if (formData.formIsFilled) {
-            router.push("/register?step=3");
+            // router.push("/register?step=3");
+            setCurrentStep(3);
           } else {
             nextStep();
-            router.push(`/register?step=${currentStep}`);
+            // router.push(`/register?step=${currentStep}`);
+            setCurrentStep(currentStep);
           }
         })
         .catch(() => {

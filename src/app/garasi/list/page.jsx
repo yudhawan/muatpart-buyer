@@ -7,7 +7,9 @@ import Toast from "@/components/Toast/Toast";
 import Modal from "@/components/AI/Modal";
 import Bottomsheet from "@/components/Bottomsheet/Bottomsheet";
 import toast from "@/store/toast";
+import SWRHandler from "@/services/useSWRHook";
 
+const api = process.env.NEXT_PUBLIC_API_HASYIM;
 // Data awal
 const initialVehicle = {
   type: "Truk",
@@ -30,10 +32,36 @@ const initialCategories = [
 
 const MainListGarasi = () => {
   const [isMobile, setIsMobile] = useState(false);
-  const [selectedVehicle, setSelectedVehicle] = useState(initialVehicle);
+  const [garageList, setGarageList] = useState();
+  const [selectedVehicle, setSelectedVehicle] = useState();
   const [categories, setCategories] = useState(initialCategories);
   const [searchTerm, setSearchTerm] = useState("");
   const { dataBottomsheet } = toast();
+  const { useSWRHook } = new SWRHandler();
+  const defaultID = 'f0f02206-e33f-4967-914c-2ca6b30fd6b8'
+
+  const { data: garageSelected, error: garageSelectedError } = useSWRHook(
+    `${api}v1/muatparts/garasi/lists?id=${defaultID}`
+  );
+  const { data: garageLists, error: garageError } = useSWRHook(
+    `${api}v1/muatparts/garasi/lists`
+  );
+
+  useEffect(() => {
+    console.log(garageSelected)
+    
+    if (garageSelected) {
+      setSelectedVehicle(garageSelected.Data);
+    }
+  }, [garageSelected]);
+
+  useEffect(() => {
+    console.log(garageLists);
+
+    if (garageLists) {
+      setGarageList(garageLists.Data);
+    }
+  }, [garageLists]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -52,6 +80,8 @@ const MainListGarasi = () => {
     setCategories,
     searchTerm,
     setSearchTerm,
+    garageList,
+    selectedVehicle,
   };
 
   return isMobile ? (
