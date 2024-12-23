@@ -4,11 +4,12 @@ export const laporkanProduk = create((set, get) => ({
   dataLaporkan: {
     OpsiPelanggaran: { value: "", validation: "" },
     DetailPelanggaran: { value: "", validation: "" },
-    FotoPelanggaran: { value: null, validation: "" },
-    LinkPelanggaran: { value: "" },
+    FotoPelanggaran: { value: [], validation: "" },
+    LinkPelanggaran: { value: "", validation: "" },
     CheckboxPelanggaran: { value: false, validation: "" },
   },
 
+  // Existing setDataLaporkan
   setDataLaporkan: (field, value) => {
     set((state) => ({
       dataLaporkan: {
@@ -21,8 +22,51 @@ export const laporkanProduk = create((set, get) => ({
     }));
   },
 
+  setApiValidationErrors: (errors) => {
+    set((state) => {
+      const newData = { ...state.dataLaporkan };
+
+      // Reset semua validation dulu
+      Object.keys(newData).forEach((key) => {
+        newData[key] = {
+          ...newData[key],
+          validation: "",
+        };
+      });
+
+      // Set validation message sesuai response API
+      errors.forEach((error) => {
+        // Mapping field dari API ke field di state
+        switch (error.path) {
+          case "link":
+            newData.LinkPelanggaran = {
+              ...newData.LinkPelanggaran,
+              validation: error.msg,
+            };
+            break;
+          case "option":
+            newData.OpsiPelanggaran = {
+              ...newData.OpsiPelanggaran,
+              validation: error.msg,
+            };
+            break;
+          case "details":
+            newData.DetailPelanggaran = {
+              ...newData.DetailPelanggaran,
+              validation: error.msg,
+            };
+            break;
+          // Case lainnya sesuai field yang ada
+        }
+      });
+
+      return {
+        dataLaporkan: newData,
+      };
+    });
+  },
+
   validateForm: (toastFunctions, isDesktop = false) => {
-    // Tambah parameter isDesktop
     const { setShowToast, setDataToast } = toastFunctions;
     const { dataLaporkan } = get();
     let isValid = true;
@@ -31,6 +75,8 @@ export const laporkanProduk = create((set, get) => ({
 
     // Validasi semua field
     Object.keys(dataLaporkan).forEach((field) => {
+      console.log(dataLaporkan, field, " kodok")
+      // Skip validation untuk field optional (LinkPelanggaran)
       if (field === "LinkPelanggaran") return;
 
       const currentValue = dataLaporkan[field].value;
@@ -43,18 +89,33 @@ export const laporkanProduk = create((set, get) => ({
       };
 
       // Check empty values
-      if (currentValue === "" || currentValue === null) {
-        validationMessage = `${field
-          .replace(/([A-Z])/g, " $1")
-          .trim()} wajib diisi`;
+      if (field === "OpsiPelanggaran" && !currentValue) {
+        validationMessage = "Opsi Pelanggaran wajib diisi";
+        setDataToast({ type: "error", message: "Field wajib diisi!" });
+        setShowToast(true);
         isValid = false;
       }
 
       // Special validation for DetailPelanggaran
-      if (field === "DetailPelanggaran" && currentValue.length < 30) {
-        validationMessage = "Detail Pelanggaran min. 30 karakter";
-        isValid = false;
+      if (field === "DetailPelanggaran") {
+        if (!currentValue) {
+          validationMessage = "Detail Pelanggaran wajib diisi";
+          setDataToast({ type: "error", message: "Field wajib diisi!" });
+          setShowToast(true);
+          isValid = false;
+        } else if (currentValue.length < 30) {
+          validationMessage = "Detail Pelanggaran min. 30 karakter";
+          isValid = false;
+        }
       }
+
+      if (field === "FotoPelanggaran") {
+        if (!Array.isArray(currentValue) || currentValue.length === 0) {
+          validationMessage = "Foto Bukti Laporan wajib diisi";
+          isValid = false;
+        }
+      }
+
 
       updatedData[field] = {
         ...updatedData[field],
@@ -69,39 +130,6 @@ export const laporkanProduk = create((set, get) => ({
 
     set({ dataLaporkan: updatedData });
 
-    // Desktop: toast hanya untuk checkbox dan success
-    if (isDesktop) {
-      if (!dataLaporkan.CheckboxPelanggaran.value) {
-        setShowToast(true);
-        setDataToast({
-          type: "error",
-          message: "Persetujuan wajib dicentang",
-        });
-      } else if (isValid) {
-        setShowToast(true);
-        setDataToast({
-          type: "success",
-          message: "Berhasil melaporkan produk",
-        });
-      }
-    }
-    // Mobile: toast untuk semua error dan success
-    else {
-      if (!isValid) {
-        setShowToast(true);
-        setDataToast({
-          type: "error",
-          message: firstError,
-        });
-      } else {
-        setShowToast(true);
-        setDataToast({
-          type: "success",
-          message: "Berhasil melaporkan produk",
-        });
-      }
-    }
-
     return isValid;
   },
 
@@ -110,8 +138,8 @@ export const laporkanProduk = create((set, get) => ({
       dataLaporkan: {
         OpsiPelanggaran: { value: "", validation: "" },
         DetailPelanggaran: { value: "", validation: "" },
-        FotoPelanggaran: { value: null, validation: "" },
-        LinkPelanggaran: { value: "" },
+        FotoPelanggaran: { value: [], validation: "" },
+        LinkPelanggaran: { value: "", validation: "" },
         CheckboxPelanggaran: { value: false, validation: "" },
       },
     });

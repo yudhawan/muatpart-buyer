@@ -108,7 +108,7 @@ function ResponsiveProvider({ children }) {
         children
       )}
       {/* <BottomTabNavigation /> */}
-      {isMobile==null?<></>:isMobile?<></>:<FooterContainer />}
+      {isMobile == null ? <></> : isMobile ? <></> : <FooterContainer />}
     </ResponsiveContext.Provider>
   );
 }

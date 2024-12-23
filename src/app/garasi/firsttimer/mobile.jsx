@@ -11,10 +11,21 @@ import { useHeader } from "@/common/ResponsiveContext";
 
 const BottomsheetContent = ({ options, onSelect, label }) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { setShowBottomsheet } = toast();
 
-  const filteredOptions = options.filter((option) =>
-    option.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredOptions = options.filter((option) => {
+    if (typeof option === "object" && option.value) {
+      return option.value.toLowerCase().includes(searchTerm.toLowerCase());
+    } else if (typeof option === "string") {
+      return option.toLowerCase().includes(searchTerm.toLowerCase());
+    }
+    return false;
+  });
+
+  const handleSelect = (value) => {
+    onSelect(value);
+    setShowBottomsheet(false);
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -35,16 +46,15 @@ const BottomsheetContent = ({ options, onSelect, label }) => {
       {/* Options List */}
       <div className="flex-1 overflow-y-auto">
         {filteredOptions.map((option, index) => (
-          <div key={option}>
+          <div key={typeof option === "object" ? option.id : option}>
             <button
-              onClick={() => onSelect(option)}
+              onClick={() =>
+                handleSelect(typeof option === "object" ? option.value : option)
+              }
               className="w-full py-3.5 text-left text-neutral-900 text-sm font-semibold hover:bg-gray-50 focus:outline-none"
             >
-              {option}
+              {typeof option === "object" ? option.value : option}
             </button>
-            {index < filteredOptions.length - 1 && (
-              <div className="border-b border-neutral-400" />
-            )}
           </div>
         ))}
         {filteredOptions.length === 0 && (
@@ -63,6 +73,11 @@ const Mobile = ({
   handleSubmit,
   isSubmitted,
   setIsSubmitted,
+  vehicleOptions,
+  brandOptions,
+  yearOptions,
+  modelOptions,
+  typeOptions,
 }) => {
   const {
     setShowToast,
@@ -120,7 +135,7 @@ const Mobile = ({
         options={config.options}
         onSelect={(value) => {
           handleChange(config.key, value);
-          setShowBottomsheet(false);
+          // setShowBottomsheet(false);
         }}
         label={config.label}
       />
@@ -155,51 +170,36 @@ const Mobile = ({
     {
       key: "vehicle",
       label: "Pilih Kendaraan",
-      options: Object.keys(vehicleData),
-      disabled: false,
+      options: vehicleOptions,
+      col: "full",
       step: 1,
     },
     {
       key: "brand",
       label: "Pilih Brand",
-      options: formState.vehicle.value
-        ? Object.keys(vehicleData[formState.vehicle.value].brands)
-        : [],
-      disabled: !formState.vehicle.value,
+      options: formState.vehicle.id ? brandOptions : [],
+      col: "half",
       step: 2,
     },
     {
       key: "year",
       label: "Pilih Tahun",
-      options: formState.brand.value
-        ? Object.keys(
-            vehicleData[formState.vehicle.value].brands[formState.brand.value]
-              .years
-          )
-        : [],
-      disabled: !formState.brand.value,
+      options: formState.brand.id ? yearOptions : [],
+      col: "half",
       step: 3,
     },
     {
       key: "model",
       label: "Pilih Model",
-      options: formState.year.value
-        ? Object.keys(
-            vehicleData[formState.vehicle.value].brands[formState.brand.value]
-              .years[formState.year.value].models
-          )
-        : [],
-      disabled: !formState.year.value,
+      options: formState.year.value ? modelOptions : [],
+      col: "half",
       step: 4,
     },
     {
       key: "type",
       label: "Pilih Tipe",
-      options: formState.model.value
-        ? vehicleData[formState.vehicle.value].brands[formState.brand.value]
-            .years[formState.year.value].models[formState.model.value].types
-        : [],
-      disabled: !formState.model.value,
+      options: formState.model.value ? typeOptions : [],
+      col: "half",
       step: 5,
     },
   ];

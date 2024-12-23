@@ -29,7 +29,7 @@ function FilterScreenProduct({isToko,onClickLeft,onClickRight,textLeft,textRight
             }}>{getFilterProduct.garage?getFilterProduct.garage:'Jenis Kendaraan saya'}</Button>
         </EachComponent>
         {/* jenis kendaraan */}
-        
+
         <EachComponent label={'Jenis Kendaraan'} labelActionButton={'Reset filter Jenis Kendaraan'} actionButton={()=>{}}>
             <Button onClick={()=>{
                 setScreen('kendaraan')
@@ -76,7 +76,7 @@ function FilterScreenProduct({isToko,onClickLeft,onClickRight,textLeft,textRight
             </div>
         </EachComponent>
         {/* lokasi */}
-        <EachComponent label={'Lokasi'} labelActionButton={'Lihat Semua'} 
+        <EachComponent label={'Lokasi'} labelActionButton={'Lihat Semua'}
         actionButton={()=>{
             setScreen('location')
             setSearch({
@@ -133,7 +133,7 @@ function FilterScreenProduct({isToko,onClickLeft,onClickRight,textLeft,textRight
                 <span onClick={()=>handleInput('lastActiveSeller', 'day')}>
                     <Bubble classname={`border ${getFilterProduct?.['lastActiveSeller']?.some(val=>val==='day')?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Paling lama 1 hari yang lalu</Bubble>
                 </span>
-                
+
             </div>
         </EachComponent>
         {/* Kategori */}
@@ -161,7 +161,7 @@ function FilterScreenProduct({isToko,onClickLeft,onClickRight,textLeft,textRight
                 <span onClick={()=>handleInput('brand', 'Dunlop')}>
                     <Bubble classname={`border ${getFilterProduct?.['brand']?.some(val=>val==='Dunlop')?'!border-primary-700 !text-primary-700 !bg-primary-50': '!border-neutral-200 !bg-neutral-200'} !text-sm !text-neutral-900 !font-medium`} >Dunlop</Bubble>
                 </span>
-                
+
             </div>
         </EachComponent>
         {/* Jenis Penjualan */}
@@ -213,10 +213,10 @@ function FilterScreenProduct({isToko,onClickLeft,onClickRight,textLeft,textRight
                     </Bubble>
                 </span>
             </div>
-        </EachComponent>    
-        
+        </EachComponent>
+
         <ButtonBottomMobile onClickLeft={onClickLeft} onClickRight={onClickRight} textLeft={textLeft?textLeft:'Batal'} textRight={textRight?textRight:'Simpan'} />
-      
+
     </div>
   )
 }

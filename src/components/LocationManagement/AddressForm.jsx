@@ -57,7 +57,12 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
   useEffect(() => {
     if (defaultValue) {
       console.log(defaultValue);
-      setAddress(defaultValue.location.title);
+      setAddress(defaultValue.address);
+
+      setLocation({
+        id: "",
+        title: defaultValue.location.title,
+      });
 
       setCity({
         name: defaultValue.city.name,
@@ -67,7 +72,7 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
         name: defaultValue.province.name,
         id: defaultValue.province.value,
       });
-      const newKecamatanList = defaultValue.listDistricts.map((i) => ({
+      const newKecamatanList = defaultValue?.listDistricts?.map((i) => ({
         value: i.DistrictID,
         name: i.District,
       }));
@@ -76,7 +81,7 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
         name: defaultValue.district.name,
         value: defaultValue.district.value,
       });
-      const newPostalCodeList = defaultValue.listPostalCodes.map((i) => ({
+      const newPostalCodeList = defaultValue?.listPostalCodes?.map((i) => ({
         value: i.ID,
         name: i.PostalCode,
       }));
@@ -154,7 +159,7 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
 
   const { data: districtData, error: districtError } = swrHandler.useSWRHook(
     location.id
-      ? `${process.env.NEXT_PUBLIC_GLOBAL_API}/get_districts_by_token`
+      ? `${process.env.NEXT_PUBLIC_GLOBAL_API}/districts_by_token`
       : null,
     districtFetcher,
     (error) => {
@@ -178,6 +183,7 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
 
   const handleAddressChange = debounce((e) => {
     const value = e.target.value;
+    console.log(value);
     setAddress(value);
   }, 500);
 
@@ -309,14 +315,16 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
   useEffect(() => {
     if (!districtData) return;
 
-    if (districtData.Message.Code === 500) {
-      setCoordinates({
-        lat: districtData.Data.lat,
-        long: districtData.Data.lng,
-      });
-      setIsOpenAddManual(true);
-      return;
-    }
+    console.log(districtData, " COKROO")
+
+    // if (districtData.Message.Code === 500) {
+    //   setCoordinates({
+    //     lat: districtData.Data.lat,
+    //     long: districtData.Data.lng,
+    //   });
+    //   setIsOpenAddManual(true);
+    //   return;
+    // }
 
     setForm(districtData);
 
@@ -365,9 +373,10 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
         <div className="w-2/3 relative" ref={locationRef}>
           <InputSearchLocation
             onClickSearchResult={(val) => {
+              console.log(val, " ccd");
               setLocation({
-                id: val.id,
-                title: val.title,
+                id: val.ID,
+                title: val.Title,
               });
             }}
             errors={errors}
@@ -401,11 +410,11 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
                 value: val[0].value,
               })
             }
-            classname={`${errors.districtID ? "!border-error-500" : ""}`}
+            classname={`${errors?.districtID ? "!border-error-500" : ""}`}
           />
-          {errors.districtID ? (
+          {errors?.districtID ? (
             <span className="font-medium text-error-400 text-xs block mt-2">
-              {errors.districtID}
+              {errors?.districtID}
             </span>
           ) : (
             ""

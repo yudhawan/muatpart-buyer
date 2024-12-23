@@ -1,7 +1,12 @@
 import React from "react";
 import MapContainer from "./MapContainer";
 
-function MiniMap({ onClick, lat = -7.2575, lng = 112.7521 }) {
+function MiniMap({
+  onClick,
+  lat = -7.2575,
+  lng = 112.7521,
+  titleButton = "Atur Pin Lokasi",
+}) {
   return (
     <div className="flex flex-col w-[262px]">
       <MapContainer
@@ -14,9 +19,9 @@ function MiniMap({ onClick, lat = -7.2575, lng = 112.7521 }) {
       />
       <span
         onClick={onClick}
-        className="w-full h-[35px] rounded-b-lg text-white bg-primary-700 grid place-content-center cursor-pointer"
+        className="w-full h-[35px] rounded-b-lg text-white bg-primary-700 grid place-content-center cursor-pointer font-bold text-xs"
       >
-        Atur Pin Lokasi
+        {titleButton}
       </span>
     </div>
   );

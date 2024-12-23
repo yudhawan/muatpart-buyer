@@ -74,15 +74,24 @@ export const Dropdown = ({
     }
   }, [isOpen]);
 
-  const filteredOptions = options?.filter((option) =>
-    option.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+const filteredOptions = options?.filter((option) => {
+  // Jika opsi adalah objek (dari API)
+  if (typeof option === "object" && option.value) {
+    return option.value.toLowerCase().includes(searchTerm.toLowerCase());
+  }
+  // Jika opsi adalah string
+  if (typeof option === "string") {
+    return option.toLowerCase().includes(searchTerm.toLowerCase());
+  }
+  // Kembalikan false jika bukan objek atau string
+  return false;
+});
 
-  const handleSelect = (option) => {
-    onChange(option);
-    setIsOpen(false);
-    setSearchTerm("");
-  };
+const handleSelect = (selectedValue) => {
+  onChange(selectedValue);
+  setIsOpen(false);
+  setSearchTerm("");
+};
 
   const handleDropdownClick = () => {
     // Jika disabled, tidak lakukan apa-apa
@@ -150,15 +159,15 @@ export const Dropdown = ({
           <div className="max-h-[160px] scrollbar-custombadanusaha overflow-y-auto">
             {filteredOptions?.map((option) => (
               <button
-                key={option}
-                className="w-full px-4 py-2 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 sm:text-neutral-600 sm:px-[10px] truncate"
-                onClick={() => handleSelect(option)}
+              key={option.id}
+              className="w-full px-4 py-2 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100 sm:text-neutral-600 sm:px-[10px] truncate"
+              onClick={() => handleSelect(option)}
               >
                 {option}
               </button>
             ))}
             {filteredOptions?.length === 0 && (
-              <div className="px-4 py-2 text-neutral-900 text-sm text-center">
+              <div className="px-4 py-2 text-neutral-900 text-xs text-center">
                 Data Tidak Ditemukan
               </div>
             )}
