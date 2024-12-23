@@ -11,6 +11,10 @@ import ProductGrid from "@/components/ProductsSectionComponent/ProductGrid";
 import CategoriesHandler from "@/libs/CategoriesHandler";
 
 function HomePageWeb({
+  headerImages,
+  bannerImages,
+  promotionImages,
+  joinedSellers,
   vehicleOptions,
   lastSeenProducts,
   mostVisitedProducts,
@@ -110,41 +114,10 @@ function HomePageWeb({
     }
   }, [vehicleOptions]);
 
-  const headerImages = [
-    "https://placehold.co/500x250/red/white.png",
-    "https://placehold.co/500x250/green/white.png",
-    "https://placehold.co/500x250/blue/white.png",
-  ];
-
-  const bannerImages = [
-    "https://placehold.co/1000x250/red/white.png",
-    "https://placehold.co/1000x250/green/white.png",
-    "https://placehold.co/1000x250/blue/white.png",
-  ];
-
-  const promotionImages = [
-    "https://placehold.co/1000x500/red/white.png",
-    "https://placehold.co/1000x500/green/white.png",
-    "https://placehold.co/1000x500/blue/white.png",
-  ];
-
   const handleInputChange = (e) => {
     setVehicle({ ...filter, keyword: e.target.value });
   };
 
-  const joinedSellers = [
-    "https://cdn-icons-png.flaticon.com/512/732/732212.png",
-    "https://cdn-icons-png.flaticon.com/512/145/145807.png",
-    "https://cdn-icons-png.flaticon.com/512/2111/2111370.png",
-    "https://cdn-icons-png.flaticon.com/512/733/733579.png",
-    "https://cdn-icons-png.flaticon.com/512/888/888859.png",
-    "https://cdn-icons-png.flaticon.com/512/732/732200.png",
-    "https://cdn-icons-png.flaticon.com/512/888/888879.png",
-    "https://cdn-icons-png.flaticon.com/512/888/888846.png",
-    "https://cdn-icons-png.flaticon.com/512/888/888853.png",
-    "https://cdn-icons-png.flaticon.com/512/888/888847.png",
-  ];
- 
   return (
     <div>
       {/* <pre>

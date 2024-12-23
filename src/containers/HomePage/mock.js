@@ -841,3 +841,34 @@ const selectedCategory = {
     name: "Personal Care",
   },
 };
+
+export const headerImages = [
+  "https://placehold.co/500x250/red/white.png",
+  "https://placehold.co/500x250/green/white.png",
+  "https://placehold.co/500x250/blue/white.png",
+];
+
+export const bannerImages = [
+  "https://placehold.co/1000x250/red/white.png",
+  "https://placehold.co/1000x250/green/white.png",
+  "https://placehold.co/1000x250/blue/white.png",
+];
+
+export const promotionImages = [
+  "https://placehold.co/1000x500/red/white.png",
+  "https://placehold.co/1000x500/green/white.png",
+  "https://placehold.co/1000x500/blue/white.png",
+];
+
+export const joinedSellers = [
+  "https://cdn-icons-png.flaticon.com/512/732/732212.png",
+  "https://cdn-icons-png.flaticon.com/512/145/145807.png",
+  "https://cdn-icons-png.flaticon.com/512/2111/2111370.png",
+  "https://cdn-icons-png.flaticon.com/512/733/733579.png",
+  "https://cdn-icons-png.flaticon.com/512/888/888859.png",
+  "https://cdn-icons-png.flaticon.com/512/732/732200.png",
+  "https://cdn-icons-png.flaticon.com/512/888/888879.png",
+  "https://cdn-icons-png.flaticon.com/512/888/888846.png",
+  "https://cdn-icons-png.flaticon.com/512/888/888853.png",
+  "https://cdn-icons-png.flaticon.com/512/888/888847.png",
+];

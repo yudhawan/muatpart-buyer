@@ -4,6 +4,12 @@ import React, { useState } from "react";
 import HomePageResponsive from "./HomePageResponsive";
 import HomePageWeb from "./HomePageWeb";
 import SWRHandler from "@/services/useSWRHook";
+import {
+  headerImages,
+  bannerImages,
+  promotionImages,
+  joinedSellers,
+} from "./mock";
 
 function HomePage() {
   const VEHICLE_OPTIONS_ENDPOINT =
@@ -27,7 +33,13 @@ function HomePage() {
   if (typeof isMobile !== "boolean") return <></>; //buat skeleton
   if (isMobile)
     return (
-      <HomePageResponsive lastSeenProducts={mostVisitedProducts?.Data ?? []} />
+      <HomePageResponsive
+        lastSeenProducts={mostVisitedProducts?.Data ?? []}
+        headerImages={headerImages}
+        bannerImages={bannerImages}
+        promotionImages={promotionImages}
+        joinedSellers={joinedSellers}
+      />
     );
   return (
     <HomePageWeb
@@ -35,6 +47,10 @@ function HomePage() {
       lastSeenProducts={mostVisitedProducts?.Data ?? []}
       mostVisitedProducts={mostVisitedProducts?.Data ?? []}
       youMightLike={mostVisitedProducts?.Data ?? []}
+      headerImages={headerImages}
+      bannerImages={bannerImages}
+      promotionImages={promotionImages}
+      joinedSellers={joinedSellers}
     />
   );
 }
