@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Dropdown from "../Dropdown/Dropdown";
 import TextArea from "../TextArea/TextArea";
 import Input from "../Input/Input";
@@ -181,11 +181,17 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
 
   // Start Handlers
 
-  const handleAddressChange = debounce((e) => {
+  const handleDebouncedChangeAddress = useCallback(
+    debounce((value) => {
+      setAddress(value);
+    }, 500),
+    []
+  );
+
+  const handleAddressChange = (e) => {
     const value = e.target.value;
-    console.log(value);
-    setAddress(value);
-  }, 500);
+    handleDebouncedChangeAddress(value);
+  };
 
   const handleLocationChange = debounce((e) => {
     const value = e.target.value;
