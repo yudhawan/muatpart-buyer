@@ -559,7 +559,7 @@ export const DataToko = ({ handleSaveStore, handleSaveCompany }) => {
   const [manajemenLokasi, setManajemenLokasi] = useState();
   const [defaultManajemenLokasi, setDefaultManajemenLokasi] = useState(null);
   const { profileData, errors } = profileSeller();
-  const { updateStoreField } = profileSeller();
+  const { updateStoreField, updateCompanyField } = profileSeller();
 
   useEffect(() => {
     if (!profileData) return;
@@ -585,7 +585,8 @@ export const DataToko = ({ handleSaveStore, handleSaveCompany }) => {
   }, [profileData, isEditStore, isEditCompany]);
 
   useEffect(() => {
-    if (manajemenLokasi) {
+    console.log(manajemenLokasi)
+    if (manajemenLokasi && isEditStore) {
       updateStoreField("address", manajemenLokasi.address);
       updateStoreField("location", manajemenLokasi.location?.title);
       updateStoreField("districtID", manajemenLokasi.district?.value);
@@ -594,6 +595,16 @@ export const DataToko = ({ handleSaveStore, handleSaveCompany }) => {
       updateStoreField("postalCode", manajemenLokasi.postalCode?.value);
       updateStoreField("latitude", manajemenLokasi.coordinates?.lat);
       updateStoreField("longitude", manajemenLokasi.coordinates?.long);
+    }
+    if (manajemenLokasi && isEditCompany) {
+      updateCompanyField("address", manajemenLokasi.address);
+      updateCompanyField("location", manajemenLokasi.location?.title);
+      updateCompanyField("districtID", manajemenLokasi.district?.value);
+      updateCompanyField("cityID", manajemenLokasi.city?.id);
+      updateCompanyField("provinceID", manajemenLokasi.province?.id);
+      updateCompanyField("postalCode", manajemenLokasi.postalCode?.value);
+      updateCompanyField("latitude", manajemenLokasi.coordinates?.lat);
+      updateCompanyField("longitude", manajemenLokasi.coordinates?.long);
     }
   }, [manajemenLokasi]);
 

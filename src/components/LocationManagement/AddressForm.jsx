@@ -159,7 +159,7 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
 
   const { data: districtData, error: districtError } = swrHandler.useSWRHook(
     location.id
-      ? `${process.env.NEXT_PUBLIC_GLOBAL_API}/get_districts_by_token`
+      ? `${process.env.NEXT_PUBLIC_GLOBAL_API}/districts_by_token`
       : null,
     districtFetcher,
     (error) => {
@@ -315,14 +315,16 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
   useEffect(() => {
     if (!districtData) return;
 
-    if (districtData.Message.Code === 500) {
-      setCoordinates({
-        lat: districtData.Data.lat,
-        long: districtData.Data.lng,
-      });
-      setIsOpenAddManual(true);
-      return;
-    }
+    console.log(districtData, " COKROO")
+
+    // if (districtData.Message.Code === 500) {
+    //   setCoordinates({
+    //     lat: districtData.Data.lat,
+    //     long: districtData.Data.lng,
+    //   });
+    //   setIsOpenAddManual(true);
+    //   return;
+    // }
 
     setForm(districtData);
 
