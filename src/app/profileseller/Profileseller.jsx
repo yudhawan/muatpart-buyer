@@ -8,7 +8,7 @@ import SWRHandler from "@/services/useSWRHook";
 import profileSeller from "@/store/profileSeller";
 import { useSWRConfig } from "swr";
 
-const api = process.env.NEXT_PUBLIC_API_FRIDAY;
+const api = process.env.NEXT_PUBLIC_GLOBAL_API;
 
 function Profileseller() {
   const { profileData, setProfileData } = profileSeller();
@@ -18,7 +18,7 @@ function Profileseller() {
 
   // Get initial profile data
   const { data: dataProfile } = useSWRHook(
-    `${api}v1/muatparts/profile`,
+    `${api}/muatparts/profile`,
     null,
     null,
     {
@@ -32,12 +32,12 @@ function Profileseller() {
 
   // Initialize SWR Handlers dengan key yang sesuai format API
   const { trigger: updateStoreTrigger } = useSWRMutateHook(
-    `${api}v1/muatparts/profile/${profileData?.storeInformation?.id}`,
+    `${api}/muatparts/profile/${profileData?.storeInformation?.id}`,
     "PUT"
   );
 
   const { trigger: updateCompanyTrigger } = useSWRMutateHook(
-    `${api}v1/muatparts/profile/company/${profileData?.companyData?.id}`,
+    `${api}/muatparts/profile/company/${profileData?.companyData?.id}`,
     "PUT"
   );
 
@@ -56,10 +56,10 @@ function Profileseller() {
           longitude: data.longitude,
           storeLogo: data.storeLogo,
         },
-        `${api}v1/muatparts/profile/${id}`
+        `${api}/muatparts/profile/${id}`
       );
 
-      mutate(`${api}v1/muatparts/profile`);
+      mutate(`${api}/muatparts/profile`);
     } catch (error) {
       console.error("Save store error:", error);
       throw error;
@@ -80,10 +80,10 @@ function Profileseller() {
           longitude: data.longitude,
           companyLogo: data.companyLogo,
         },
-        `${api}v1/muatparts/profile/company/${id}`
+        `${api}/muatparts/profile/company/${id}`
       ); // URL sebenarnya sebagai parameter kedua
 
-      mutate(`${api}v1/muatparts/profile`);
+      mutate(`${api}/muatparts/profile`);
     } catch (error) {
       console.error("Save company error:", error);
       throw error;

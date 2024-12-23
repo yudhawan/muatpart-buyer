@@ -19,7 +19,7 @@ import SWRHandler from "@/services/useSWRHook";
 import NavSelectedMobile from "@/components/Bottomsheet/NavSelectedMobile";
 import { X } from "lucide-react";
 
-const api = process.env.NEXT_PUBLIC_API_FRIDAY;
+const api = process.env.NEXT_PUBLIC_GLOBAL_API;
 
 export default function Laporkan({
   idProduct = "cade02cd-d60f-4696-ac7e-3943aa",
@@ -241,7 +241,7 @@ export const LaporkanWeb = ({ opsiList, onSubmit }) => {
 
           <DivParticleLaporkan title="Detail Pelanggaran*" hr>
             <TextArea
-              maxLength={1000}  
+              maxLength={1000}
               hasCharCount={false}
               status={`${
                 dataLaporkan.DetailPelanggaran.validation !== "" && "error"

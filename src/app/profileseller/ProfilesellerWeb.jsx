@@ -17,7 +17,7 @@ import MiniMap from "@/containers/MapContainer/MiniMap";
 import MapContainer from "@/containers/MapContainer/MapContainer";
 import ModalComponent from "@/components/Modals/ModalComponent";
 
-const api = process.env.NEXT_PUBLIC_API_FRIDAY;
+const api = process.env.NEXT_PUBLIC_GLOBAL_API;
 
 function ProfilesellerWeb({ handleSaveStore, handleSaveCompany }) {
   return (
@@ -49,7 +49,7 @@ export const ProfileHeaderContent = () => {
   const { useSWRMutateHook } = new SWRHandler();
   const { mutate } = useSWRConfig();
   const { trigger: changeFotoProfil } = useSWRMutateHook(
-    `${api}v1/muatparts/profile/update_avatar_url`,
+    `${api}/muatparts/profile/update_avatar_url`,
     "PUT"
   );
 
@@ -58,7 +58,7 @@ export const ProfileHeaderContent = () => {
       const formData = new URLSearchParams();
       formData.append("file", val);
       await changeFotoProfil(formData.toString());
-      mutate(`${api}v1/muatparts/profile/update_avatar_url`);
+      mutate(`${api}/muatparts/profile/update_avatar_url`);
     } catch (err) {
       console.error("Upload error:", err);
     }
@@ -585,7 +585,7 @@ export const DataToko = ({ handleSaveStore, handleSaveCompany }) => {
   }, [profileData, isEditStore, isEditCompany]);
 
   useEffect(() => {
-    console.log(manajemenLokasi)
+    console.log(manajemenLokasi);
     if (manajemenLokasi && isEditStore) {
       updateStoreField("address", manajemenLokasi.address);
       updateStoreField("location", manajemenLokasi.location?.title);
