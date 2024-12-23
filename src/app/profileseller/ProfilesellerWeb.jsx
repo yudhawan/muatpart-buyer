@@ -337,6 +337,10 @@ const StoreSection = ({
             </>
           ) : type === "map" ? (
             <div className="w-full">
+     {
+     console.log(field?.coordinates, "tes")
+
+     }
               <MiniMap
                 lat={field?.coordinates.lat || -7.250445}
                 lng={field?.coordinates.long || 112.768845}
@@ -413,6 +417,10 @@ const StoreSection = ({
                 <div className="flex justify-between items-center w-full">
                   {field.type === "map" ? (
                     <div className="w-full">
+                      {
+     console.log(field?.coordinates, "tos")
+
+     }
                       <MiniMap
                         lat={field?.coordinates.lat || -7.250445}
                         lng={field?.coordinates.long || 112.768845}
