@@ -52,7 +52,7 @@ function DetailProductPageResponsive({
         appBarType:'compact',
         renderActionButton:<div className='flex gap-2'>
           <span className='flex flex-col z-30 justify-center items-center gap-[2px] select-none cursor-pointer' onClick={()=>console.log('asuuuu')}>
-            <IconComponent classname={'chevron-white'} width={20} height={20} src={'/icons/share.svg'} />
+            <IconComponent classname={'icon-white'} width={20} height={20} src={'/icons/share.svg'} />
             <span className='font-semibold text-neutral-50 text-[10px]'>Bagikan</span>
           </span>
           <span className='flex flex-col z-30 justify-center items-center gap-[2px] select-none cursor-pointer' onClick={()=>console.log('asuuuu')}>
@@ -214,7 +214,7 @@ function DetailProductPageResponsive({
           </div>
           <span className='flex justify-end gap-2 items-center text-primary-700 select-none cursor-pointer text-sm font-medium' onClick={()=>{}}>
             <span>Lihat Selengkapnya</span>
-            <IconComponent classname={'chevron-blue'} src={`/icons/chevron-down.svg`} width={12} height={12} />
+            <IconComponent classname={'icon-blue'} src={`/icons/chevron-down.svg`} width={12} height={12} />
           </span>
           <span className='text-sm font-semibold'>Detail Produk</span>
           <p className='line-clamp-6 font-normal text-sm'>Peralatan asli nomor komponen 142 1022
@@ -225,7 +225,7 @@ Menyeimbangkan aliran udara menuju pengukur aliran udara dan menutup komponen ya
 Menyeimbangkan aliran udara menuju pengukur aliran udara dan menutup komponen yang berdekatan</p>
           <span className='flex justify-end gap-2 items-center text-primary-700 select-none cursor-pointer text-sm font-medium' onClick={()=>{}}>
             <span>Lihat Selengkapnya</span>
-            <IconComponent classname={'chevron-blue'} src={`/icons/chevron-down.svg`} width={12} height={12} />
+            <IconComponent classname={'icon-blue'} src={`/icons/chevron-down.svg`} width={12} height={12} />
           </span>
         </SectionCard>
         <SectionCard>
@@ -291,7 +291,7 @@ Menyeimbangkan aliran udara menuju pengukur aliran udara dan menutup komponen ya
       </div>
       <ButtonBottomMobile classname={'flex gap-[10px] p-4 border-t border-neutral-200'}>
         <span className='p-3 rounded-[20px] border border-primary-700 bg-neutral-50 select-none cursor-pointer h-10 grid place-content-center'>
-            <IconComponent src={'/icons/chat.svg'} width={24} height={24} classname={'chevron-blue'} />
+            <IconComponent src={'/icons/chat.svg'} width={24} height={24} classname={'icon-blue'} />
         </span>
         <span className='p-3 rounded-[20px] border border-primary-700 bg-neutral-50 select-none cursor-pointer h-10 grid place-content-center'>
             <Image alt='ds' src={'/img/cart-add-blue.png'} width={45} height={45} />

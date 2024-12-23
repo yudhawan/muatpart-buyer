@@ -11,6 +11,7 @@ import Button from '@/components/Button/Button'
 import Link from 'next/link'
 import ModalComponent from '@/components/Modals/ModalComponent'
 import ModalPeriode from './screens/ModalPeriode'
+import DetailPesananMobile from '@/containers/DetailPesananMobile/DetailPesananMobile'
 
 const menus=[
   {
@@ -26,25 +27,36 @@ const menus=[
     notif:1
   },
 ]
-function DaftarpesananResponsive({data}) {
+function DaftarpesananResponsive({data,status_pesanan,detailPesanan}) {
   const router=useRouter()
   const [getMenu,setMenu]=useState('Semua')
   const [showPeriode,setShowPeriode]=useState(false)
-  const {
-    appBarType, //pilih salah satu : 'header_title_secondary' || 'header_search_secondary' || 'default_search_navbar_mobile' || 'header_search' || 'header_title'
-    appBar, // muncul ini : {onBack:null,title:'',showBackButton:true,appBarType:'',appBar:null,header:null}
-    renderAppBarMobile, // untuk render komponen header mobile dengan memasukkanya ke useEffect atau by trigger function / closer
-    setAppBar, // tambahkan payload seperti ini setAppBar({onBack:()=>setScreen('namaScreen'),title:'Title header',appBarType:'type'})
-    handleBack, // dipanggil di dalam button di luar header, guna untuk kembali ke screen sebelumnya 
-    clearScreen,// reset appBar
-    setScreen, // set screen
-    screen, // get screen,
-    search, // {placeholder:'muatparts',value:'',type:'text'}
-    setSearch, // tambahkan payload seperti ini {placeholder:'Pencarian',value:'',type:'text'}
-  }=useHeader()
+  const [getStatus,setStatus]=useState(null)
+  const {setAppBar, screen, setSearch,setScreen}=useHeader()
+  function handleClickFromCard(params) {
+    if(params?.button==='right'){
+      // handle right
+      setStatus(params)
+      return
+    }
+    if(params?.button==='left'){
+      // handle left
+      setStatus(params)
+      return
+    }
+    if(params?.action_button==='Lacak Pesanan'){
+      setScreen('lacak_pesanan')
+      setStatus(params)
+      return
+    }
+    if(params?.action_button==='Detail Pesanan'){
+      setScreen('detail_pesanan')
+      setStatus(params)
+      return
+    }
+  }
   useEffect(()=>{
-  },[])
-  useEffect(()=>{
+    if(screen) setAppBar({renderActionButton:null})
     if(!screen){
       setSearch({
         placeholder:'Cari Pesanan'
@@ -63,24 +75,16 @@ function DaftarpesananResponsive({data}) {
         </div>
       })
     }
-    if(screen==='example4'){
+    if(screen==='detail_pesanan'){
       setAppBar({
-        title:'Example 4',
-        appBarType:'header_search_secondary',
-        onBack:()=>setScreen('example3')
-      })
-      setSearch({
-        placeholder:'Pencarian Example 4'
+        title:'Detail Pesanan',
+        appBarType:'header_title',
+        onBack:()=>setScreen('')
       })
     }
   },[screen])
-  if (screen==='example') return (
-    <div className=' flex flex-col'>
-      <p>Example</p>
-      <button className='bg-primary-600' onClick={()=>{setScreen('example2')}}>Go to Example 2</button>
-    </div>
-  )
   
+  if(screen==='detail_pesanan') return <DetailPesananMobile statusPesanan={getStatus} detailPesanan={detailPesanan} />
   // main screen
   return (
     <div className={`${style.main} flex flex-col gap-2 bg-neutral-200`}>
@@ -103,8 +107,8 @@ function DaftarpesananResponsive({data}) {
       }
       </div>
       {
-        (getMenu==='Semua'&&data)&&
-        <CardDaftarPesananMobile/>
+        (getMenu==='Semua'&&data?.length)&&
+        data?.map((val,i)=><CardDaftarPesananMobile key={i} {...val} status_pesanan={status_pesanan} onClick={handleClickFromCard} />)
       }
       {
         !data&&<div className={style.notFoundContainer+' w-full h-full flex flex-col gap-3 px-4 justify-center items-center'}>

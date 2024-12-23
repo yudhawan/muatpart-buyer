@@ -653,7 +653,7 @@ function HeaderContainerWeb({ renderAppBar }) {
                     Kategori
                   </p>
                   <IconComponent
-                    classname={"chevron-white"}
+                    classname={"icon-white"}
                     src={"/icons/chevron-down.svg"}
                   />
                 </div>
@@ -662,7 +662,7 @@ function HeaderContainerWeb({ renderAppBar }) {
                   onClick={() => setShowLocation(!showLocation)}
                 >
                   <IconComponent
-                    classname={"chevron-white"}
+                    classname={"icon-white"}
                     src={"/icons/lokasi.svg"}
                     width={24}
                   />
@@ -670,7 +670,7 @@ function HeaderContainerWeb({ renderAppBar }) {
                     Dikirim ke: Surabaya
                   </p>
                   <IconComponent
-                    classname={"chevron-white"}
+                    classname={"icon-white"}
                     src={"/icons/chevron-down.svg"}
                   />
                 </div>

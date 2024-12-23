@@ -1,0 +1,49 @@
+{
+  "Message": { "Code": 200, "Text": "Success" },
+  "Data": {
+    "nomorInvoice": "INV/2024/012345789",
+    "metodePembayaran": "BCA VIRTUAL ACCOUNT",
+    "nomorVA": "8072140884022",
+    "totalTagihan": 12035000,
+    "batasPembayaran": "2024-01-24 14:46 WIB",
+    "biayaAplikasi": 1000,
+    "detailToko": [
+      {
+        "namaToko": "Priority Tire",
+        "alamat": "Kota Tangerang",
+        "kurir": "JNE",
+        "nomorInvoice": "INV/2024/012345789",
+        "alamatPengiriman": {
+          "namaGudang": "Gudang Bumi Cipta Karya",
+          "pic": "Joko (0813-9860-0000)",
+          "alamatLengkap": "Jl. Pahlawan No.20, Kota Surabaya, Jawa Timur 61665",
+          "catatan": "Gudang Bumi Cipta Karya"
+        },
+        "detailProduk": [
+          {
+            "gambar": "gajah_tunggal.jpg",
+            "nama": "Gajah Tunggal 1000X20 16PR Miller RFD Ban Truk",
+            "keterangan": "Mulai dari: Des 20-24",
+            "jumlah": 3,
+            "harga": 1000000000,
+            "catatan": "tolong dipacking dengan benar"
+          },
+          {
+            "gambar": "gajah_tunggal.jpg",
+            "nama": "Gajah Tunggal 1000X20 16PR Miller RFD Ban",
+            "keterangan": "Mulai dari: Des 20-24",
+            "jumlah": 3,
+            "harga": 1000000,
+            "catatan": "tolong dipacking dengan benar"
+          }
+        ],
+        "summaryBiaya": {
+          "subTotal": 6074000,
+          "totalHarga": 6000000,
+          "biayaPengiriman": 60000,
+          "beratTotal": 4
+        }
+      }
+    ]
+  }
+}

@@ -350,7 +350,7 @@ const DeskripsiProduk=({desc,showDescription,setShowDescription})=>{
                 </p>
                 <span className='flex gap-2 items-center text-primary-700 select-none cursor-pointer' onClick={()=>setShowDescription(!showDescription)}>
                     <span>Lihat {showDescription?'Lebih Sedikit':'Selengkapnya'}</span>
-                    <IconComponent classname={'chevron-blue'} src={`${showDescription?'/icons/chevron-up.svg':'/icons/chevron-down.svg'}`} width={12} height={12} />
+                    <IconComponent classname={'icon-blue'} src={`${showDescription?'/icons/chevron-up.svg':'/icons/chevron-down.svg'}`} width={12} height={12} />
                 </span>
             </div>
         </CardDetailProduct>

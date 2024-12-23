@@ -165,14 +165,19 @@ input::-webkit-inner-spin-button {
   font-weight: 700;
 }
 
-.chevron-white {
+.icon-white {
   path {
     stroke: var(--neutral-50);
   }
 }
-.chevron-blue {
+.icon-blue {
   path {
     stroke: var(--primary-700);
+  }
+}
+.icon-error-400 {
+  path {
+    stroke: var(--error-400);
   }
 }
 .input-error {
