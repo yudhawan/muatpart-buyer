@@ -157,7 +157,7 @@ function HomePageWeb({
 
             <div className="grid grid-flow-row-dense grid-cols-4 grid-rows-3 gap-3">
               <Dropdown
-                defaultValue={filter.vehicle}
+                defaultValue={[filter.vehicle]}
                 options={options.vehicle}
                 placeholder="Pilih Jenis Kendaraan"
                 classname="!w-full col-span-4"
@@ -174,7 +174,7 @@ function HomePageWeb({
                 onSelected={(val) => setVehicle({ ...filter, vehicle: val[0] })}
               />
               <Dropdown
-                defaultValue={filter.brand}
+                defaultValue={[filter.brand]}
                 options={options.brand}
                 placeholder="Pilih Brand"
                 classname="!w-full col-span-2"
@@ -191,7 +191,7 @@ function HomePageWeb({
                 onSelected={(val) => setVehicle({ ...filter, brand: val[0] })}
               />
               <Dropdown
-                defaultValue={filter.year}
+                defaultValue={[filter.year]}
                 options={options.year}
                 placeholder="Pilih Tahun"
                 classname="!w-full col-span-2"
@@ -208,7 +208,7 @@ function HomePageWeb({
                 onSelected={(val) => setVehicle({ ...filter, year: val[0] })}
               />
               <Dropdown
-                defaultValue={filter.model}
+                defaultValue={[filter.model]}
                 options={options.model}
                 placeholder="Pilih Model"
                 classname="!w-full col-span-2"
@@ -225,7 +225,7 @@ function HomePageWeb({
                 onSelected={(val) => setVehicle({ ...filter, model: val[0] })}
               />
               <Dropdown
-                defaultValue={filter.type}
+                defaultValue={[filter.type]}
                 options={options.type}
                 placeholder="Pilih Tipe"
                 classname="!w-full col-span-2"
@@ -283,6 +283,7 @@ function HomePageWeb({
       <ProductGrid
         totalProducts={Array(42).fill(mostVisitedProducts).flat().slice(0, 42)}
         title="Produk Yang Banyak Dikunjungi"
+        loading={false}
       />
 
       <ProductGrid

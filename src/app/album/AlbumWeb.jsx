@@ -158,7 +158,9 @@ function AlbumCard({ title, itemCount, images }) {
 
   return (
     <div className="flex flex-col self-stretch my-auto">
-      <ImageGrid images={images} />
+      <div className="cursor-pointer">
+        <ImageGrid images={images} />
+      </div>
       <div className="flex flex-col mt-3 w-full leading-tight">
         <div className="flex justify-between text-base ">
           <div className="font-bold text-black">{title}</div>

@@ -680,7 +680,7 @@ const InputSearchLocation = ({
                 onSearchValue
                 placeholder="Pilih Kode Pos"
                 searchPlaceholder="Cari Kode Pos"
-                defaultValue={postalCode}
+                defaultValue={[postalCode]}
                 onSelected={(val) =>
                   setPostalCode({
                     name: val[0].name,

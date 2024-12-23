@@ -56,7 +56,6 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
 
   useEffect(() => {
     if (defaultValue) {
-      console.log(defaultValue);
       setAddress(defaultValue.address);
 
       setLocation({
@@ -98,86 +97,6 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
   }, [defaultValue]);
 
   // End State Management
-
-  // Start Form Data
-
-  const autocompleteFormData = new FormData();
-  autocompleteFormData.append("phrase", location.title || address);
-  autocompleteFormData.append("dataType", "json");
-
-  const districtFormData = new FormData();
-  districtFormData.append("place_id", location.id);
-  // Start Form Data
-
-  const latLongFormData = new FormData();
-  latLongFormData.append("Lat", coordinates.lat);
-  latLongFormData.append("Long", coordinates.long);
-
-  // End Form Data
-
-  // Start Fetchers
-
-  const autoCompleteFetcher = (url) => {
-    return fetch(url, {
-      method: "POST",
-      body: autocompleteFormData,
-    }).then((res) => res.json());
-  };
-
-  const districtFetcher = (url) => {
-    return fetch(url, {
-      method: "POST",
-      body: districtFormData,
-    }).then((res) => res.json());
-  };
-
-  const latLongFetcher = (url) => {
-    return fetch(url, {
-      method: "POST",
-      body: latLongFormData,
-    }).then((res) => res.json());
-  };
-
-  // End Fetchers
-
-  // Start SWR Hooks
-
-  const { data: autocompleteData, error: autocompleteError } =
-    swrHandler.useSWRHook(
-      location?.title?.length > 2 || address?.length > 2
-        ? `${process.env.NEXT_PUBLIC_GLOBAL_API}/get_autocomplete_street`
-        : null,
-      autoCompleteFetcher,
-      (error) => {
-        // console.error("Autocomplete error:", error);
-      }
-    );
-
-  const searchResults = Array.isArray(autocompleteData)
-    ? autocompleteData.slice(0, 3)
-    : [];
-
-  const { data: districtData, error: districtError } = swrHandler.useSWRHook(
-    location.id
-      ? `${process.env.NEXT_PUBLIC_GLOBAL_API}/districts_by_token`
-      : null,
-    districtFetcher,
-    (error) => {
-      // console.error("District fetch error:", error);
-    }
-  );
-
-  const { data: latLongData, error: latLongError } = swrHandler.useSWRHook(
-    coordinates.lat && coordinates.long
-      ? `${process.env.NEXT_PUBLIC_GLOBAL_API}/get_information_location_by_lat_long`
-      : null,
-    latLongFetcher,
-    (error) => {
-      // console.error("Lat long error:", error);
-    }
-  );
-
-  // End SWR Hooks
 
   // Start Handlers
 
@@ -234,8 +153,6 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
   };
 
   const handleAutoFillForm = (val) => {
-    console.log("Auto Fill Form", val);
-
     setDistrict({
       name: val.DistrictName,
       value: val.DistrictID,
@@ -258,8 +175,6 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
   // End Handlers
 
   const setForm = (val) => {
-    console.log("Set Form", val);
-
     const newDistrict = {
       name: val?.Data?.Districts[0].District,
       value: val?.Data?.Districts[0].DistrictID,
@@ -318,43 +233,6 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
     });
   };
 
-  useEffect(() => {
-    if (!districtData) return;
-
-    console.log(districtData, " COKROO");
-
-    // if (districtData.Message.Code === 500) {
-    //   setCoordinates({
-    //     lat: districtData.Data.lat,
-    //     long: districtData.Data.lng,
-    //   });
-    //   setIsOpenAddManual(true);
-    //   return;
-    // }
-
-    setForm(districtData);
-
-    // Prepare all the new values first
-  }, [districtData, address, location]); // Add other dependencies if needed
-
-  useEffect(() => {
-    if (latLongData) {
-      // Handle the lat long data here
-      if (latLongData?.Message?.Code === 200) {
-        // Additional logic here
-      }
-    }
-  }, [latLongData]);
-  useEffect(() => {
-    if (latLongData) {
-      console.log("Lat Long Data", latLongData);
-      // Handle the lat long data here
-      // if (latLongData.Message.Code === 200) {
-      //   // Additional logic here
-      // }
-    }
-  }, [latLongData]);
-
   return (
     <div className="space-y-4 my-4 mx-12 text-xs">
       <div className="flex items-baseline">
@@ -379,7 +257,6 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
         <div className="w-2/3 relative" ref={locationRef}>
           <InputSearchLocation
             onClickSearchResult={(val) => {
-              console.log(val, " ccd");
               setLocation({
                 id: val.ID,
                 title: val.Title,
@@ -389,7 +266,6 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
             onSelectLocation={(val) => {
               console.log(val, "hello");
             }}
-            searchResults={searchResults?.slice(0, 3)}
             changeEvent={handleLocationChange}
             locationRef={locationRef}
             addressValue={address}
