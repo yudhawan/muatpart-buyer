@@ -70,7 +70,7 @@ function HomePageResponsive({lastSeenProducts}) {
       {/* list products */}
       <section className={`h-fit ${style.listProducts} p-4`}>
         {
-          lastSeenProducts.products.map(val=>{
+          lastSeenProducts?.products?.map(val=>{
             return <ProductComponent key={val.id} {...val} />
           })
         }
