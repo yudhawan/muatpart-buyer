@@ -458,6 +458,10 @@ const InputSearchLocation = ({
         value={locationTes}
         changeEvent={handleInputChange}
         focusEvent={handleInputFocus}
+        status={errors.location ? "error" : ""}
+        supportiveText={{
+          title: errors.location || "",
+        }}
       />
 
       <div className="absolute w-full flex">

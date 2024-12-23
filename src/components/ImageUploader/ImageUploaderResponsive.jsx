@@ -10,7 +10,6 @@ import closeImage from "./assets/closeGrey.svg";
 import CropperImage from "../Cropper/Cropper";
 import IconComponent from "../IconComponent/IconComponent";
 import toast from "@/store/toast";
-import Bottomsheet from "../Bottomsheet/Bottomsheet";
 
 export default function ImageUploaderResponsive({
   className,
@@ -25,11 +24,14 @@ export default function ImageUploaderResponsive({
   onUpload = () => {}, //function that return image of uploaded image
   onError = () => {}, //function that return error when uploading image,
   value = null,
+  previewTitle
 }) {
-  const { setShowBottomsheet } = toast();
-  const imageRef = useRef(null);
+  const { setShowBottomsheet, setTitleBottomsheet, setDataBottomsheet } = toast();
+  const cameraRef = useRef(null);
+  const fileRef = useRef(null);
   const [image, setImage] = useState(null); //set image source for cropper
   const [isOpen, setIsOpen] = useState(false); //open cropper modal
+  const [isShowPreview, setIsShowPreview] = useState(false) // open preview setelah crop
   const [cropData, setCropData] = useState(null); //get crop result
   const base64Image = value || cropData;
 
@@ -54,6 +56,7 @@ export default function ImageUploaderResponsive({
         }
         reader.readAsDataURL(files[0]);
         setIsOpen(true);
+        setIsShowPreview(false)
         onError(false);
       }
     }
@@ -65,43 +68,64 @@ export default function ImageUploaderResponsive({
       getImage(value);
       onUpload(value);
       onError(false);
-      imageRef.current.value = null;
+      cameraRef.current.value = null
+      fileRef.current.value = null;
     }
   };
 
   const clearInput = (value) => {
     if (value) {
-      imageRef.current.value = null;
+      cameraRef.current.value = null
+      fileRef.current.value = null;
       setImage(null);
     }
   };
 
   const removeImage = (e) => {
-    imageRef.current.value = null;
+    cameraRef.current.value = null
+    fileRef.current.value = null;
     setImage(null);
     setCropData(null);
     getImage(null);
     e.stopPropagation();
   };
 
+  const handleOpenFileUploadBottomsheet = () => {
+    console.log("test1")
+    setShowBottomsheet(true)
+    setTitleBottomsheet(" -")
+    setDataBottomsheet(
+      <div className="flex justify-around">
+        {uploadOptions.map((option, key) => (
+          <div className="flex flex-col gap-y-4 items-center" key={key}>
+            <div className="p-5 bg-primary-700 cursor-pointer rounded-[50px] size-16" onClick={option.onClick}>
+              <IconComponent
+                src={option.src}
+                size="medium"
+              />
+            </div>
+            <span className="font-semibold text-[16px] leading-[19.2px]">{option.title}</span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  const uploadOptions = [
+    {
+      src: "/icons/camera.svg",
+      title: "Ambil Foto",
+      onClick: () => cameraRef.current.click()
+    },
+    {
+      src: "/icons/Upload.svg",
+      title: "Unggah File",
+      onClick: () => fileRef.current.click()
+    },
+  ]
+
   return (
     <>
-      <Bottomsheet label="">
-        <div className="flex flex-col items-center gap-y-4 pb-[9px]">
-          <div className="p-5 bg-primary-700 rounded-[50px] cursor-pointer" onClick={(e) => {
-            // e.stopPropagation()
-            imageRef.current.click()
-          }}>
-            <Image
-              src="/icon/uploadImage.svg"
-              width={24}
-              height={24}
-              alt="icon-3dots-product"
-            />
-          </div>
-          <span className="text-[16px] leading-[19.2px] font-semibold">Upload File</span>
-        </div>
-      </Bottomsheet>
       <div
         className={`${
           error ? styles.ImageUploaderError : styles.ImageUploader
@@ -113,13 +137,20 @@ export default function ImageUploaderResponsive({
             ? { backgroundImage: `url(${base64Image})` }
             : { backgroundImage: `none` }
         }
-        onClick={() => setShowBottomsheet()}
+        onClick={handleOpenFileUploadBottomsheet}
       >
         <input
+          ref={cameraRef}
           type="file"
-          onChange={getFile}
-          ref={imageRef}
           className="hidden"
+          onChange={getFile}
+          capture
+        />
+        <input
+          ref={fileRef}
+          type="file"
+          className="hidden"
+          onChange={getFile}
         />
         {!error && !base64Image && (
           <>
@@ -159,6 +190,10 @@ export default function ImageUploaderResponsive({
         onClose={clearInput}
         required={true}
         isCircle={isCircle}
+        previewTitle={previewTitle}
+        uploadOptions={uploadOptions}
+        isShowPreview={isShowPreview}
+        setIsShowPreview={setIsShowPreview}
       />
     </>
   );

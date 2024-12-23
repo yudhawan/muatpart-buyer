@@ -77,7 +77,7 @@ const Bottomsheet = ({
   return (
     <>
       {showBottomsheet && (
-        <div className="fixed inset-0 z-50">
+        <div className="fixed inset-0 z-[100]">
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/50 transition-opacity duration-300"

@@ -10,6 +10,9 @@ import { Dropdown } from "@/app/garasi/page";
 import SWRHandler from "@/services/useSWRHook";
 import { DivParticleRegister } from "./InformasiTokoAkun";
 import ImageUploaderRegisterResponsive from "@/components/ImageUploader/ImageUploaderRegisterResponsive";
+import ImageUploaderResponsive from "@/components/ImageUploader/ImageUploaderResponsive";
+import Bottomsheet from "@/components/Bottomsheet/Bottomsheet";
+import toast from "@/store/toast";
 
 const api = process.env.NEXT_PUBLIC_API_HASYIM;
 
@@ -19,6 +22,7 @@ const InformasiTokoAkunResponsive = () => {
   const [defaultManajemenLokasi, setDefaultManajemenLokasi] = useState(null);
   const { formData, errors, handleInputChange } = registerForm();
   const { useSWRHook } = new SWRHandler();
+  const { dataBottomsheet } = toast();
 
   // API Calls
   const { data: dataBusinessEntity } = useSWRHook(api + "v1/business_entity");
@@ -50,7 +54,7 @@ const InformasiTokoAkunResponsive = () => {
       handleInputChange("longitude", manajemenLokasi.coordinates?.long);
     }
   }, [manajemenLokasi]);
-  
+
   useEffect(() => {
     if (defaultManajemenLokasi) {
       handleInputChange("address", defaultManajemenLokasi.address);
@@ -117,6 +121,7 @@ const InformasiTokoAkunResponsive = () => {
 
   return (
     <div className="pt-8 px-4 pb-24 bg-white min-h-screen">
+      {/* <Bottomsheet>{dataBottomsheet}</Bottomsheet> */}
       <h1 className="text-sm font-semibold text-neutral-900 mb-5">
         Informasi Toko
       </h1>
@@ -207,6 +212,16 @@ const InformasiTokoAkunResponsive = () => {
           <ImageUploaderRegisterResponsive
             value={(e) => handleInputChange("logo", e)}
             defaultValue={formData[0].logo}
+          />
+          <ImageUploaderResponsive
+            className="!rounded-[4px] !size-[40px]"
+            getImage={(e) => console.log(e)}
+            maxSize={10000}
+            uploadText=""
+            isCircle={true}
+            onUpload={() => {}}
+            onError={() => {}}
+            error={false}
           />
         </DivParticleRegister>
         {/* Location Management */}
