@@ -13,20 +13,25 @@ import Bubble from "@/components/Bubble/Bubble";
 import { authZustand } from "@/store/auth/authZustand";
 import Button from "@/components/Button/Button";
 import { categoriesZustand } from "@/store/products/categoriesZustand";
+import { userZustand } from "@/store/auth/userZustand";
+import CategoryNested from "./CategoryNested";
 
 function HeaderContainerWeb({ renderAppBar }) {
   const headerRef = useRef(null);
   const inputRef = useRef(null);
   const [getProfile, setProfile] = useState(ProfileHover);
   const [showCategory, setShowCategory] = useState(false);
+  const [showAllCategory, setShowAllCategory] = useState(false);
   const [showTips, setShowTips] = useState(false);
   const [showLocation, setShowLocation] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [showListLocation, setShowListLocation] = useState(false);
+  const [showCamera, setShowCamera] = useState(false);
   const [getCategory, setCategory] = useState();
   const { setHeaderHeight } = headerProps();
-  const { categories } = categoriesZustand();
-  const { token } = authZustand();
+  const {categories}=categoriesZustand()
+  const {token} = authZustand()
+  const user=userZustand()
   useEffect(() => {
     if (getProfile.length) {
       const newProfileUpdate = getProfile.map((val) => {
@@ -184,139 +189,88 @@ function HeaderContainerWeb({ renderAppBar }) {
         }}
       >
         <div className="py-6 px-4 flex flex-col gap-6">
-          {token ? (
-            <h1 className="font-bold text-base text-neutral-900">
-              Pilih Alamat Tujuan
-            </h1>
-          ) : (
-            <h1 className="font-bold text-base text-neutral-900">
-              Ke mana pesanan mau dikirim?
-            </h1>
-          )}
-          {token ? (
-            <div className="flex flex-col gap-4">
-              <Input
-                placeholder="Cari nama alamat yang disimpan"
-                focusEvent={() => setShowListLocation(true)}
-                icon={{ left: "icons/search.svg" }}
-              />
-              <ul className="flex flex-col list-none gap-2">
-                <li>
-                  <div className="bg-primary-50 p-3 flex flex-col gap-4">
-                    <div className="flex justify-between items-center">
-                      <span className="flex items-center gap-2">
-                        <span className="text-xs text-neutral-900 font-bold">
-                          Gudang Bumi Cipta Karya
-                        </span>
-                        <span className="rounded p-1 bg-primary-700 text-neutral-50 text-xs font-semibold">
-                          Utama
-                        </span>
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-xs text-primary-700">
-                          Ubah
-                        </span>
-                        <IconComponent src={"/icons/pencil-blue.svg"} />
-                      </div>
-                    </div>
-                    <div className="flex justify-between h-auto relative">
-                      <div className="flex flex-col gap-3 w-[60%]">
-                        <span className="font-medium text-[10px] text-neutral-900">
-                          Joko (0811-2312-3123)
-                        </span>
-                        <span className="font-medium text-[10px] text-neutral-900">
-                          Jl. Pahlawan no. 18, Kota Kediri, Jawa Timur, 61665
-                        </span>
-                        <span className="font-medium text-[10px] text-neutral-900">
-                          Detail Alamat : Gudang Bumi Cipta Jaya
-                        </span>
-                      </div>
-                      <Button Class="absolute right-0 bottom-0" disabled>
-                        Terpilih
-                      </Button>
+          {token?<h1 className="font-bold text-base text-neutral-900">Pilih Alamat Tujuan</h1>:<h1 className="font-bold text-base text-neutral-900">Ke mana pesanan mau dikirim?</h1>}
+          {token?
+          <div className="flex flex-col gap-4">
+            <Input placeholder="Cari nama alamat yang disimpan" focusEvent={()=>setShowListLocation(true)} icon={{left:'icons/search.svg'}} />
+            <ul className="flex flex-col list-none gap-2">
+              <li>
+                <div className="bg-primary-50 p-3 flex flex-col gap-4">
+                  <div className="flex justify-between items-center">
+                    <span className="flex items-center gap-2">
+                      <span className="text-xs text-neutral-900 font-bold">Gudang Bumi Cipta Karya</span>
+                      <span className="rounded p-1 bg-primary-700 text-neutral-50 text-xs font-semibold">Utama</span>
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium text-xs text-primary-700">Ubah</span>
+                      <IconComponent src={'/icons/pencil-blue.svg'} />
                     </div>
                   </div>
-                </li>
-              </ul>
-            </div>
-          ) : (
-            <>
-              <div className="flex flex-col gap-3">
-                <p className="text-xs font-medium text-neutral-900">
-                  Masukkan alamat/kelurahan/kota pengiriman kamu
-                </p>
-                <div className="relative">
-                  <Input
-                    placeholder="Cari Lokasi Kamu"
-                    focusEvent={() => setShowListLocation(true)}
-                    icon={{ left: "icons/search.svg" }}
-                  />
-                  {showListLocation && (
-                    <ul className="absolute top-9 left-0 list-none bg-neutral-50 rounded-md shadow-xl w-full py-2 px-[10px] flex flex-col gap-4 border border-neutral-300">
-                      <li>
-                        <div className="flex items-center justify-between">
-                          <div
-                            className="flex items-center gap-1 cursor-pointer text-neutral-900 font-medium text-xs"
-                            onClick={() => {
-                              setShowListLocation(false);
-                            }}
-                          >
-                            <IconComponent src={"/icons/marker-outline.svg"} />
-                            <span className="w-full line-clamp-1 cursor-pointer">
-                              Lokasi belum integrasi
-                            </span>
-                          </div>
-                          <span
-                            className="cursor-pointer"
-                            onClick={() => {
-                              setShowListLocation(false);
-                            }}
-                          >
-                            <IconComponent
-                              src={"/icons/bookmark-outline.svg"}
-                            />
-                          </span>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="flex items-center justify-between">
-                          <div
-                            className="flex items-center gap-1 text-neutral-900 font-medium text-xs"
-                            onClick={() => {
-                              setShowListLocation(false);
-                            }}
-                          >
-                            <IconComponent src={"/icons/marker-outline.svg"} />
-                            <span className="w-full line-clamp-1">
-                              Lokasi belum integrasi
-                            </span>
-                          </div>
-                          <span
-                            onClick={() => {
-                              setShowListLocation(false);
-                            }}
-                          >
-                            <IconComponent
-                              src={"/icons/bookmark-outline.svg"}
-                            />
-                          </span>
-                        </div>
-                      </li>
-                    </ul>
-                  )}
+                  <div className="flex justify-between h-auto relative">
+                    <div className="flex flex-col gap-3 w-[60%]">
+                      <span className="font-medium text-[10px] text-neutral-900">Joko (0811-2312-3123)</span>
+                      <span className="font-medium text-[10px] text-neutral-900">Jl. Pahlawan no. 18, Kota Kediri, Jawa Timur, 61665</span>
+                      <span className="font-medium text-[10px] text-neutral-900">Detail Alamat : Gudang Bumi Cipta Jaya</span>
+                    </div>
+                    <Button Class="absolute right-0 bottom-0" disabled>Terpilih</Button>
+                  </div>
                 </div>
-              </div>
-              <span className="w-full gap-3 flex item-center justify-between">
-                <span className="bg-neutral-400 w-full h-[1px] self-center"></span>
-                <span className="text-neutral-400 text-xs">atau</span>
-                <span className="bg-neutral-400 w-full h-[1px] self-center"></span>
-              </span>
-              <span className="text-xs font-medium text-neutral-900">
-                <span className="text-primary-700">Masuk</span> untuk melihat
-                alamat yang telah kamu simpan
-              </span>
-            </>
-          )}
+              </li>
+            </ul>
+          </div>
+          :<><div className="flex flex-col gap-3">
+            <p className="text-xs font-medium text-neutral-900">Masukkan alamat/kelurahan/kota pengiriman kamu</p>
+            <div className="relative">
+              <Input placeholder="Cari Lokasi Kamu" focusEvent={()=>setShowListLocation(true)} icon={{left:'icons/search.svg'}} />
+              {showListLocation&&<ul className="absolute top-9 left-0 list-none bg-neutral-50 rounded-md shadow-xl w-full py-2 px-[10px] flex flex-col gap-4 border border-neutral-300">
+                <li>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1 cursor-pointer text-neutral-900 font-medium text-xs" onClick={()=>{
+                      setShowListLocation(false)
+                    }}>
+                      <IconComponent src={"/icons/marker-outline.svg"} />
+                      <span className="w-full line-clamp-1 cursor-pointer">Lokasi belum integrasi</span>
+                    </div>
+                    <span className="cursor-pointer" onClick={()=>{
+                      setShowListLocation(false)
+                    }}>
+                      <IconComponent src={"/icons/bookmark-outline.svg"} />
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1 text-neutral-900 font-medium text-xs" onClick={()=>{
+                      setShowListLocation(false)
+                    }}>
+                      <IconComponent src={"/icons/marker-outline.svg"} />
+                      <span className="w-full line-clamp-1">Lokasi belum integrasi</span>
+                    </div>
+                    <span onClick={()=>{
+                      setShowListLocation(false)
+                    }}>
+                      <IconComponent src={"/icons/bookmark-outline.svg"} />
+                    </span>
+                  </div>
+                </li>
+              </ul>}
+            </div>
+          </div>
+          <span className='w-full gap-3 flex item-center justify-between'>
+              <span className='bg-neutral-400 w-full h-[1px] self-center'></span>
+              <span className='text-neutral-400 text-xs'>atau</span>
+              <span className='bg-neutral-400 w-full h-[1px] self-center'></span>
+          </span>
+          <span className="text-xs font-medium text-neutral-900"><span className="text-primary-700">Masuk</span> untuk melihat alamat yang telah kamu simpan</span></>}
+        </div>
+      </ModalComponent>
+      <ModalComponent isOpen={showCamera} setClose={()=>setShowCamera(false)} hideHeader >
+        <div className="flex flex-col gap-3 justify-start items-center text-neutral-900 py-[30px] px-[22px]">
+          <span className="bold-base">Pencarian Gambar</span>
+          <span className="medium-xs">Temukan Produk Impianmu dengan Mudah! 
+          Hanya Foto & Cari di Aplikasi muatmuat</span>
+          <Image width={200} height={200} src={'/img/barcode.png'} alt="barcode" />
+          <Button Class="semi-xs h-7">Unduh Aplikasi muatmuat</Button>
         </div>
       </ModalComponent>
       {
@@ -384,16 +338,16 @@ function HeaderContainerWeb({ renderAppBar }) {
                       Seller/Partenr Center
                     </p>
                   </Link>
-                  <div className="flex items-center gap-3 cursor-pointer group relative">
+                  {user?.id?<div className="flex items-center gap-3 cursor-pointer group relative">
                     <Image
-                      src={"/img/chopper.png"}
+                      src={`${user?.picture??'/img/chopper.png'}`}
                       width={20}
                       height={20}
                       alt="profil"
                       className="rounded-full"
                     />
                     <span className="text-neutral-50 font-medium  text-xs w-[104px] line-clamp-1 mt-[1px]">
-                      Ruben Coda S.I Terrrrr
+                      {user?.name}
                     </span>
                     <div className="hidden absolute group-hover:flex top-2 right-0 pt-4">
                       <div className="bg-white z-[91] w-[327px] p-4 cursor-default h-[192px] flex rounded-lg p4 divide-x-2 divide-neutral-500 shadow-xl">
@@ -459,7 +413,12 @@ function HeaderContainerWeb({ renderAppBar }) {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div>:
+                  <div className="flex gap-[1px] text-neutral-50 font-medium text-xs pt-[1px]">
+                    <Link href={'/'}>Daftar</Link>
+                    /
+                    <Link href={'/'}>Login</Link>
+                  </div>}
                 </div>
               </div>
             </div>
@@ -476,9 +435,16 @@ function HeaderContainerWeb({ renderAppBar }) {
                     className="h-8"
                   />
                 </Link>
+                <span className="h-8 p-3 medium-xs text-neutral-900 flex justify-between w-[164px] bg-neutral-50 border border-neutral-400 rounded-md items-center cursor-pointer select-none" onClick={()=>setShowAllCategory(true)}>
+                  Semua Kategori
+                  {showAllCategory?<IconComponent loader={false} src={'/icons/chevron-up.svg'} />:<IconComponent loader={false} src={'/icons/chevron-down.svg'} />}
+                </span>
+                <CategoryNested isOpen={showAllCategory} setClose={()=>setShowAllCategory(false)} />
+                {/* <div></div>
                 <div></div>
-                <div></div>
-                <Dropdown classname={"!w-[164px] relative"}>
+                <Dropdown
+                  classname={"!w-[164px] relative"}
+                >
                   <ul className="p-4 flex flex-col gap-3 text-neutral-900 font-medium text-xs">
                     {categories?.map((val) => (
                       <li key={val.id}>{val.value}</li>
@@ -489,7 +455,7 @@ function HeaderContainerWeb({ renderAppBar }) {
                       ass
                     </div>
                   }
-                </Dropdown>
+                </Dropdown> */}
                 <div className="relative" ref={inputRef}>
                   <Input
                     placeholder="Cari Sparepart"
@@ -497,10 +463,17 @@ function HeaderContainerWeb({ renderAppBar }) {
                     width={391}
                     icon={{
                       right: (
-                        <IconComponent
-                          src={"/icons/search.svg"}
-                          classname={style.iconnSearch}
-                        />
+                        <div className="flex gap-2 items-center !bg-transparent">
+                          <IconComponent
+                            src={"/icons/search.svg"}
+                            classname={style.iconnSearch}
+                            />
+                          <span onClick={()=>setShowCamera(true)} className="cursor-pointer">
+                            <IconComponent
+                              src={"/icons/camera-outline-blue.svg"}
+                              />
+                          </span>
+                        </div>
                       ),
                     }}
                     focusEvent={() => setShowSearch(true)}
@@ -615,7 +588,12 @@ function HeaderContainerWeb({ renderAppBar }) {
                   </span>
                 </Link>
                 <div className="flex items-center gap-3">
-                  <span className="relative cursor-pointer">
+                  <span
+                    className="relative cursor-pointer"
+                    onClick={() => {
+                      router.push("/troli");
+                    }}
+                  >
                     <Image
                       src={"/icons/cart.svg"}
                       width={24}

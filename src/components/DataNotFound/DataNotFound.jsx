@@ -6,6 +6,7 @@ const DataNotFound = ({
   children,
   classname,
   image,
+  type='search',
   textClass
 }) => {
   return (
@@ -13,7 +14,7 @@ const DataNotFound = ({
       className={`flex flex-col justify-center items-center gap-[10px] ${classname}`}
     >
       <Image
-        src={image ? image : "/img/data-not-found.svg"}
+        src={image ? image : type==='search'?"/img/data-not-found.svg":type==='data'?'/img/daftarprodukicon.png':''}
         alt="Data Not Found"
         width={142}
         height={122}

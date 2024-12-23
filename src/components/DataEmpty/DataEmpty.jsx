@@ -10,7 +10,7 @@ const DataEmpty = ({
   onButtonClick,
 }) => {
   return (
-    <div className="w-full flex flex-col justify-center items-center rounded-xl p-6 shadow-muatmuat">
+    <div className="w-full flex flex-col justify-center items-center rounded-xl p-6 shadow-muatmuat mb-4">
       <Image
         src="/img/daftarprodukicon.png"
         width={95}

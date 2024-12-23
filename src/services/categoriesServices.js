@@ -6,7 +6,6 @@ class CategoriesServices extends ConfigUrl {
         this.options=options
     }
     async fetchCategories() {
-        console.log('ASUUU :',this)
         try {
             const response = this.get('muatparts/product/category')
             return (await response).data

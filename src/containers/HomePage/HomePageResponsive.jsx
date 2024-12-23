@@ -53,7 +53,7 @@ function HomePageResponsive({lastSeenProducts}) {
         <h1 className='text-neutral-900 font-semibold text-base'>Terakhir Dilihat</h1>
         <div className={`${style.sectionHideScroll} w-full flex gap-2 overflow-x-auto`}>
           {
-            lastSeenProducts.products.map(val=>{
+            lastSeenProducts?.products?.map(val=>{
               return <ProductComponent key={val.id} {...val} />
             })
           }
@@ -70,7 +70,7 @@ function HomePageResponsive({lastSeenProducts}) {
       {/* list products */}
       <section className={`h-fit ${style.listProducts} p-4`}>
         {
-          lastSeenProducts.products.map(val=>{
+          lastSeenProducts?.products?.map(val=>{
             return <ProductComponent key={val.id} {...val} />
           })
         }

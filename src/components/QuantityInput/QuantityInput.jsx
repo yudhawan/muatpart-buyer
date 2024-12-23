@@ -1,5 +1,5 @@
 import { Minus, Plus } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function QuantityInput({
   maxStock = 5,
@@ -8,10 +8,13 @@ export default function QuantityInput({
 }) {
   const [quantity, setQuantity] = useState(initialValue);
 
+  const prevQuantityRef = useRef();
+
   useEffect(() => {
-    if (onChange) {
+    if (prevQuantityRef.current !== quantity && onChange) {
       onChange(quantity);
     }
+    prevQuantityRef.current = quantity;
   }, [quantity, onChange]);
 
   const handleIncrement = () => {

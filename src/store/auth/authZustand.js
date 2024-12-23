@@ -1,13 +1,15 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 export const authZustand = create(persist(
     (set)=>({
-        token:'',
+        accessToken:'',
         refreshToken:'',
-        setToken:val=>set({token:val.token,refreshToken:val.refreshToken})
+        setToken:val=>set(val),
+        clearToken:()=>set({accessToken:'',refreshToken:''})
     }),
     {
         name:'t-ash',
+        storage:createJSONStorage(()=>localStorage)
     }
 ))

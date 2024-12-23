@@ -1,10 +1,11 @@
-Alamat:
+**Alamat:**
 
-GOALS:
+- Case:
+  - Jika toko sama (id) namun dengan "dikirim ke" yang berbeda, maka beda card
+  - ubah alamat di atas aktif ketika
 
-- user bisa kirim barang ke alamat berbeda
+**Quantity:**
 
-CASE:
-
-- Jika toko sama (id) namun dengan "dikirim ke" yang berbeda, maka beda card
-- ubah alamat di atas aktif ketika
+- Case:
+  - item.quantity > item.stock ? item.stock : item.quantity
+  - data dari be

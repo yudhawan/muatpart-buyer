@@ -2,26 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import ProductComponent from "../ProductComponent/ProductComponent";
 import Button from "../Button/Button";
 
-/**
- * ProductGrid component displays a grid of products with lazy loading functionality.
- *
- * @param {Object} props - The component props.
- * @param {number} [props.initialLoadCount=18] - The initial number of products to load.
- * @param {number} [props.batchSize=18] - The number of products to load in each batch.
- * @param {Array} [props.totalProducts=[]] - The total list of products to display.
- * @param {number} [props.maxAutoLoad=36] - The maximum number of products to auto-load.
- * @param {number} [props.buttonThreshold=24] - The number of products after which the load more button is shown.
- * @param {string} [props.title="Produk Yang Banyak Dikunjungi"] - The title of the product grid section.
- *
- * @returns {JSX.Element} The rendered ProductGrid component.
- */
 const ProductGrid = ({
   initialLoadCount = 18,
   batchSize = 18,
   totalProducts = [],
   maxAutoLoad = 36,
   buttonThreshold = 24,
-  title = "Produk Yang Banyak Dikunjungi",
+  title = "add title",
 }) => {
   const [visibleProducts, setVisibleProducts] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -63,19 +50,40 @@ const ProductGrid = ({
     setTimeout(() => {
       setVisibleProducts((prev) => [...prev, ...nextBatch]);
       setLoading(false);
-    }, 500); // Simulated loading delay
+    }, 500);
   };
 
   const showLoadMoreButton =
     totalProducts.length > buttonThreshold &&
     visibleProducts.length < totalProducts.length;
 
+  const getGridCols = (length) => {
+    if (length === 2) return "grid-cols-2";
+    if (length === 3) return "grid-cols-3";
+    if (length === 4) return "grid-cols-4";
+    if (length === 5) return "grid-cols-5";
+    return "grid-cols-6";
+  };
+
+  // Loading placeholder component
+  const LoadingPlaceholder = () => (
+    <div className="animate-pulse">
+      <div className="w-full aspect-square bg-gray-200 rounded-lg mb-2"></div>
+      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+    </div>
+  );
+
   return (
     <section className="bg-white py-6">
-      <div className="w-full max-w-[1080px] mx-auto space-y-7">
-        <h1 className="text-neutral-900 font-bold text-lg">{title}</h1>
+      <div className="w-full max-w-[1080px] mx-auto">
+        <h1 className="text-neutral-900 font-bold text-lg pt-4 pb-7">
+          {title}
+        </h1>
 
-        <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div
+          className={`w-full grid ${getGridCols(visibleProducts.length)} gap-3`}
+        >
           {visibleProducts.map((product) => (
             <ProductComponent
               key={product.id}
@@ -83,17 +91,23 @@ const ProductGrid = ({
               image={`https://prd.place/170?id=2`}
             />
           ))}
+          {!loading &&
+            Array.from({ length: 6 }).map((_, index) => (
+              <LoadingPlaceholder key={`loading-${index}`} />
+            ))}
         </div>
 
-        <div ref={observerRef} className="h-4" />
+        {totalProducts.length > 6 && <div ref={observerRef} className="h-8" />}
 
         {showLoadMoreButton && (
-          <div className="flex justify-center">
+          <div className="flex justify-center mt-6">
             <Button
               ref={loadMoreRef}
               onClick={loadMoreProducts}
               disabled={loading}
-              className="place-self-center"
+              className={`place-self-center ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
               {loading ? "Memuat..." : "Muat Lebih Banyak"}
             </Button>

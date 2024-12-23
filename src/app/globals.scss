@@ -128,6 +128,43 @@ input::-webkit-inner-spin-button {
 //     --foreground: #ededed;
 //   }
 // }
+.medium-xs{
+  font-size: 12px;
+  font-weight: 500;
+}
+.medium-sm{
+  font-size: 14px;
+  font-weight: 500;
+}
+.medium-base{
+  font-size: 16px;
+  font-weight: 500;
+}
+.semi-xs{
+  font-size: 12px;
+  font-weight: 600;
+}
+.semi-sm{
+  font-size: 14px;
+  font-weight: 600;
+}
+.semi-base{
+  font-size: 16px;
+  font-weight: 600;
+}
+.bold-xs{
+  font-size: 12px;
+  font-weight: 700;
+}
+.bold-sm{
+  font-size: 14px;
+  font-weight: 700;
+}
+.bold-base{
+  font-size: 16px;
+  font-weight: 700;
+}
+
 .chevron-white {
   path {
     stroke: var(--neutral-50);

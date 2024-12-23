@@ -10,29 +10,29 @@ export const sellerItems = [
         selected: false,
         name: "iPhone 13 Pro",
         image: "https://prd.place/170?id=3.png",
-        stock: 101, // ini dari BE (stock produk)
-        initialPrice: 19999000, 
-        discount: 10, 
-        finalPrice: 17999100, 
+        stock: 2, // ini dari BE (stock produk)
+        initialPrice: 15449000, 
+        discount: 42, 
+        finalPrice: 8999000, 
         variant: "Space Gray",
         liked: true,
-        quantity: 1,
+        quantity: 3,
         note: "This is a note for iPhone 13 Pro Space Gray tolong dipacking kayu dan jangan sampai rusak"
       },
-      {
-        id: '123e4567-e89b-12d3-a456-426614174001',
-        selected: false,
-        name: "MacBook Pro 2021",
-        image: "https://prd.place/170?id=4.png",
-        stock: 100,
-        initialPrice: 24999000, 
-        discount: 0, 
-        finalPrice: 24999000, 
-        variant: "Space Gray",
-        liked: false,
-        quantity: 1,
-        note: ""
-      }
+      // {
+      //   id: '123e4567-e89b-12d3-a456-426614174001',
+      //   selected: false,
+      //   name: "MacBook Pro 2021",
+      //   image: "https://prd.place/170?id=4.png",
+      //   stock: 100,
+      //   initialPrice: 24999000, 
+      //   discount: 0, 
+      //   finalPrice: 24999000, 
+      //   variant: "Space Gray",
+      //   liked: false,
+      //   quantity: 1,
+      //   note: ""
+      // }
     ]
   },
   {
