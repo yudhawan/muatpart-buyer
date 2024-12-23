@@ -23,6 +23,7 @@ const InputSearchLocation = ({
   openAddManual,
   autoFillForm,
   sendDataToParent,
+  errors,
 }) => {
   const AUTOCOMPLETE_ENDPOINT = `${process.env.NEXT_PUBLIC_GLOBAL_API}/autocompleteStreet`;
   const DISTRICT_ENDPOINT = `${process.env.NEXT_PUBLIC_GLOBAL_API}/district_by_token`;
@@ -458,9 +459,9 @@ const InputSearchLocation = ({
         value={locationTes}
         changeEvent={handleInputChange}
         focusEvent={handleInputFocus}
-        status={errors.location ? "error" : ""}
+        status={errors?.location ? "error" : ""}
         supportiveText={{
-          title: errors.location || "",
+          title: errors?.location || "",
         }}
       />
 
