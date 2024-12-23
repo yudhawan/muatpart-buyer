@@ -43,7 +43,7 @@ function HeaderContainerMobile() {
             :<div className='flex flex-col'>
               <div className='flex items-start justify-between gap-4'>
                 <div className='flex items-center gap-2 w-full'>
-                  {appBar?.showBackButton&&<span onClick={()=>handleBack()} className='w-6 h-6 rounded-full bg-neutral-50 flex justify-center items-center cursor-pointer'>
+                  {appBar?.showBackButton&&<span onClick={()=>handleBack()} className='w-auto h-auto p-1 rounded-full bg-neutral-50 flex justify-center items-center cursor-pointer'>
                     <IconComponent src={'/icons/chevron-left.svg'} classname={style.iconBackRed} width={24} />
                   </span>}
                   <Input focusEvent={()=>{
@@ -53,7 +53,7 @@ function HeaderContainerMobile() {
                       appBarType:'header_title_secondary',
                       defaultType:'default_search_navbar_mobile'
                     })
-                    }} classname={style.inputMobile} placeholder='Cari Produk' icon={{left:'/icons/search.svg'}} />
+                    }} classname={style.inputMobile} placeholder='Cari Produk' icon={{left:<span className='w-4 h-4'><IconComponent src={'/icons/search.svg'} /></span>,right:<span className='w-4 h-4'><IconComponent src={'/icons/camera-outline.svg'} /></span>}} />
                 </div>
                 <div className='flex gap-4 items-start'>
                   <span className='gap-[2px] flex flex-col items-center z-20'>
@@ -111,7 +111,7 @@ export function HeaderTitleSearchMobile({appBar,type,title,onBack,searchPlacehol
           (appBar.showBackButton&&RenderBack)?
           <RenderBack/>:
           (appBar.showBackButton)?
-          <span onClick={onBack} className={`w-6 h-6 ${isBgSecondary?'bg-[#176cf7]':'bg-neutral-50'} rounded-full flex justify-center items-center cursor-pointer whitespace-nowrap`}>
+          <span onClick={onBack} className={`w-auto p-1 h-auto ${isBgSecondary?'bg-[#176cf7]':'bg-neutral-50'} rounded-full flex justify-center items-center cursor-pointer whitespace-nowrap`}>
             <IconComponent width={16} height={16} classname={`${isBgSecondary?style.iconBackWhite:style.iconBackRed}`} src={'/icons/chevron-left.svg'} />
           </span>:''
           }
@@ -184,7 +184,7 @@ export function HeaderMainCompact() {
         <div className='flex flex-col'>
           <div className='flex items-start justify-between gap-4'>
             <div className='flex items-center gap-2 w-full relative'>
-              {appBar?.showBackButton&&<span onClick={()=>handleBack()} className='w-6 h-6 rounded-full bg-neutral-50 flex justify-center items-center cursor-pointer'>
+              {appBar?.showBackButton&&<span onClick={()=>handleBack()} className='w-auto p-1 h-auto rounded-full bg-neutral-50 flex justify-center items-center cursor-pointer'>
                 <IconComponent src={'/icons/chevron-left.svg'} classname={style.iconBackRed} width={24} />
               </span>}
               <Input 

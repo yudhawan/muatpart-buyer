@@ -111,7 +111,6 @@ function ModalComponent({
         }
         {
           type==='BottomSheet'&&
-          <>
             <div className={'absolute z-40 w-full h-fit bottom-0 left-0 bg-neutral-50 rounded-t-2xl flex flex-col gap-4'}>
               <div className="w-[38px] h-1 bg-[#dddddd] rounded-[4px] self-center mt-1"></div>
               <div className="flex w-full relative justify-center px-4">
@@ -127,7 +126,6 @@ function ModalComponent({
               </div>
               {children}
             </div>
-          </>
         }
       </div>
     );

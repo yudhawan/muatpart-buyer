@@ -185,6 +185,12 @@ input::-webkit-inner-spin-button {
     border-color: var(--error-400);
   }
 }
+.cart-outline{
+  path{
+    fill: none;
+    stroke: var(--neutral-50);
+  }
+}
 body {
   color: var(--foreground);
   background: var(--neutral-100);
@@ -249,4 +255,8 @@ body {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+}
+.react-calendar__tile--now{
+  background-color: var(--muat-parts-member-400) !important;
+  color: var(--neutral-50);
 }

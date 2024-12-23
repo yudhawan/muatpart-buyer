@@ -7,7 +7,9 @@ const DataNotFound = ({
   classname,
   image,
   type='search',
-  textClass
+  textClass,
+  width=142,
+  height=122
 }) => {
   return (
     <div
@@ -16,8 +18,8 @@ const DataNotFound = ({
       <Image
         src={image ? image : type==='search'?"/img/data-not-found.svg":type==='data'?'/img/daftarprodukicon.png':''}
         alt="Data Not Found"
-        width={142}
-        height={122}
+        width={width}
+        height={height}
       />
       <div>
         {children ? (
