@@ -5,11 +5,16 @@ import styles from "./ReviewsContainer.module.scss"
 import Input from '@/components/Input/Input';
 import IconComponent from '@/components/IconComponent/IconComponent';
 
-export default function ReviewsContainer() {
-  const [currentFilter, setCurrentFilter] = useState({
-    rating: null,
-    withMedia: false
-  });
+export default function ReviewsContainer({
+  reviewSummary,
+  reviews,
+  filter,
+  setFilter,
+}) {
+  // const [currentFilter, setCurrentFilter] = useState({
+  //   rating: null,
+  //   withMedia: false
+  // });
   const [search, setSearch] = useState("")
   const [searchQuery, setSearchQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -46,51 +51,11 @@ export default function ReviewsContainer() {
       setIsOpen(false);
   };
 
-  // Sample data untuk demo
-  const reviews = [
-    {
-      id: 1,
-      rating: 4,
-      date: "28 Aug 2021",
-      time: "17.08",
-      productImage: "https://cdn.builder.io/api/v1/image/assets/60cdcdaf919148d9b5b739827a6f5b2a/637d991f82d042ef46c1efe24b7a4afc12a464a8317ac5596d4b710c2c900a70?apiKey=60cdcdaf919148d9b5b739827a6f5b2a&",
-      productName: "Filter Oli Mesin Honda Original",
-      quality: "Genuine",
-      userImage: "https://cdn.builder.io/api/v1/image/assets/60cdcdaf919148d9b5b739827a6f5b2a/8d2d5f6f8dcacb0efdb215b721b9e926007945d2f6091a82bd92d1676f1da541?apiKey=60cdcdaf919148d9b5b739827a6f5b2a&",
-      userName: "Josh Verrelld",
-      reviewTitle: "Mujianto",
-      reviewText: "Barangnya ok, samsung terkenal dengan kualitasnya, tapi ini pengiriman lama, respon juga sangat lama, kalo memang gak siap jualan online ya jangan, besok2 mending beli dr.",
-      images: [
-        "https://cdn.builder.io/api/v1/image/assets/60cdcdaf919148d9b5b739827a6f5b2a/0bf4bc6bd0fb10999632def751cbc21b5b21cc3e1bd0098a2ac4a9415a457e9d?apiKey=60cdcdaf919148d9b5b739827a6f5b2a&",
-        "https://cdn.builder.io/api/v1/image/assets/60cdcdaf919148d9b5b739827a6f5b2a/0bf4bc6bd0fb10999632def751cbc21b5b21cc3e1bd0098a2ac4a9415a457e9d?apiKey=60cdcdaf919148d9b5b739827a6f5b2a&",
-        "https://cdn.builder.io/api/v1/image/assets/60cdcdaf919148d9b5b739827a6f5b2a/0bf4bc6bd0fb10999632def751cbc21b5b21cc3e1bd0098a2ac4a9415a457e9d?apiKey=60cdcdaf919148d9b5b739827a6f5b2a&"
-      ]
-    },
-    {
-      id: 2,
-      rating: 5,
-      date: "27 Aug 2021",
-      time: "16.30",
-      productImage: "https://cdn.builder.io/api/v1/image/assets/60cdcdaf919148d9b5b739827a6f5b2a/637d991f82d042ef46c1efe24b7a4afc12a464a8317ac5596d4b710c2c900a70?apiKey=60cdcdaf919148d9b5b739827a6f5b2a&",
-      productName: "Kampas Rem Depan Yamaha Genuine",
-      quality: "Genuine",
-      userImage: "https://cdn.builder.io/api/v1/image/assets/60cdcdaf919148d9b5b739827a6f5b2a/8d2d5f6f8dcacb0efdb215b721b9e926007945d2f6091a82bd92d1676f1da541?apiKey=60cdcdaf919148d9b5b739827a6f5b2a&",
-      userName: "Sarah Wilson",
-      reviewTitle: "Barang Bagus",
-      reviewText: "Pengiriman cepat, packing rapi, barang sesuai deskripsi. Recommended seller!",
-      images: [
-        "https://cdn.builder.io/api/v1/image/assets/60cdcdaf919148d9b5b739827a6f5b2a/0bf4bc6bd0fb10999632def751cbc21b5b21cc3e1bd0098a2ac4a9415a457e9d?apiKey=60cdcdaf919148d9b5b739827a6f5b2a&",
-        "https://cdn.builder.io/api/v1/image/assets/60cdcdaf919148d9b5b739827a6f5b2a/0bf4bc6bd0fb10999632def751cbc21b5b21cc3e1bd0098a2ac4a9415a457e9d?apiKey=60cdcdaf919148d9b5b739827a6f5b2a&",
-        "https://cdn.builder.io/api/v1/image/assets/60cdcdaf919148d9b5b739827a6f5b2a/0bf4bc6bd0fb10999632def751cbc21b5b21cc3e1bd0098a2ac4a9415a457e9d?apiKey=60cdcdaf919148d9b5b739827a6f5b2a&"
-      ]
-    }
-  ];
-
   return (
     <div className="flex gap-x-[38px] w-full mt-6">
       {/* Rating Filter - Kiri */}
       <div className="w-[264px] flex-shrink-0">
-        <RatingFilter />
+        <RatingFilter {...reviewSummary} filter={filter} setFilter={setFilter} />
       </div>
 
       {/* Container Ulasan - Kanan */}

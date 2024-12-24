@@ -1,16 +1,65 @@
 // src/services/MockServer_ProfileSellerBuyer.js
 
+
+// Helper function to generate random decimal with specific precision
+const randomDecimal = (min, max, precision = 2) => {
+  const num = Math.random() * (max - min) + min;
+  return Number(num.toFixed(precision));
+};
+
+// Helper function to generate random integer
+const randomInteger = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
+// Helper function to generate product data
+const generateProduct = (id) => {
+  const originalPrice = randomInteger(1000000, 15000000);
+  const hasDiscount = Math.random() > 0.2; // 80% chance of having a discount
+  const discount = hasDiscount ? randomInteger(5, 30) : 0;
+  const discountedPrice = hasDiscount ? Math.floor(originalPrice * (1 - discount/100)) : 0;
+  
+  return {
+    id,
+    imageSrc: "/img/temp-product-terlaris.png",
+    title: [
+      "Piston Set Standar RX-King",
+      "Kampas Rem Depan GL Pro",
+      "Filter Oli Mesin CB150R",
+      "Bearing Roda Depan Vario",
+      "Shock Absorber Belakang Supra",
+    ][id % 5],
+    originalPrice,
+    discountedPrice,
+    discount,
+    quality: ["Genuine", "OEM", "Aftermarket"][Math.floor(Math.random() * 3)],
+    seller: "Makmur Jaya",
+    location: "Surabaya",
+    rating: randomDecimal(4.0, 5.0, 3), // Generates ratings like 4.875
+    sales: randomInteger(100, 50000),
+    isGrosir: Math.random() > 0.7,
+    stock: randomInteger(1, 100),
+    bonus: [
+      "Garansi 3 Bulan",
+      "Garansi 6 Bulan",
+      "Gratis Pemasangan",
+      "Free Ongkir",
+      null // Some products won't have bonus
+    ][Math.floor(Math.random() * 5)]
+  };
+};
+
 // Mock Data
 export const profileSellerBuyerData = {
   storeInfo: {
     id: 1,
     name: "Makmur Jaya",
+    isOnline: false,
     location: "Surabaya",
-    lastOnline: "2 jam yang lalu",
-    logo: "https://cdn.builder.io/api/v1/image/assets/TEMP/0c40e02d0abb5a235e621cb4a53ddc6e7315ce6db93eb1c7b40780d49f7a1d44",
+    lastOnline: "2024-12-23 14:30:00", // SQL DateTime format
+    logo: "/img/FloatingMenu.png",
     metrics: [
       {
-        icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/2fb9663f1d7d5b3c970c14998d5a8c28b0bb57f77a17f2527e50b3d0ea227709",
         value: "4.9",
         subValue: "/5",
         label: "Rating & Ulasan",
@@ -18,14 +67,12 @@ export const profileSellerBuyerData = {
         showBorder: true
       },
       {
-        // icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/2fb9663f1d7d5b3c970c14998d5a8c28b0bb57f77a17f2527e50b3d0ea227709",
         value: "3.000",
         label: "Produk",
         width: "100px",
         showBorder: true
       },
       {
-        // icon: "https://cdn.builder.io/api/v1/image/assets/TEMP/ba30e658d99205d5b08c9cf16fd24168677d59b344724ba30df7f08f2b2c1abe",
         value: "08:00 - 21:00",
         label: "Jam Operasional",
         width: "131px",
@@ -50,153 +97,13 @@ export const profileSellerBuyerData = {
       "Produk Diskon",
       "Grosir"
     ],
-    products: Array(50).fill().map((_, index) => ({
-      id: 100 + index,
-      image: `https://cdn.builder.io/api/v1/image/assets/TEMP/d68020e8c29dbb29257991ed5100439e368a3dd3c2cfb4530b7acf36880e0e25`,
-      title: [
-        "Piston Set Standar RX-King",
-        "Kampas Rem Depan GL Pro",
-        "Filter Oli Mesin CB150R",
-        "Bearing Roda Depan Vario",
-        "Shock Absorber Belakang Supra",
-        "Radiator Coolant Ninja 250",
-        "Timing Belt Set Jazz RS",
-        "Pompa Air Radiator Avanza",
-        "Disc Brake Rotor Xenia",
-        "Master Rem Atas Vixion",
-        "Rantai Drive Chain CB150",
-        "Velg Racing R17 Vario",
-        "Ban Tubeless 150/70 R17",
-        "Karburator PE28 KLX",
-        "CDI Racing Unlimited Supra",
-        "Knalpot Racing R9 Misano",
-        "Cylinder Head Mio Soul",
-        "Piston Kit OS 50 Satria",
-        "Noken As Racing Jupiter",
-        "Kabel Gas Throttle Blade",
-        "Gear Set Racing SSS",
-        "Kopling Manual Revo",
-        "Seal Shock Depan Beat",
-        "V-Belt Kevlar Vario",
-        "Roller Racing Kawahara",
-        "Spion Carbon Nmax",
-        "Lampu LED Projector",
-        "ECU BRT Juken Beat",
-        "Cover Body R15 V3",
-        "Filter Udara Racing HKS",
-        "Aki GS Astra MF",
-        "Busi Iridium NGK",
-        "Stang Fatbar Proteaper",
-        "Rem Cakram Brembo",
-        "Swingarm Racing RCB",
-        "Suspensi YSS G-Sport",
-        "Velg OZ Racing",
-        "Ban Battlax S22",
-        "Rantai DID Gold",
-        "Sprocket Sunshine Steel",
-        "Gasket Complete Set",
-        "Boring Kit Kawahara",
-        "Camshaft Racing WebCam",
-        "Karbu PWK 28",
-        "Koil Racing KTC",
-        "Piston Forged Wiseco",
-        "Conrod Racing BRT",
-        "Head Porting Stage 1",
-        "ECU Unlimited Racing",
-        "Big Bore Kit 65mm"
-      ][index % 50],
-      originalPrice: `Rp${(Math.random() * 10000000 + 1000000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`,
-      discountedPrice: `Rp${(Math.random() * 8000000 + 800000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`,
-      discount: Math.floor(Math.random() * 30) + 10,
-      quality: ["Genuine", "OEM", "Aftermarket"][Math.floor(Math.random() * 3)],
-      seller: "Makmur Jaya",
-      location: "Surabaya", 
-      rating: (Math.random() + 4).toFixed(1),
-      sales: `${Math.floor(Math.random() * 50) + 10} rb`,
-      isGrosir: Math.random() > 0.5,
-      stock: Math.floor(Math.random() * 100) + 1
-    }))
+    products: Array(50).fill().map((_, index) => generateProduct(100 + index))
   },
 
   products: {
-    bestSeller: Array(10).fill().map((_, index) => ({
-      id: 200 + index,
-      image: `https://cdn.builder.io/api/v1/image/assets/TEMP/d68020e8c29dbb29257991ed5100439e368a3dd3c2cfb4530b7acf36880e0e25`,
-      title: [
-        "Piston Nissan Diesel Premium",
-        "Kampas Kopling Heavy Duty",
-        "Filter Udara Racing",
-        "Oil Seal Crankshaft",
-        "Gasket Head Cylinder",
-        "Connecting Rod Bearing", 
-        "Fuel Injection Pump",
-        "Turbocharger Assembly",
-        "Engine Mounting Kit",
-        "Cylinder Head Complete"
-      ][index],
-      originalPrice: `Rp${(Math.random() * 15000000 + 2000000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`,
-      discountedPrice: `Rp${(Math.random() * 12000000 + 1500000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`,
-      discount: Math.floor(Math.random() * 25) + 5,
-      quality: ["Genuine", "OEM", "Aftermarket"][Math.floor(Math.random() * 3)],
-      seller: "Makmur Jaya",
-      location: "Surabaya",
-      rating: (Math.random() + 4).toFixed(1),
-      sales: `${Math.floor(Math.random() * 100) + 20} rb`,
-      isGrosir: Math.random() > 0.7,
-      stock: Math.floor(Math.random() * 50) + 1
-    })),
-    favorite: Array(10).fill().map((_, index) => ({
-      id: 300 + index,
-      image: `https://cdn.builder.io/api/v1/image/assets/TEMP/d68020e8c29dbb29257991ed5100439e368a3dd3c2cfb4530b7acf36880e0e25`,
-      title: [
-        "Kampas Rem Racing Brembo",
-        "Oil Filter K&N Premium",
-        "Rantai SSS Gold Series",
-        "Velg Racing BBS",
-        "Shock Absorber Ohlins",
-        "Piston Forged Mahle",
-        "ECU HKS Racing",
-        "Turbo Kit Garrett",
-        "Big Bore Kit Wiseco",
-        "Carbon Fiber Body Kit"
-      ][index],
-      originalPrice: `Rp${(Math.random() * 15000000 + 2000000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`,
-      discountedPrice: `Rp${(Math.random() * 12000000 + 1500000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`,
-      discount: Math.floor(Math.random() * 25) + 5,
-      quality: ["Genuine", "OEM", "Aftermarket"][Math.floor(Math.random() * 3)],
-      seller: "Makmur Jaya",
-      location: "Surabaya",
-      rating: (Math.random() + 4).toFixed(1),
-      sales: `${Math.floor(Math.random() * 100) + 20} rb`,
-      isGrosir: Math.random() > 0.7,
-      stock: Math.floor(Math.random() * 50) + 1
-    })),
-    new: Array(10).fill().map((_, index) => ({
-      id: 400 + index,
-      image: `https://cdn.builder.io/api/v1/image/assets/TEMP/d68020e8c29dbb29257991ed5100439e368a3dd3c2cfb4530b7acf36880e0e25`,
-      title: [
-        "LED Headlight Kit",
-        "Carbon Brake Pads",
-        "High Flow Air Filter",
-        "Racing Camshaft Set",
-        "Lightweight Flywheel",
-        "Stainless Headers",
-        "Racing Clutch Kit",
-        "Adjustable Coilovers",
-        "Big Brake Kit",
-        "Short Shifter Kit"
-      ][index],
-      originalPrice: `Rp${(Math.random() * 15000000 + 2000000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`,
-      discountedPrice: `Rp${(Math.random() * 12000000 + 1500000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`,
-      discount: Math.floor(Math.random() * 25) + 5,
-      quality: ["Genuine", "OEM", "Aftermarket"][Math.floor(Math.random() * 3)],
-      seller: "Makmur Jaya",
-      location: "Surabaya",
-      rating: (Math.random() + 4).toFixed(1),
-      sales: `${Math.floor(Math.random() * 100) + 20} rb`,
-      isGrosir: Math.random() > 0.7,
-      stock: Math.floor(Math.random() * 50) + 1
-    }))
+    bestSeller: Array(10).fill().map((_, index) => generateProduct(200 + index)),
+    favorite: Array(10).fill().map((_, index) => generateProduct(300 + index)),
+    new: Array(10).fill().map((_, index) => generateProduct(400 + index))
   },
 
   vouchers: Array(10).fill().map((_, index) => ({
@@ -211,10 +118,10 @@ export const profileSellerBuyerData = {
 
   reviews: Array(10).fill().map((_, index) => ({
     id: index + 1,
-    rating: Math.floor(Math.random() * 2) + 4, // 4 atau 5 bintang
+    rating: Math.floor(Math.random() * 5) + 1, // 1 s/d 5 bintang
     date: `${Math.floor(Math.random() * 28) + 1} Nov 2024`,
     time: `${Math.floor(Math.random() * 24)}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
-    productImage: `https://cdn.builder.io/api/v1/image/assets/TEMP/d68020e8c29dbb29257991ed5100439e368a3dd3c2cfb4530b7acf36880e0e25`,
+    productImage: "/img/temp-review.png",
     productName: [
       "Piston Set Standar RX-King",
       "Kampas Rem Depan GL Pro",
@@ -228,7 +135,7 @@ export const profileSellerBuyerData = {
       "Master Rem Atas Vixion"
     ][index],
     quality: ["Genuine", "OEM", "Aftermarket"][Math.floor(Math.random() * 3)],
-    userImage: `https://cdn.builder.io/api/v1/image/assets/TEMP/avatar${index + 1}`,
+    userImage: "/img/temp-josh.png",
     userName: [
       "John Doe",
       "Jane Smith",
@@ -255,9 +162,21 @@ export const profileSellerBuyerData = {
     ][index],
     reviewText: "Barang sesuai dengan deskripsi, pengiriman cepat, packing rapi dan aman. Seller sangat responsive. Sangat puas dengan pelayanannya. Recommended seller!",
     images: Array(3).fill().map(() => 
-      `https://cdn.builder.io/api/v1/image/assets/TEMP/review-image-${Math.floor(Math.random() * 5) + 1}`
+      "/img/temp-review.png"
     )
-  }))
+  })),
+  reviewSummary: {
+    storeRating: 4.9,
+    totalRatings: 342,
+    totalReviews: 287,
+    ratingDistribution: [
+      { star: 5, count: 95 },
+      { star: 4, count: 162 },
+      { star: 3, count: 45 },
+      { star: 2, count: 28 },
+      { star: 1, count: 12 }
+    ]
+  }
 };
 
 // Mock API functions
@@ -270,7 +189,7 @@ const mockAPI = {
     });
   },
 
-  getProducts: (storeId, category = 'all', sort = 'newest', search = '') => {
+  getProducts: (storeId, category = 'all', sort = "newset", search = '') => {
     return new Promise((resolve) => {
       setTimeout(() => {
         let filteredProducts = [];
@@ -304,19 +223,99 @@ const mockAPI = {
           filteredProducts.sort((a, b) => a.id - b.id);
         }
 
-        resolve(filteredProducts);
+        resolve(filteredProducts.slice(0, 10));
       }, 500);
     });
   },
 
-  getEtalaseData: () => {
+  // getEtalaseData: () => {
+  //   return new Promise((resolve) => {
+  //     setTimeout(() => {
+  //       resolve({
+  //         categories: profileSellerBuyerData.etalase.categories,
+  //         showcases: profileSellerBuyerData.etalase.showcases,
+  //         products: profileSellerBuyerData.etalase.products
+  //       });
+  //     }, 500);
+  //   });
+  // },
+  getEtalaseShowcases: () => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve({
-          categories: profileSellerBuyerData.etalase.categories,
-          showcases: profileSellerBuyerData.etalase.showcases,
-          products: profileSellerBuyerData.etalase.products
-        });
+        resolve(profileSellerBuyerData.etalase.showcases);
+      }, 500);
+    });
+  },
+
+  getEtalaseProducts: (search = '', sort = 'newest', page = 1, isMobile = false) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        let filteredProducts = [...profileSellerBuyerData.etalase.products];
+
+        // Apply search filter if provided
+        if (search) {
+          filteredProducts = filteredProducts.filter(product => 
+            product.title.toLowerCase().includes(search.toLowerCase()) ||
+            product.quality.toLowerCase().includes(search.toLowerCase()) ||
+            product.seller.toLowerCase().includes(search.toLowerCase()) ||
+            product.location.toLowerCase().includes(search.toLowerCase())
+          );
+        }
+
+        // Apply sorting
+        switch (sort) {
+          case 'newest':
+            filteredProducts.sort((a, b) => b.id - a.id);
+            break;
+          case 'oldest':
+            filteredProducts.sort((a, b) => a.id - b.id);
+            break;
+          case 'price_high':
+            filteredProducts.sort((a, b) => {
+              const priceA = parseInt(a.originalPrice.replace(/[^0-9]/g, ''));
+              const priceB = parseInt(b.originalPrice.replace(/[^0-9]/g, ''));
+              return priceB - priceA;
+            });
+            break;
+          case 'price_low':
+            filteredProducts.sort((a, b) => {
+              const priceA = parseInt(a.originalPrice.replace(/[^0-9]/g, ''));
+              const priceB = parseInt(b.originalPrice.replace(/[^0-9]/g, ''));
+              return priceA - priceB;
+            });
+            break;
+          case 'rating':
+            filteredProducts.sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating));
+            break;
+          case 'sales':
+            filteredProducts.sort((a, b) => {
+              const salesA = parseInt(a.sales.replace(/[^0-9]/g, ''));
+              const salesB = parseInt(b.sales.replace(/[^0-9]/g, ''));
+              return salesB - salesA;
+            });
+            break;
+          default:
+            // Keep original order
+            break;
+        }
+
+        // Implement pagination
+        const itemsPerPage = isMobile ? 10 : 20;
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
+        // Return paginated results with metadata
+        resolve(paginatedProducts)
+        // resolve({
+        //   products: paginatedProducts,
+        //   pagination: {
+        //     currentPage: page,
+        //     totalPages: Math.ceil(filteredProducts.length / itemsPerPage),
+        //     totalItems: filteredProducts.length,
+        //     itemsPerPage
+        //   }
+        // });
       }, 500);
     });
   },
@@ -360,42 +359,61 @@ const mockAPI = {
     });
   },
 
-  getReviews: (storeId, filters = {}) => {
+  getReviews: (storeId, filter = {}) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         let filteredReviews = [...profileSellerBuyerData.reviews];
         
         // Filter berdasarkan rating jika ada
-        if (filters.rating) {
+        if (filter.rating) {
           filteredReviews = filteredReviews.filter(review => 
-            review.rating === filters.rating
+            review.rating === filter.rating
           );
         }
         
         // Filter berdasarkan keberadaan media jika diminta
-        if (filters.withMedia) {
+        if (filter.withMedia) {
           filteredReviews = filteredReviews.filter(review => 
             review.images && review.images.length > 0
           );
         }
 
         // Filter berdasarkan pencarian jika ada
-        if (filters.search) {
+        if (filter.search) {
           filteredReviews = filteredReviews.filter(review => 
-            review.productName.toLowerCase().includes(filters.search.toLowerCase()) ||
-            review.reviewText.toLowerCase().includes(filters.search.toLowerCase()) ||
-            review.userName.toLowerCase().includes(filters.search.toLowerCase())
+            review.productName.toLowerCase().includes(filter.search.toLowerCase()) ||
+            review.reviewText.toLowerCase().includes(filter.search.toLowerCase()) ||
+            review.userName.toLowerCase().includes(filter.search.toLowerCase())
           );
         }
 
         // Sort berdasarkan tanggal jika diminta
-        if (filters.sort === 'newest') {
+        if (filter.sort === 'newest') {
           filteredReviews.sort((a, b) => new Date(b.date) - new Date(a.date));
-        } else if (filters.sort === 'oldest') {
+        } else if (filter.sort === 'oldest') {
           filteredReviews.sort((a, b) => new Date(a.date) - new Date(b.date));
         }
         
         resolve(filteredReviews);
+      }, 500);
+    });
+  },
+
+  getStoreReviewSummary: (storeId) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        // Get the review summary data
+        const summary = profileSellerBuyerData.reviewSummary;
+
+        // Format it according to requirements
+        const response = {
+          storeRating: summary.storeRating,
+          totalRatings: summary.totalRatings,
+          totalReviews: summary.totalReviews,
+          ratingCounts: summary.ratingDistribution
+        };
+
+        resolve(response);
       }, 500);
     });
   }

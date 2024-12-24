@@ -1,12 +1,14 @@
 import { useState } from "react";
 import JamOperasionalModal from "./JamOperasionalModal";
+import Image from "next/image";
+import IconComponent from "@/components/IconComponent/IconComponent";
 
 function MetricItem({ icon, value, subValue, label, showBorder }) {
   const [isOpenModal, setIsOpenModal] = useState(false)
-  const isClickable = label === "Jam Operasional"
+  const isJamOperasional = label === "Jam Operasional"
 
   const handleOpenModal = () => {
-    if (isClickable) {
+    if (isJamOperasional) {
       setIsOpenModal(true)
     }
   }
@@ -16,17 +18,16 @@ function MetricItem({ icon, value, subValue, label, showBorder }) {
       <div
         className={`flex flex-col justify-center items-center 
           ${showBorder ? 'pr-4 border-r border-solid border-r-stone-300' : ''}
-          ${isClickable ? "cursor-pointer" : ""}
+          ${isJamOperasional ? "cursor-pointer" : ""}
         `}
         onClick={handleOpenModal}
       >
         <div className="flex gap-1 items-center text-base font-bold">
-          {icon ? (
-            <img
-              loading="lazy"
-              src={icon}
-              alt={`${label} icon`}
-              className="object-contain shrink-0 self-stretch my-auto w-5 aspect-square"
+          {label === "Rating & Ulasan" ? (
+            <IconComponent
+              src="/icons/star.svg"
+              size={20}
+              height={20}
             />
           ) : null}
           <div className="self-stretch my-auto">

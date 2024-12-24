@@ -6,12 +6,14 @@ import ReviewsContainer from "@/containers/Seller/Web/Review/ReviewsContainer";
 
 function SellerWeb({
     activeTab,
-    setActiveTab,
+    onChangeTab,
     tabs,
     storeData,
     products,
     vouchers,
     etalaseData,
+    reviews,
+    reviewSummary,
     loading,
     error,
     productsWithFavorites,
@@ -20,7 +22,11 @@ function SellerWeb({
     search,
     setSearch,
     searchQuery,
-    setSearchQuery
+    setSearchQuery,
+    filter,
+    setFilter,
+    selectedEtalaseOption,
+    setSelectedEtalaseOption
 }) {
     // Common search handler for all tabs
     const handleSearch = (e) => {
@@ -40,8 +46,17 @@ function SellerWeb({
       searchQuery,
       setSearchQuery,
       handleSearch,
-      handleClearSearch
+      handleClearSearch,
+      filter,
+      setFilter,
+      selectedEtalaseOption,
+      setSelectedEtalaseOption
     };
+
+    const reviewProps = {
+      reviewSummary,
+      reviews
+    }
   
     if (loading && !storeData) {
       return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
@@ -61,7 +76,7 @@ function SellerWeb({
               <NavigationTabs
                 tabs={tabs} 
                 activeTab={activeTab} 
-                onTabChange={setActiveTab}
+                onChangeTab={onChangeTab}
               />
             </div>
             {activeTab === 0 && (
@@ -79,7 +94,8 @@ function SellerWeb({
                 loading={loading}
                 etalaseData={etalaseData}
                 productsWithFavorites={productsWithFavorites}
-                setActiveTab={setActiveTab}
+                onChangeTab={onChangeTab}
+                storeName={storeData.name}
                 {...searchProps}
               />
             )}
@@ -87,6 +103,7 @@ function SellerWeb({
               <ReviewsContainer
                 loading={loading}
                 {...searchProps}
+                {...reviewProps}
               />
             )}
           </div>

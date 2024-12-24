@@ -7,6 +7,7 @@ import SellerResponsive from "./SellerResponsive";
 import { useState, useEffect, useCallback } from "react";
 import mockAPI from '@/services/MockServer_ProfileSellerBuyer';
 import { useHeader } from "@/common/ResponsiveContext";
+import useImmediateIntervalEffect from "@/libs/useImmediateIntervalEffect";
 
 function Seller() {
   const [activeTab, setActiveTab] = useState(0);
@@ -23,44 +24,55 @@ function Seller() {
     new: []
   });
   const [vouchers, setVouchers] = useState([]);
-  const [etalaseData, setEtalaseData] = useState({
-    categories: [],
-    showcases: [],
-    products: []
-  });
+  const [showcases, setShowcases] = useState([]);
+  const [etalaseProducts, setEtalaseProducts] = useState([]);
   const [favorites, setFavorites] = useState({});
+  const [reviews, setReviews] = useState([]);
+  const [reviewSummary, setReviewSummary] = useState({})
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   // Filter
   // const []
 
   // Web-specific shared search state
+  const defaultFilter = {
+    rating: [],
+    isWithImage: false,
+    sort: "newest",
+    page: 1
+  }
+  const [selectedEtalaseOption, setSelectedEtalaseOption] = useState(null);
   const [webSearch, setWebSearch] = useState("");
   const [webSearchQuery, setWebSearchQuery] = useState("");
+  const [filter, setFilter] = useState(defaultFilter)
+  
+  const etalaseData = {
+    showcases,
+    products: etalaseProducts
+  };
 
   // Fetch store data
-  useEffect(() => {
-    const fetchStoreData = async () => {
-      try {
-        const data = await mockAPI.getStoreInfo(1);
-        setStoreData(data);
-        setError(null);
-      } catch (err) {
-        setError('Failed to fetch store data');
-        console.error('Error fetching store data:', err);
-      }
-    };
-    fetchStoreData();
-  }, []);
+  const fetchStoreData = async () => {
+    try {
+      const data = await mockAPI.getStoreInfo(1);
+      setStoreData(data);
+      setError(null);
+    } catch (err) {
+      setError('Failed to fetch store data');
+      console.error('Error fetching store data:', err);
+    }
+  };
+
+  useImmediateIntervalEffect(fetchStoreData, 30000);
 
   // Fetch products
-  const fetchProducts = async (searchQuery = "") => {
+  const fetchProducts = async (searchQuery = "", sort = "newest") => {
     setLoading(true);
     try {
       const [bestSellerProducts, favoriteProducts, newProducts] = await Promise.all([
-        mockAPI.getProducts(1, 'best-seller', "newest", searchQuery),
-        mockAPI.getProducts(1, 'favorite', "newest", searchQuery),
-        mockAPI.getProducts(1, 'new', "newest", searchQuery)
+        mockAPI.getProducts(1, 'best-seller', sort, searchQuery),
+        mockAPI.getProducts(1, 'favorite', sort, searchQuery),
+        mockAPI.getProducts(1, 'new', sort, searchQuery)
       ]);
 
       setProducts({
@@ -76,18 +88,46 @@ function Seller() {
     }
   };
 
-  // Fetch etalase data
+  const fetchReviews = async () => {
+    try {
+      const data = await mockAPI.getReviews();
+      setReviews(data);
+    } catch (err) {
+      console.error('Error fetching showcases:', err);
+    }
+  };
+
+  const fetchStoreReviewSummary = async () => {
+    try {
+      const data = await mockAPI.getStoreReviewSummary();
+      setReviewSummary(data)
+    } catch (err) {
+      console.error('Error fetching showcases:', err);
+    }
+  };
+
+  // Fetch showcases
   useEffect(() => {
-    const fetchEtalaseData = async () => {
+    const fetchShowcases = async () => {
       try {
-        const data = await mockAPI.getEtalaseData();
-        setEtalaseData(data);
+        const data = await mockAPI.getEtalaseShowcases();
+        setShowcases(data);
       } catch (err) {
-        console.error('Error fetching etalase data:', err);
+        console.error('Error fetching showcases:', err);
       }
     };
-    fetchEtalaseData();
+    fetchShowcases();
   }, []);
+
+  // Fetch etalase products
+  const fetchEtalaseProducts = async (searchQuery = "", sort = "", page = 1) => {
+    try {
+      const data = await mockAPI.getEtalaseProducts(searchQuery, sort, page, isMobile);
+      setEtalaseProducts(data);
+    } catch (err) {
+      console.error('Error fetching etalase products:', err);
+    }
+  };
 
   // Fetch vouchers
   useEffect(() => {
@@ -117,12 +157,48 @@ function Seller() {
 
   // Handle web search
   useEffect(() => {
-    if (!isMobile) {
+    if (!isMobile && activeTab === 0) {
       fetchProducts(webSearchQuery);
-    } else {
+    } else if (activeTab === 0) {
       fetchProducts(search.value);
+    } else if (!isMobile && activeTab === 1) {
+      fetchEtalaseProducts(webSearchQuery, filter.sort, filter.page)
+    } else if (activeTab === 1) {
+      fetchEtalaseProducts(search.value, filter.sort, filter.page)
+    } else if (activeTab === 2) {
+      fetchReviews()
     }
-  }, [webSearchQuery, isMobile, search.value]);
+  }, [webSearchQuery, isMobile, search.value, activeTab, JSON.stringify(filter)]);
+
+  // useEffect(() => {
+  //   if (isMobile && activeTab === 0) {
+  //     fetchProducts(search.value)
+  //   }
+  // }, [activeTab, isMobile, search.value])
+
+  // useEffect(() => {
+  //   if (!isMobile && activeTab === 1) {
+  //     fetchEtalaseProducts(webSearchQuery, filter.sort, filter.page)
+  //   }
+  // }, [activeTab, isMobile, JSON.stringify(filter), webSearchQuery])
+
+  // useEffect(() => {
+  //   if (isMobile && activeTab === 1) {
+  //     fetchEtalaseProducts(webSearchQuery, filter.sort, filter.page)
+  //   }
+  // }, [activeTab, isMobile, JSON.stringify(filter), webSearchQuery])
+
+  useEffect(() => {
+    if (activeTab === 2) {
+      fetchStoreReviewSummary()
+    }
+  }, [activeTab])
+
+  useEffect(() => {
+    if (etalaseData.showcases.length > 0) {
+        setSelectedEtalaseOption({ type: "showcase", value: etalaseData.showcases[0] })
+    }
+}, [JSON.stringify(etalaseData.showcases)])
 
   const toggleFavorite = async (productId) => {
     try {
@@ -145,16 +221,27 @@ function Seller() {
     }));
   };
 
+  const handleChangeTab = (value) => () => {
+    setActiveTab(value)
+    setWebSearch("")
+    setWebSearchQuery("")
+    setFilter(defaultFilter)
+    setSelectedEtalaseOption({ type: "showcase", value: etalaseData.showcases[0] })
+  }
+
   if (typeof isMobile !== "boolean") return null;
 
   const sharedProps = {
     activeTab,
     setActiveTab,
+    onChangeTab: handleChangeTab,
     tabs,
     storeData,
     products,
     vouchers,
     etalaseData,
+    reviews,
+    reviewSummary,
     loading,
     error,
     productsWithFavorites,
@@ -167,6 +254,11 @@ function Seller() {
     setSearch: setWebSearch,
     searchQuery: webSearchQuery,
     setSearchQuery: setWebSearchQuery,
+    filter,
+    setFilter,
+    // Etalase
+    selectedEtalaseOption,
+    setSelectedEtalaseOption
   };
 
   return isMobile ? (

@@ -9,9 +9,10 @@ export const numberFormatMoney = (val)=>{
     return currency
 }
 
-export const thousandSeparator=(x)=> {
-    const val= x.toLocaleString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
-    const lastIdx = val.lastIndexOf('.')
-    const string = val.toString().slice(0,lastIdx) + ','+val.slice(lastIdx+1)
-    return string
+export const ThousandSeparator=(x)=> {
+    // const val= x.toLocaleString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".")
+    // const lastIdx = val.lastIndexOf('.')
+    // const string = val.toString().slice(0,lastIdx) + ','+val.slice(lastIdx+1)
+    const thousandSeparator = new Intl.NumberFormat("id-ID").format(x)
+    return thousandSeparator
 }

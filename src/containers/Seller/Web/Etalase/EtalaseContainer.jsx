@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef, useMemo, Fragment } from "react";
 import ProductGrid from "./ProductGrid"
 import Sidebar from "./Sidebar"
 import styles from "./EtalaseContainer.module.scss"
@@ -10,23 +10,36 @@ import { useRouter } from "next/navigation";
 const EtalaseContainer = ({
     etalaseData,
     productsWithFavorites,
-    setActiveTab,
+    onChangeTab,
+    storeName,
     // Shared search props
     search,
     setSearch,
     handleSearch,
     handleClearSearch,
+    filter,
+    setFilter,
+    selectedEtalaseOption,
+    setSelectedEtalaseOption
 }) => {
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
-    const [selected, setSelected] = useState("Terbaru");
-    const options = ["Terbaru", "Terlama"];
+    // const [selected, setSelected] = useState("Terbaru");
+    const options = [
+        {
+            label: "Terbaru",
+            value: "newest"
+        },
+        {
+            label: "Terlama",
+            value: "oldest"
+        },
+    ];
+    const selectedSort = options.find(item => item.value === filter.sort).label
     const dropdownRef = useRef(null);
 
-    const [selectedEtalaseOption, setSelectedEtalaseOption] = useState(null);
-
     const breadcrumbData = useMemo(() => {
-        const baseItems = ['Muatparts', 'Makmur Jaya'];
+        const baseItems = ['Muatparts', storeName];
 
         if (!selectedEtalaseOption) return baseItems;
 
@@ -39,7 +52,7 @@ const EtalaseContainer = ({
         }
         
         return items;
-    }, [selectedEtalaseOption]);
+    }, [selectedEtalaseOption, storeName]);
 
     // Handle click outside dropdown
     useEffect(() => {
@@ -58,15 +71,10 @@ const EtalaseContainer = ({
         };
     }, []);
 
-    useEffect(() => {
-        if (etalaseData.showcases.length > 0) {
-            setSelectedEtalaseOption({ type: "showcase", value: etalaseData.showcases[0] })
-        }
-    }, [JSON.stringify(etalaseData.showcases)])
-
     const toggleDropdown = () => setIsOpen(!isOpen);
     const selectOption = (option) => {
-        setSelected(option);
+        setFilter(prevState => ({ ...prevState, sort: option }))
+        // setSelected(option);
         setIsOpen(false);
     };
 
@@ -74,8 +82,8 @@ const EtalaseContainer = ({
         if (val === "Muatparts") {
             router.push("/")
         }
-        if (val === "Makmur Jaya") {
-            setActiveTab(0)
+        if (val === storeName) {
+            onChangeTab(0)
         }
         if (val === "Etalase") {
             setSelectedEtalaseOption({ type: "showcase", value: "Semua Produk" })
@@ -85,7 +93,7 @@ const EtalaseContainer = ({
     return (
         <div className="flex gap-x-[38px] mt-6">
             <Sidebar
-                categories={etalaseData.categories}
+                // categories={etalaseData.categories}
                 showcases={etalaseData.showcases}
                 selectedOption={selectedEtalaseOption}
                 onSelect={setSelectedEtalaseOption}
@@ -120,7 +128,7 @@ const EtalaseContainer = ({
                             aria-expanded={isOpen}
                         >
                             <IconComponent src="/icons/sorting.svg"/>
-                            <span className="font-medium text-[12px] leading-[14.4px]">{selected}</span>
+                            <span className="font-medium text-[12px] leading-[14.4px]">{selectedSort}</span>
                             <IconComponent classname={`transition-transform ${isOpen ? "rotate-180" : "rotate-0"}`} src="/icons/chevron-down.svg"/>
                         </button>
 
@@ -130,19 +138,20 @@ const EtalaseContainer = ({
                                 role="listbox"
                             >
                             {options.map((option, index) => (
-                                <li
-                                    key={option}
-                                    onClick={() => selectOption(option)}
-                                    className={`
-                                        px-3 py-2 cursor-pointer hover:bg-neutral-200 font-medium text-[12px] leading-[14.4px]
-                                        ${index === 0 ? 'rounded-t-md' : ''}
-                                        ${index === options.length - 1 ? 'rounded-b-md' : ''}
-                                    `}
-                                    role="option"
-                                    aria-selected={selected === option}
-                                >
-                                    {option}
-                                </li>
+                                <Fragment key={index}>
+                                    <li
+                                        onClick={() => selectOption(option.value)}
+                                        className={`
+                                            px-3 py-2 cursor-pointer hover:bg-neutral-200 font-medium text-[12px] leading-[14.4px]
+                                            ${index === 0 ? 'rounded-t-md' : ''}
+                                            ${index === options.length - 1 ? 'rounded-b-md' : ''}
+                                        `}
+                                        role="option"
+                                        aria-selected={filter.sort === option.value}
+                                    >
+                                        {option.label}
+                                    </li>
+                                </Fragment>
                             ))}
                             </ul>
                         )}

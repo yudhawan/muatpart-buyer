@@ -58,7 +58,7 @@ export default function SellerResponsive({
             <span className="font-semibold text-[10px] leading-[10px] text-neutral-50">Bagikan</span>
           </button>
           <button className="flex flex-col gap-y-0.5 items-center z-10">
-            <IconComponent classname={styles.icon_trolley} src="/iconsp/cart.svg" size="medium"/>
+            <IconComponent classname={styles.icon_trolley} src="/icons/cart.svg" size="medium"/>
             <span className="font-semibold text-[10px] leading-[10px] text-neutral-50">Troli</span>
           </button>
         </div>

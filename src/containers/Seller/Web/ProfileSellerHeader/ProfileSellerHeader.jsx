@@ -10,7 +10,7 @@ const ProfileSellerHeader = ({
             <div className="flex size-[89px] bg-[#C8C8C8] rounded-[50px] relative">
                 <Image
                     loading="lazy"
-                    src="/img/FloatingMenu.png"
+                    src={storeData.logo}
                     alt="Store logo"
                     className="object-contain shrink-0 self-stretch m-auto aspect-square"
                     width={73}
@@ -23,9 +23,7 @@ const ProfileSellerHeader = ({
                 ) : null}
             </div>
             <StoreInfo
-                name={storeData.name}
-                location={storeData.location}
-                lastOnline={storeData.lastOnline}
+                {...storeData}
             />
             <StoreMetrics metrics={storeData.metrics} />
         </div>

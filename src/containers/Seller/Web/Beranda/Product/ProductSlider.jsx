@@ -2,10 +2,20 @@ import Image from 'next/image';
 import { Fragment, useState } from 'react';
 import styles from "./ProductSlider.module.scss"
 import IconComponent from '@/components/IconComponent/IconComponent';
+import { ThousandSeparator } from '@/libs/NumberFormat';
+
+function formatNumber(num) {
+  if (num >= 1000) {
+      return (num / 1000).toFixed(1).replace('.', ',') + " rb";
+  } else {
+      return num.toString();
+  }
+}
 
 export const ProductCard = ({
-  image,
+  imageSrc,
   title,
+  bonus,
   originalPrice,
   discountedPrice,
   discount,
@@ -23,7 +33,7 @@ export const ProductCard = ({
     <div className="relative sm:size-[160px] size-[170px]">
       <Image
         className='rounded-t-md sm:size-[160px]'
-        src="/img/temp-product-terlaris.png"
+        src={imageSrc}
         alt={title}
         width={170}
         height={170}
@@ -70,25 +80,29 @@ export const ProductCard = ({
       <div className="flex flex-col gap-y-1">
         <div className='flex gap-x-1 items-center'>
           <div className="font-medium text-[10px] leading-[13px] text-neutral-600">
-            {discountedPrice}
+            {`Rp ${ThousandSeparator(originalPrice)}`}
           </div>
-          <div className="px-1 h-[14px] sm:bg-neutral-50 bg-error-400 rounded flex">
-            <div className="font-semibold my-auto text-[8px] leading-[10.4px] sm:text-error-400 text-neutral-50">
-              10% OFF
+          {discount ? (
+            <div className="px-1 h-[14px] sm:bg-neutral-50 bg-error-400 rounded flex">
+              <div className="font-semibold my-auto text-[8px] leading-[10.4px] sm:text-error-400 text-neutral-50">
+                {`${discount}% OFF`}
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
-        {originalPrice && (
+        {discount ? (
           <div className="font-bold text-[14px] leading-[16.8px]">
-            <span className="line-through">{originalPrice}</span>
+            <span className="line-through">{`Rp ${ThousandSeparator(discountedPrice)}`}</span>
           </div>
-        )}
+        ) : null}
       </div>
 
-      <div className="flex items-center gap-1">
-        <Image src="/img/temp-garansi.png" alt="" width={16} height={16} />
-        <span className="font-medium text-[12px] leading-[14.4px] text-neutral-700">Garansi 3 Bulan</span>
-      </div>
+      {bonus ? (
+        <div className="flex items-center gap-1">
+          <Image src="/img/temp-garansi.png" alt="" width={16} height={16} />
+          <span className="font-medium text-[12px] leading-[14.4px] text-neutral-700">{bonus}</span>
+        </div>
+      ) : null}
 
       <div className="flex items-center gap-1">
         <Image src="/img/temp-nama-toko.png" alt="" width={16} height={16} />
@@ -103,25 +117,13 @@ export const ProductCard = ({
           
         <div className="flex items-center gap-1">
           <Image src="/img/temp-rating.png" alt="" width={16} height={16} />
-          <span className="font-medium text-[12px] leading-[14.4px] text-neutral-700">{rating}</span>
+          <span className="font-medium text-[12px] leading-[14.4px] text-neutral-700">{Math.floor(rating * 10) / 10}</span>
           <div className="w-[2px] h-[2px] bg-neutral-700 rounded" />
-          <span className="font-medium text-[12px] leading-[14.4px] text-neutral-700">Terjual {sales}</span>
+          <span className="font-medium text-[12px] leading-[14.4px] text-neutral-700">Terjual {formatNumber(sales)}</span>
         </div>
       </div>
     </div>
   </div>
-);
-
-const ChevronLeft = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M15 18l-6-6 6-6" />
-  </svg>
-);
-
-const ChevronRight = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-    <path d="M9 18l6-6-6-6" />
-  </svg>
 );
 
 const ProductSlider = ({ products = [], title }) => {
@@ -173,19 +175,25 @@ const ProductSlider = ({ products = [], title }) => {
             {currentIndex > 0 && (
               <button
                 onClick={handlePrevious}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white rounded-full p-2 shadow-muat hover:bg-gray-50 z-10"
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white rounded-full p-2 shadow-muat hover:bg-gray-50 z-10 size-10 flex"
                 aria-label="Previous products"
               >
-                <ChevronLeft />
+                <IconComponent
+                  classname={`m-auto ${styles.icon_arrow}`}
+                  src="/icons/chevron-left.svg"
+                />
               </button>
             )}
             {currentIndex < maxIndex && (
               <button
                 onClick={handleNext}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white rounded-full p-2 shadow-muat hover:bg-gray-50 z-10"
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white rounded-full p-2 shadow-muat hover:bg-gray-50 z-10 size-10 flex"
                 aria-label="Next products"
               >
-                <ChevronRight />
+                <IconComponent
+                  classname={`m-auto ${styles.icon_arrow}`}
+                  src="/icons/chevron-right.svg"
+                />
               </button>
             )}
           </>

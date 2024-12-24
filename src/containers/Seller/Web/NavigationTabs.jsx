@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 
-function NavigationTabs({ tabs, activeTab, onTabChange }) {
+function NavigationTabs({ tabs, activeTab, onChangeTab }) {
   return (
     <div className="flex flex-col items-start w-full text-center text-black whitespace-nowrap">
       <div className="flex flex-col justify-center">
@@ -8,7 +8,7 @@ function NavigationTabs({ tabs, activeTab, onTabChange }) {
           {tabs.map((tab, index) => (
             <Fragment key={tab}>
               <button
-                onClick={() => onTabChange(index)}
+                onClick={onChangeTab(index)}
                 className={`flex flex-col justify-center text-[16px] leading-[19.2px] items-center min-h-[40px] cursor-pointer hover:bg-gray-50 focus:outline-none ${
                   index === activeTab
                     ? "font-bold text-primary-700 border-b-2 border-solid border-b-primary-700"
