@@ -118,6 +118,8 @@ function HomePageWeb({
     setVehicle({ ...filter, keyword: e.target.value });
   };
 
+  joinedSellers = joinedSellers.map((seller) => seller.logo);
+
   return (
     <div>
       {/* <pre>

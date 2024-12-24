@@ -4,12 +4,7 @@ import React, { useState } from "react";
 import HomePageResponsive from "./HomePageResponsive";
 import HomePageWeb from "./HomePageWeb";
 import SWRHandler from "@/services/useSWRHook";
-import {
-  headerImages,
-  bannerImages,
-  promotionImages,
-  joinedSellers,
-} from "./mock";
+import { headerImages, bannerImages, promotionImages } from "./mock";
 
 function HomePage() {
   const VEHICLE_OPTIONS_ENDPOINT =
@@ -18,16 +13,18 @@ function HomePage() {
   const PRODUCT_POPULAR_ENDPOINT =
     process.env.NEXT_PUBLIC_GLOBAL_API + "muatparts/product/popular";
 
+  const JOINED_SELLERS_ENDPOINT =
+    process.env.NEXT_PUBLIC_GLOBAL_API + "muatparts/landing/partners";
+
   const [state, setState] = useState();
+
   const { useSWRHook, useSWRMutateHook } = new SWRHandler();
 
-  const {
-    data: mostVisitedProducts,
-    error,
-    isLoading,
-  } = useSWRHook(PRODUCT_POPULAR_ENDPOINT);
+  const { data: mostVisitedProducts } = useSWRHook(PRODUCT_POPULAR_ENDPOINT);
 
   const { data: vehicleOptions } = useSWRHook(VEHICLE_OPTIONS_ENDPOINT);
+
+  const { data: joinedSellers } = useSWRHook(JOINED_SELLERS_ENDPOINT);
 
   const { isMobile } = viewport();
   if (typeof isMobile !== "boolean") return <></>; //buat skeleton
@@ -38,7 +35,7 @@ function HomePage() {
         headerImages={headerImages}
         bannerImages={bannerImages}
         promotionImages={promotionImages}
-        joinedSellers={joinedSellers}
+        joinedSellers={joinedSellers?.Data ?? []}
       />
     );
   return (
@@ -50,7 +47,7 @@ function HomePage() {
       headerImages={headerImages}
       bannerImages={bannerImages}
       promotionImages={promotionImages}
-      joinedSellers={joinedSellers}
+      joinedSellers={joinedSellers?.Data ?? []}
     />
   );
 }
