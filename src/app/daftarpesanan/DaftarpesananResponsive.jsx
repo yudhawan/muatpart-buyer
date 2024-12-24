@@ -12,6 +12,7 @@ import Link from 'next/link'
 import ModalComponent from '@/components/Modals/ModalComponent'
 import ModalPeriode from './screens/ModalPeriode'
 import DetailPesananMobile from '@/containers/DetailPesananMobile/DetailPesananMobile'
+import CaraPembayaranMobile from '@/containers/CaraPembayaranMobile/CaraPembayaranMobile'
 
 const menus=[
   {
@@ -24,6 +25,18 @@ const menus=[
   },
   {
     name:'Diproses',
+    notif:1
+  },
+  {
+    name:'Dikirim',
+    notif:1
+  },
+  {
+    name:'Selesai',
+    notif:1
+  },
+  {
+    name:'Dibatalkan',
     notif:1
   },
 ]
@@ -82,9 +95,17 @@ function DaftarpesananResponsive({data,status_pesanan,detailPesanan}) {
         onBack:()=>setScreen('')
       })
     }
+    if(screen==='cara_pembayaran'){
+      setAppBar({
+        title:'Cara Pembayaran',
+        appBarType:'header_title',
+        onBack:()=>setScreen('detail_pesanan')
+      })
+    }
   },[screen])
   
   if(screen==='detail_pesanan') return <DetailPesananMobile statusPesanan={getStatus} detailPesanan={detailPesanan} />
+  if(screen==='cara_pembayaran') return <CaraPembayaranMobile detailPesanan={detailPesanan} />
   // main screen
   return (
     <div className={`${style.main} flex flex-col gap-2 bg-neutral-200`}>

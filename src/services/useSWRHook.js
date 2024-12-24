@@ -8,11 +8,8 @@ class SWRHandler {
     this.defaultFetcher = defaultFetcher;
     this.interceptor = null;
   }
-  static defaultFetcher(url, option) {
+  static async defaultFetcher(url, option) {
     return axios({ url, ...option }).then((res) => res.data);
-  }
-  static defaultPostdata(url, arg) {
-    return axios({url, method: "put"}).then((data) => data.data)
   }
   getInterceptor() {
     return this.interceptor;
@@ -68,14 +65,17 @@ class SWRHandler {
   }
 }
 
-// class InterceptorHook extends SWRHandler {
-//   authorize = false
-//   constructor() {
-//     this.authorize = !!super.getInterceptor();
-//   }
-//   getUnauthorized() {
-//     return this.authorize;
-//   }
-// }
+class InterceptorHook extends SWRHandler {
+  authorize = false
+  constructor() {
+    this.authorize = !!super.getInterceptor();
+  }
+  getUnauthorized() {
+    return this.authorize;
+  }
+}
+const SWRHandlerConfig = new SWRHandler()
 
-export default SWRHandler;
+export {SWRHandlerConfig};
+export default SWRHandler
+

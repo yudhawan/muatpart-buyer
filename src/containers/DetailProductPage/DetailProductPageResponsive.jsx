@@ -15,24 +15,20 @@ import AddAddressContainerMobile from '../AddAddressContainerMobile/AddAddressCo
 function DetailProductPageResponsive({
   product,
   ID,
-  Photo,
-  Favorite,
-  Name,
-  Store,
-  PriceBeforeDiscount,
-  PriceAfterDiscount,
-  Discount,
-  Rating,
-  ReviewCount,
-  SalesType,
-  Views,
-  Quality,
-  City,
+  Images,
   SoldCount,
+  ReviewCount,
+  Rating,
+  Pricing,
   Bonus,
-  CreatedAt,
+  ProductInfo,
+  Variants,
+  ProductType,
+  Stock,
+  Description,
+  sellerInfo,
   getExpanded,
-  handleExpanded
+  handleExpanded,
 }) {
   const {
     appBarType, //pilih salah satu : 'header_title_secondary' || 'header_search_secondary' || 'default_search_navbar_mobile' || 'header_search' || 'header_title'
@@ -123,21 +119,21 @@ function DetailProductPageResponsive({
           <span className='text-xs font-medium'><b>Toko sedang libur</b>. Barang ini bisa kamu beli setelah toko buka pada <b>Selasa, 10 Desember 2024</b></span>
         </SectionCard>
         <SectionCard>
-          {Discount ? (
+          {Pricing?.DiscountPercentage ? (
               <div className='flex gap-2'>
                 <h1 className="text-neutral-900 text-sm font-bold">
-                    {PriceAfterDiscount}
+                    {numberFormatMoney(Pricing?.Price)}
                 </h1>
                 <div className="flex gap-1 items-center">
                     <strike className="text-neutral-600 text-[10px] font-medium">
-                    {PriceBeforeDiscount}
+                    {numberFormatMoney(Pricing?.OriginalPrice)}
                     </strike>
-                    <p className={style.discount}>{Discount}</p>
+                    <p className={style.discount}>{Pricing?.DiscountPercentage}</p>
                 </div>
               </div>
           ) : (
               <h1 className="text-neutral-900 text-sm font-bold">
-              {numberFormatMoney(PriceBeforeDiscount??0)}
+              {numberFormatMoney(Pricing?.OriginalPrice)}
               </h1>
           )}
           <div className='flex items-center'>
@@ -149,10 +145,10 @@ function DetailProductPageResponsive({
           <span className='font-medium text-xs flex'>
               <span className='flex items-center gap-1'>Terjual <span className='text-neutral-700'>{SoldCount>99?'99+':SoldCount}</span> &#183; <span className='py-2 px-3 flex gap-1 items-center bg-neutral-200 rounded-[24px]'><Image src={"/icons/product-star.svg"} width={16} height={16} alt="Rating"/> {Rating} <span className='text-neutral-700'>(16)</span></span></span>
           </span>
-          {Bonus&&<div className='flex flex-wrap gap-2 border-b border-neutral-400 pb-4 text-neutral-900'>
+          {Bonus?.length&&<div className='flex flex-wrap gap-2 border-b border-neutral-400 pb-4 text-neutral-900'>
               <span className='text-xs font-medium text-neutral-600'>Bonus</span>
               <div className='flex overflow-auto gap-[7px]'>
-                  {Bonus.map(val=><div className='bg-success-50 py-1 px-2 rounded-md text-success-400 font-semibold text-xs'>{val?.name}</div>)}
+                  {Bonus.map(val=><div className='bg-success-50 py-1 px-2 rounded-md text-success-400 font-semibold text-xs'>{val}</div>)}
               </div>
           </div>}
         </SectionCard>

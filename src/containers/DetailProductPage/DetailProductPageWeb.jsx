@@ -9,7 +9,7 @@ import ButtonPlusMinus from '@/components/ButtonPlusMinus/ButtonPlusMinus';
 import { numberFormatMoney } from '@/libs/NumberFormat';
 import IconComponent from '@/components/IconComponent/IconComponent';
 import Bubble from '@/components/Bubble/Bubble';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ProductComponent from '@/components/ProductComponent/ProductComponent';
 import ImageProductSlider from '@/components/ImageProductSlider/ImageProductSlider';
 const tabmenu = [
@@ -33,30 +33,37 @@ const tabmenu = [
 function DetailProductPageWeb({
     product,
     ID,
-    Photo,
-    Favorite,
-    Name,
-    Store,
-    PriceBeforeDiscount,
-    PriceAfterDiscount,
-    Discount,
-    Rating,
-    ReviewCount,
-    SalesType,
-    Views,
-    Quality,
-    City,
+    Images,
     SoldCount,
+    ReviewCount,
+    Rating,
+    Pricing,
     Bonus,
-    CreatedAt,
+    ProductInfo,
     Variants,
+    ProductType,
+    Stock,
+    Description,
+    sellerInfo,
     getExpanded,
     handleExpanded,
     showDescription,
     setShowDescription
 }) {
     const [getMenuTab,setMenuTab]=useState('detail_product')
+    const [getVariants,setVariants]=useState({
+        variant_one:Variants?.variant_1_value[0],
+        variant_two:Variants?.variant_2_value[0]
+    })
     const categories=[product?.Categories?.['Groupcategory'],product?.Categories?.['Category'],product?.Categories?.['Subcategory'],product?.Categories?.['Item']]
+    useEffect(()=>{
+        if(Variants?.Combinations?.length){
+            const tmp = Variants?.Combinations?.reduce((a,b)=>{
+                if(a<b) return a
+            })
+            console.log(tmp)
+        }
+    },[Variants])
     return (
         <div className={style.main}>
             <div className='w-full max-w-[1280px] self-center'>
@@ -89,50 +96,48 @@ function DetailProductPageWeb({
                             <div className='w-full flex flex-col gap-4'>
                                 {/* title desc */}
                                 <div className='flex flex-col gap-4 border-b border-neutral-400 pb-4 text-neutral-900'>
-                                    <h1 className='font-bold text-[18px]'>{Name}</h1>
+                                    <h1 className='font-bold text-[18px]'>{ProductInfo?.Title}</h1>
                                     <span className='font-medium text-xs flex'>
                                         <span className='flex items-center gap-1'>Terjual <span className='text-neutral-700'>{SoldCount>99?'99+':SoldCount}</span> &#183; <Image src={"/icons/product-star.svg"} width={16} height={16} alt="Rating"/> {Rating} <span className='text-neutral-700'>(16 rating)</span></span>
                                     </span>
-                                    {Discount ? (
+                                    {Pricing?.DiscountPercentage ? (
                                         <>
                                         <div className="flex gap-1 items-center">
                                             <strike className="text-neutral-600 text-[10px] font-medium">
-                                            {PriceBeforeDiscount}
+                                            {numberFormatMoney(Pricing?.OriginalPrice)}
                                             </strike>
 
-                                            <p className={style.discount}>{Discount}</p>
+                                            <p className={style.discount}>{Pricing?.DiscountPercentage}</p>
                                         </div>
                                         <h1 className="text-neutral-900 text-sm font-bold">
-                                            {PriceAfterDiscount}
+                                            {numberFormatMoney(Pricing?.Price)}
                                         </h1>
                                         </>
                                     ) : (
                                         <h1 className="text-neutral-900 text-sm font-bold">
-                                        {numberFormatMoney(PriceBeforeDiscount??0)}
+                                        {numberFormatMoney(Pricing?.Price)}
                                         </h1>
                                     )}
                                 </div>
-                                {Bonus&&<div className='flex flex-col gap-2 border-b border-neutral-400 pb-4 text-neutral-900'>
+                                {Bonus?.length&&<div className='flex flex-col gap-2 border-b border-neutral-400 pb-4 text-neutral-900'>
                                     <span className='text-xs font-medium text-neutral-600'>Bonus</span>
                                     <div className='flex overflow-auto gap-[7px]'>
-                                        {Bonus.map(val=><div className='bg-success-50 py-1 px-2 rounded-md text-success-400 font-semibold text-xs'>{val?.name}</div>)}
+                                        {Bonus.map(val=><div className='bg-success-50 py-1 px-2 rounded-md text-success-400 font-semibold text-xs'>{val}</div>)}
                                     </div>
                                 </div>}
                                 {Variants&&<div className='flex flex-col gap-4 border-b border-neutral-400 pb-4 text-neutral-900'>
                                     <div className='flex flex-col gap-2'>
-                                        <span className='text-xs font-medium text-neutral-600 gap-1 flex'>Tipe <span className='text-neutral-900'>On Road</span></span>
+                                        <span className='text-xs font-medium text-neutral-600 gap-1 flex'>{Variants?.variant_1_name}:<span className='text-neutral-900'>On Road</span></span>
                                         <div className='flex overflow-auto gap-[7px]'>
-                                            <Bubble className='!h-[28px]'>sadasda as dsadsa</Bubble>
-                                            <Bubble className='!h-[28px]'>sadasda as dsadsa</Bubble>
+                                            {Variants?.variant_1_value?.map((val,i)=><span key={i} className={`!h-[28px] px-3 ${getVariants.variant_one===val?"bg-primary-50 border-primary-700 text-primary-700":"bg-neutral-200 border-neutral-200 text-neutral-600"} border font-semibold text-[10px] flex items-center rounded-2xl`} onClick={()=>setVariants(a=>({...a,variant_one:val}))}>{val}</span>)}
                                         </div>
                                     </div>
-                                    <div className='flex flex-col gap-2'>
-                                        <span className='text-xs font-medium text-neutral-600 gap-1 flex'>Ukuran : <span className='text-neutral-900'>Low 6x4</span></span>
+                                    {Variants?.variant_2_name&&<div className='flex flex-col gap-2'>
+                                        <span className='text-xs font-medium text-neutral-600 gap-1 flex'>{Variants?.variant_2_name}:<span className='text-neutral-900'>Low 6x4</span></span>
                                         <div className='flex overflow-auto gap-[7px]'>
-                                            <Bubble className='!h-[28px]'>sadasda as dsadsa</Bubble>
-                                            <Bubble className='!h-[28px]'>sadasda as dsadsa</Bubble>
+                                            {Variants?.variant_2_value?.map((val,i)=><span key={i} className={`!h-[28px] px-3 ${getVariants.variant_two===val?"bg-primary-50 border-primary-700 text-primary-700":"bg-neutral-200 border-neutral-200 text-neutral-600"} border font-semibold text-[10px] flex items-center rounded-2xl`} onClick={()=>setVariants(a=>({...a,variant_two:val}))}>{val}</span>)}
                                         </div>
-                                    </div>
+                                    </div>}
                                 </div>}
                                 <div className='flex flex-col gap-4 border-b border-neutral-400 pb-4 text-neutral-900'>
                                     <span className='flex gap-4'>
@@ -141,7 +146,7 @@ function DetailProductPageWeb({
                                     </span>
                                     <span className='flex gap-4'>
                                         <span className='w-[100px] text-xs text-neutral-600'>Kondisi</span>
-                                        <span className='text-xs flex gap-1'>Baru</span>
+                                        <span className='text-xs flex gap-1'>{ProductInfo?.Condition}</span>
                                     </span>
                                     <span className='flex gap-4'>
                                         <span className='w-[100px] text-xs text-neutral-600'>Brand</span>
@@ -153,7 +158,7 @@ function DetailProductPageWeb({
                                     </span>
                                     <span className='flex gap-4'>
                                         <span className='w-[100px] text-xs text-neutral-600'>Min Pesanan</span>
-                                        <span className='text-xs flex gap-1'>1 pcs</span>
+                                        <span className='text-xs flex gap-1'>{ProductInfo?.MinOrder}</span>
                                     </span>
                                 </div>
                                 {/* toko */}

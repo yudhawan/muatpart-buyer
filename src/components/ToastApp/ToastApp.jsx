@@ -35,9 +35,9 @@ const ToastApp = ({
                 ${show ? 'flex' : 'hidden'}
                 border-[1px] rounded-[6px] w-full z-[100] max-w-[328px] p-[12px] items-center gap-[12px] justify-between`}>
                     {(status === 'error') ?
-                        <Image src={iconWarning}/>
+                        <Image width={18} height={18} alt="stat" src={iconWarning}/>
                     :
-                        <Image src={iconSuccess}/>
+                        <Image width={18} height={18} alt="stat" src={iconSuccess}/>
                     }
                     {
                         text && 
@@ -46,7 +46,7 @@ const ToastApp = ({
                         </span>
                     }
                     <button onClick={onClose}>
-                        <Image src={toastClose}/>
+                        <Image width={18} height={18} alt="stat" src={toastClose}/>
                     </button>
                 </div>
             </div>

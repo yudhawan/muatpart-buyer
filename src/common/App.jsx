@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import ResponsiveProvider from "./ResponsiveContext";
 import { viewport } from "@/store/viewport";
 import { headerProps } from "@/containers/HeaderContainer/headerProps";
-import SWRHandler from "@/services/useSWRHook";
+import SWRHandler, { SWRHandlerConfig } from "@/services/useSWRHook";
 import { categoriesZustand } from "@/store/products/categoriesZustand";
 import { useSearchParams } from "next/navigation";
 import { authZustand } from "@/store/auth/authZustand";
@@ -13,7 +13,7 @@ function App({ children }) {
   
   const { setIsmobile, isMobile } = viewport();
   const { headerHeight } = headerProps();
-  const {useSWRHook,useSWRMutateHook} = new SWRHandler()
+  const {useSWRHook,useSWRMutateHook} = SWRHandlerConfig
   const {data} = useSWRHook(process.env.NEXT_PUBLIC_GLOBAL_API+'muatparts/product/category')
   const {data:auth,trigger} = useSWRMutateHook(process.env.NEXT_PUBLIC_GLOBAL_API+'muatparts/auth/credential-check')
   const {setCategories}=categoriesZustand()
