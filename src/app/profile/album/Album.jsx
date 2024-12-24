@@ -5,6 +5,7 @@ import AlbumResponsive from "./AlbumResponsive";
 import AlbumWeb from "./AlbumWeb";
 import SWRHandler from "@/services/useSWRHook";
 import { albumItems } from "./mock";
+import useAlbumStore from "@/store/album";
 
 function Album() {
   const PRODUCT_POPULAR_ENDPOINT =
@@ -19,6 +20,8 @@ function Album() {
     isLoading,
   } = useSWRHook(PRODUCT_POPULAR_ENDPOINT);
 
+  const { modalNewAlbum, setModalNewAlbum } = useAlbumStore();
+
   const { isMobile } = viewport();
   if (typeof isMobile !== "boolean") return <></>; //buat skeleton
   if (isMobile) return <AlbumResponsive />;
@@ -26,6 +29,8 @@ function Album() {
     <AlbumWeb
       albumItems={albumItems}
       lastVisited={mostVisitedProducts?.Data ?? []}
+      modalNewAlbum={modalNewAlbum}
+      setModalNewAlbum={setModalNewAlbum}
     />
   );
 }

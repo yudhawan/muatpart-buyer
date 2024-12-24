@@ -1,12 +1,18 @@
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import registerForm from "@/store/registerForm";
 import { PencilLine } from "lucide-react";
 import { DivParticleRegister } from "./InformasiTokoAkun";
+import MiniMap from "../MapContainer/MiniMap";
+import ModalComponent from "@/components/Modals/ModalComponent";
+import MapContainer from "../MapContainer/MapContainer";
+import IconComponent from "@/components/IconComponent/IconComponent";
 
 const KonfirmasiDataResponsive = () => {
-  const { formData, formIsFilled, setFormIsFilled } = registerForm();
+  const { formData, formIsFilled, setFormIsFilled, setCurrentStep } =
+    registerForm();
   const router = useRouter();
+  const [isOpenMap, setOpenMap] = useState(false);
 
   const renderFieldValue = (field) => {
     const { title, value, desc } = field;
@@ -22,12 +28,52 @@ const KonfirmasiDataResponsive = () => {
         );
       case "Titik Lokasi":
         return (
-          <button
-            className="w-full h-[120px] bg-[#F3F4F6] rounded-lg flex items-center justify-center"
-            onClick={() => console.log("Show map")}
-          >
-            Lihat Pin Lokasi
-          </button>
+          <div className="w-full">
+            <MiniMap
+              lat={Number(value?.lat) || -7.250445}
+              lng={Number(value?.long) || 112.768845}
+              onClick={() => setOpenMap(true)}
+              titleButton="Lihat Lokasi"
+            />
+            <ModalComponent
+              isOpen={isOpenMap}
+              setClose={() => setOpenMap(false)}
+              hideHeader
+            >
+              <div className="flex item-start gap-4 pt-[14px] px-3">
+                <MapContainer
+                  width={600}
+                  height={390}
+                  lat={Number(value?.lat) || -7.250445}
+                  lng={Number(value?.long) || 112.768845}
+                  // onPosition={(val) => {
+                  //   if (type === "store") {
+                  //     updateStoreField("latitude", Number(value.lat));
+                  //     updateStoreField("longitude", Number(value.lng));
+                  //   } else {
+                  //     updateCompanyField("latitude", Number(value.lat));
+                  //     updateCompanyField("longitude", Number(value.lng));
+                  //   }
+                  // }}
+                />
+                <div className="flex flex-col gap-[22px]">
+                  <span className="text-base font-semibold text-neutral-900">
+                    Lihat Lokasi
+                  </span>
+                  <div className="relative">
+                    <IconComponent
+                      classname="absolute"
+                      size="medium"
+                      src={"/icons/marker.svg"}
+                    />
+                    <span className="flex items-center gap-2 w-[237px] font-medium text-[#868686] text-xs pl-[25px]">
+                      {value?.location}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </ModalComponent>
+          </div>
         );
       case "KTP Pendaftar":
         const fileUrl = typeof value === "object" ? value.url : value;
@@ -109,7 +155,11 @@ const KonfirmasiDataResponsive = () => {
         { title: "Kode Pos", value: formData[0].postalCode },
         {
           title: "Titik Lokasi",
-          value: { lat: formData[0].latitude, long: formData[0].longitude },
+          value: {
+            lat: formData[0].latitude,
+            long: formData[0].longitude,
+            location: formData[0].location,
+          },
         },
         { title: "Email", value: formData[0].email },
       ],
@@ -162,11 +212,13 @@ const KonfirmasiDataResponsive = () => {
     // Arahkan ke step yang sesuai berdasarkan section
     switch (section.title) {
       case "Informasi Toko":
-        router.push("/register?step=1");
+        setCurrentStep(0);
         break;
       case "Data Pendaftar":
+        setCurrentStep(1);
+        break;
       case "Informasi Rekening":
-        router.push("/register?step=2");
+        setCurrentStep(1);
         break;
       default:
         break;
@@ -178,7 +230,7 @@ const KonfirmasiDataResponsive = () => {
   }, []);
 
   return (
-    <div className="space-y-6 pt-14 pb-24 bg-white min-h-screen">
+    <div className="space-y-6 pt-8 px-4 pb-24 bg-white min-h-screen">
       {sections.map((section, idx) => (
         <div key={idx} className={`bg-white`}>
           <div className="flex justify-between items-center">
@@ -224,7 +276,8 @@ const KonfirmasiDataResponsive = () => {
         </div>
       ))}
       <div className="bg-[#D3EBFF] py-2 rounded-[5px] font-medium text-xs text-center shadow-muat">
-        Baca <span className="!text-primary-700">Syarat dan Ketentuan</span> Muatparts Mart.
+        Baca <span className="!text-primary-700">Syarat dan Ketentuan</span>{" "}
+        Muatparts Mart.
       </div>
     </div>
   );

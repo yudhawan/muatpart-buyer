@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Dropdown from "../Dropdown/Dropdown";
 import TextArea from "../TextArea/TextArea";
 import Input from "../Input/Input";
@@ -56,8 +56,12 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
 
   useEffect(() => {
     if (defaultValue) {
-      console.log(defaultValue);
-      setAddress(defaultValue.location.title);
+      setAddress(defaultValue.address);
+
+      setLocation({
+        id: "",
+        title: defaultValue.location.title,
+      });
 
       setCity({
         name: defaultValue.city.name,
@@ -67,7 +71,7 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
         name: defaultValue.province.name,
         id: defaultValue.province.value,
       });
-      const newKecamatanList = defaultValue.listDistricts.map((i) => ({
+      const newKecamatanList = defaultValue?.listDistricts?.map((i) => ({
         value: i.DistrictID,
         name: i.District,
       }));
@@ -76,7 +80,7 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
         name: defaultValue.district.name,
         value: defaultValue.district.value,
       });
-      const newPostalCodeList = defaultValue.listPostalCodes.map((i) => ({
+      const newPostalCodeList = defaultValue?.listPostalCodes?.map((i) => ({
         value: i.ID,
         name: i.PostalCode,
       }));
@@ -94,92 +98,19 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
 
   // End State Management
 
-  // Start Form Data
-
-  const autocompleteFormData = new FormData();
-  autocompleteFormData.append("phrase", location.title || address);
-  autocompleteFormData.append("dataType", "json");
-
-  const districtFormData = new FormData();
-  districtFormData.append("place_id", location.id);
-  // Start Form Data
-
-  const latLongFormData = new FormData();
-  latLongFormData.append("Lat", coordinates.lat);
-  latLongFormData.append("Long", coordinates.long);
-
-  // End Form Data
-
-  // Start Fetchers
-
-  const autoCompleteFetcher = (url) => {
-    return fetch(url, {
-      method: "POST",
-      body: autocompleteFormData,
-    }).then((res) => res.json());
-  };
-
-  const districtFetcher = (url) => {
-    return fetch(url, {
-      method: "POST",
-      body: districtFormData,
-    }).then((res) => res.json());
-  };
-
-  const latLongFetcher = (url) => {
-    return fetch(url, {
-      method: "POST",
-      body: latLongFormData,
-    }).then((res) => res.json());
-  };
-
-  // End Fetchers
-
-  // Start SWR Hooks
-
-  const { data: autocompleteData, error: autocompleteError } =
-    swrHandler.useSWRHook(
-      location?.title?.length > 2 || address?.length > 2
-        ? `${process.env.NEXT_PUBLIC_GLOBAL_API}/get_autocomplete_street`
-        : null,
-      autoCompleteFetcher,
-      (error) => {
-        // console.error("Autocomplete error:", error);
-      }
-    );
-
-  const searchResults = Array.isArray(autocompleteData)
-    ? autocompleteData.slice(0, 3)
-    : [];
-
-  const { data: districtData, error: districtError } = swrHandler.useSWRHook(
-    location.id
-      ? `${process.env.NEXT_PUBLIC_GLOBAL_API}/get_districts_by_token`
-      : null,
-    districtFetcher,
-    (error) => {
-      // console.error("District fetch error:", error);
-    }
-  );
-
-  const { data: latLongData, error: latLongError } = swrHandler.useSWRHook(
-    coordinates.lat && coordinates.long
-      ? `${process.env.NEXT_PUBLIC_GLOBAL_API}/get_information_location_by_lat_long`
-      : null,
-    latLongFetcher,
-    (error) => {
-      // console.error("Lat long error:", error);
-    }
-  );
-
-  // End SWR Hooks
-
   // Start Handlers
 
-  const handleAddressChange = debounce((e) => {
+  const handleDebouncedChangeAddress = useCallback(
+    debounce((value) => {
+      setAddress(value);
+    }, 500),
+    []
+  );
+
+  const handleAddressChange = (e) => {
     const value = e.target.value;
-    setAddress(value);
-  }, 500);
+    handleDebouncedChangeAddress(value);
+  };
 
   const handleLocationChange = debounce((e) => {
     const value = e.target.value;
@@ -222,8 +153,6 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
   };
 
   const handleAutoFillForm = (val) => {
-    console.log("Auto Fill Form", val);
-
     setDistrict({
       name: val.DistrictName,
       value: val.DistrictID,
@@ -246,45 +175,43 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
   // End Handlers
 
   const setForm = (val) => {
-    console.log("Set Form", val);
-
     const newDistrict = {
-      name: val.Data.Districts[0].District,
-      value: val.Data.Districts[0].DistrictID,
+      name: val?.Data?.Districts[0].District,
+      value: val?.Data?.Districts[0].DistrictID,
     };
 
     const newCity = {
-      name: val.Data.CompleteLocation.city,
-      id: val.Data.CompleteLocation.cityid,
+      name: val?.Data?.CompleteLocation.city,
+      id: val?.Data?.CompleteLocation.cityid,
     };
 
     const newProvince = {
-      name: val.Data.CompleteLocation.province,
-      id: val.Data.CompleteLocation.provinceid,
+      name: val?.Data?.CompleteLocation.province,
+      id: val?.Data?.CompleteLocation.provinceid,
     };
 
-    const newKecamatanList = val.Data.Districts[0].DistrictList.map((i) => ({
+    const newKecamatanList = val?.Data?.Districts[0].DistrictList.map((i) => ({
       value: i.DistrictID,
       name: i.District,
     }));
 
-    const newPostalCodeList = val.Data.Districts[0].PostalCodes.map((i) => ({
+    const newPostalCodeList = val?.Data?.Districts[0].PostalCodes.map((i) => ({
       value: i.ID,
       name: i.PostalCode,
     }));
 
-    const findPostalCode = val.Data.Districts[0].PostalCodes.find(
-      (item) => item.PostalCode === val.Data.CompleteLocation.postal
+    const findPostalCode = val?.Data?.Districts[0].PostalCodes.find(
+      (item) => item.PostalCode === val?.Data?.CompleteLocation.postal
     );
 
     const newPostalCode = {
-      name: findPostalCode.Description,
-      value: findPostalCode.ID,
+      name: findPostalCode?.Description,
+      value: findPostalCode?.ID,
     };
 
     const newCoordinates = {
-      lat: val.Data.Lat,
-      long: val.Data.Long,
+      lat: val?.Data?.Lat,
+      long: val?.Data?.Long,
     };
 
     setDistrict(newDistrict);
@@ -305,41 +232,6 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
       coordinates: newCoordinates,
     });
   };
-
-  useEffect(() => {
-    if (!districtData) return;
-
-    if (districtData.Message.Code === 500) {
-      setCoordinates({
-        lat: districtData.Data.lat,
-        long: districtData.Data.lng,
-      });
-      setIsOpenAddManual(true);
-      return;
-    }
-
-    setForm(districtData);
-
-    // Prepare all the new values first
-  }, [districtData, address, location]); // Add other dependencies if needed
-
-  useEffect(() => {
-    if (latLongData) {
-      // Handle the lat long data here
-      if (latLongData?.Message?.Code === 200) {
-        // Additional logic here
-      }
-    }
-  }, [latLongData]);
-  useEffect(() => {
-    if (latLongData) {
-      console.log("Lat Long Data", latLongData);
-      // Handle the lat long data here
-      // if (latLongData.Message.Code === 200) {
-      //   // Additional logic here
-      // }
-    }
-  }, [latLongData]);
 
   return (
     <div className="space-y-4 my-4 mx-12 text-xs">
@@ -366,15 +258,14 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
           <InputSearchLocation
             onClickSearchResult={(val) => {
               setLocation({
-                id: val.id,
-                title: val.title,
+                id: val.ID,
+                title: val.Title,
               });
             }}
             errors={errors}
             onSelectLocation={(val) => {
               console.log(val, "hello");
             }}
-            searchResults={searchResults?.slice(0, 3)}
             changeEvent={handleLocationChange}
             locationRef={locationRef}
             addressValue={address}
@@ -401,11 +292,11 @@ const AddressForm = ({ AddressData, errors, defaultValue }) => {
                 value: val[0].value,
               })
             }
-            classname={`${errors.districtID ? "!border-error-500" : ""}`}
+            classname={`${errors?.districtID ? "!border-error-500" : ""}`}
           />
-          {errors.districtID ? (
+          {errors?.districtID ? (
             <span className="font-medium text-error-400 text-xs block mt-2">
-              {errors.districtID}
+              {errors?.districtID}
             </span>
           ) : (
             ""

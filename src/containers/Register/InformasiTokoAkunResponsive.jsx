@@ -10,6 +10,9 @@ import { Dropdown } from "@/app/garasi/page";
 import SWRHandler from "@/services/useSWRHook";
 import { DivParticleRegister } from "./InformasiTokoAkun";
 import ImageUploaderRegisterResponsive from "@/components/ImageUploader/ImageUploaderRegisterResponsive";
+import ImageUploaderResponsive from "@/components/ImageUploader/ImageUploaderResponsive";
+import Bottomsheet from "@/components/Bottomsheet/Bottomsheet";
+import toast from "@/store/toast";
 
 const api = process.env.NEXT_PUBLIC_API_HASYIM;
 
@@ -19,6 +22,7 @@ const InformasiTokoAkunResponsive = () => {
   const [defaultManajemenLokasi, setDefaultManajemenLokasi] = useState(null);
   const { formData, errors, handleInputChange } = registerForm();
   const { useSWRHook } = new SWRHandler();
+  const { dataBottomsheet } = toast();
 
   // API Calls
   const { data: dataBusinessEntity } = useSWRHook(api + "v1/business_entity");
@@ -51,6 +55,19 @@ const InformasiTokoAkunResponsive = () => {
     }
   }, [manajemenLokasi]);
 
+  useEffect(() => {
+    if (defaultManajemenLokasi) {
+      handleInputChange("address", defaultManajemenLokasi.address);
+      handleInputChange("location", defaultManajemenLokasi.location?.title);
+      handleInputChange("districtID", defaultManajemenLokasi.district?.value);
+      handleInputChange("cityID", defaultManajemenLokasi.city?.id);
+      handleInputChange("provinceID", defaultManajemenLokasi.province?.id);
+      handleInputChange("postalCode", defaultManajemenLokasi.postalCode?.name);
+      handleInputChange("latitude", defaultManajemenLokasi.coordinates?.lat);
+      handleInputChange("longitude", defaultManajemenLokasi.coordinates?.long);
+    }
+  }, [defaultManajemenLokasi]);
+
   // Helper Functions
   const handleInitialData = (data) => {
     Object.entries(data).forEach(([key, value]) =>
@@ -74,7 +91,6 @@ const InformasiTokoAkunResponsive = () => {
   };
 
   const setBusinessEntityData = (merchantData, businessEntities) => {
-    console.log(merchantData, businessEntities, " kadal");
     if (merchantData.businessEntityID && businessEntities) {
       const entity = businessEntities.find(
         (item) => item.ID == merchantData.businessEntityID
@@ -104,7 +120,8 @@ const InformasiTokoAkunResponsive = () => {
   };
 
   return (
-    <div className="pt-14 pb-24 bg-white min-h-screen">
+    <div className="pt-8 px-4 pb-24 bg-white min-h-screen">
+      {/* <Bottomsheet>{dataBottomsheet}</Bottomsheet> */}
       <h1 className="text-sm font-semibold text-neutral-900 mb-5">
         Informasi Toko
       </h1>
@@ -195,6 +212,16 @@ const InformasiTokoAkunResponsive = () => {
           <ImageUploaderRegisterResponsive
             value={(e) => handleInputChange("logo", e)}
             defaultValue={formData[0].logo}
+          />
+          <ImageUploaderResponsive
+            className="!rounded-[4px] !size-[40px]"
+            getImage={(e) => console.log(e)}
+            maxSize={10000}
+            uploadText=""
+            isCircle={true}
+            onUpload={() => {}}
+            onError={() => {}}
+            error={false}
           />
         </DivParticleRegister>
         {/* Location Management */}

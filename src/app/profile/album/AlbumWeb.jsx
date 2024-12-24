@@ -3,17 +3,19 @@
 import { useState, useEffect } from "react";
 import DataEmpty from "@/components/DataEmpty/DataEmpty";
 import style from "./Album.module.scss";
-import { Sidebar } from "@/components/Sidebar/Sidebar";
 import ProductGrid from "@/components/ProductsSectionComponent/ProductGrid";
 import Image from "next/image";
 import { EllipsisVertical, Plus } from "lucide-react";
+import Modal from "@/components/Modals/modal";
+import { useRouter } from "next/navigation";
 
-function NewAlbumCard() {
+function NewAlbumCard({ setModalNewAlbum }) {
   return (
     <div className="flex flex-col flex-1 shrink self-stretch pb-12 text-sm font-semibold leading-tight text-center text-black basis-0">
       <button
         className="flex flex-col justify-center items-center bg-white rounded-xl border-primary-700 border-dashed border h-48 w-full hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
         aria-label="Create new album"
+        onClick={() => setModalNewAlbum(true)}
       >
         <Plus size={24} className="text-primary-700" />
         <div className="mt-2.5">Album Baru</div>
@@ -136,7 +138,9 @@ function ImageGrid({ images }) {
   return null;
 }
 
-function AlbumCard({ title, itemCount, images }) {
+function AlbumCard({ id, title, itemCount, images }) {
+  const router = useRouter();
+
   const [menuOpen, setMenuOpen] = useState(false);
   const menuContainerClass = `menu-container-${title.replace(
     /\s+/g,
@@ -158,7 +162,12 @@ function AlbumCard({ title, itemCount, images }) {
 
   return (
     <div className="flex flex-col self-stretch my-auto">
-      <ImageGrid images={images} />
+      <div
+        className="cursor-pointer"
+        onClick={() => router.push("/profile/album/" + id)}
+      >
+        <ImageGrid images={images} />
+      </div>
       <div className="flex flex-col mt-3 w-full leading-tight">
         <div className="flex justify-between text-base ">
           <div className="font-bold text-black">{title}</div>
@@ -190,44 +199,51 @@ function AlbumCard({ title, itemCount, images }) {
   );
 }
 
-function AlbumGrid({ albumItems }) {
+function AlbumGrid({ albumItems, setModalNewAlbum }) {
   return (
     <div className="flex flex-col justify-center p-6 bg-white rounded-xl shadow-muatmuat">
       <div className="grid grid-cols-3 gap-6">
         {albumItems.map((album) => (
           <AlbumCard
             key={album.id}
+            id={album.id}
             title={album.title}
             itemCount={album.itemCount}
             images={album.images}
           />
         ))}
-        <NewAlbumCard />
+        <NewAlbumCard setModalNewAlbum={setModalNewAlbum} />
       </div>
     </div>
   );
 }
 
-function AlbumWeb({ albumItems, lastVisited }) {
+function AlbumWeb({
+  albumItems,
+  lastVisited,
+  modalNewAlbum,
+  setModalNewAlbum,
+}) {
   return (
-    <div className={style.main}>
+    <>
       <div className="flex gap-[30px]">
-        <Sidebar />
         <div className="w-[900px] space-y-6">
           <div className="flex gap-3">
             <h1 className="text-xl font-bold">Album</h1>
           </div>
-
           {albumItems.length === 0 ? (
             <DataEmpty
               title="Albummu kamu kosong"
               subtitle="Isi Album-mu dengan klik ikon hati saat kamu ketemu barang yang kamu suka!"
               buttonText="Cari Barang yang Disukai"
+              onButtonClick={() => setModalNewAlbum(true)}
             />
           ) : (
-            <AlbumGrid albumItems={albumItems} />
+            <AlbumGrid
+              albumItems={albumItems}
+              setModalNewAlbum={setModalNewAlbum}
+            />
           )}
-
           <div className="">
             <ProductGrid
               title="Terakhir Kamu Lihat"
@@ -236,7 +252,16 @@ function AlbumWeb({ albumItems, lastVisited }) {
           </div>
         </div>
       </div>
-    </div>
+
+      <Modal
+        isOpen={modalNewAlbum}
+        setIsOpen={setModalNewAlbum}
+        closeArea={false}
+        closeBtn={true}
+      >
+        si kocak
+      </Modal>
+    </>
   );
 }
 

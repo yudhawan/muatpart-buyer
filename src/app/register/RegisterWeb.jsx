@@ -19,7 +19,7 @@ function RegisterWeb({
   hasVerifiedRekening,
   remainingTime,
 }) {
-  const { prevStep, formData } = registerForm();
+  const { prevStep, formData, setCurrentStep, currentStep } = registerForm();
   const router = useRouter();
   const step = useSearchParams().get("step") || "1";
 
@@ -32,7 +32,8 @@ function RegisterWeb({
   const handleGoBack = () => {
     if (step !== "1") {
       prevStep();
-      router.push(`/register?step=${Number(step) - 1}`);
+      // router.push(`/register?step=${Number(step) - 1}`);
+      setCurrentStep(currentStep);
     }
   };
 
@@ -71,7 +72,9 @@ function RegisterWeb({
                       const index = BREADCRUMB_ITEMS.findIndex(
                         (item) => item === val
                       );
-                      router.push(`/register?step=${Number(index) + 1}`);
+                      // router.push(`/register?step=${Number(index) + 1}`);
+                      nextStep();
+                      setCurrentStep(currentStep);
                     }}
                   />
                 </div>

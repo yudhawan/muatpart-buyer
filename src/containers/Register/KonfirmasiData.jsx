@@ -158,20 +158,25 @@ const KonfirmasiData = () => {
     },
   ];
 
-   const handleEdit = (section) => {
-     // Arahkan ke step yang sesuai berdasarkan section
-     switch (section.title) {
-       case "Informasi Toko":
-         router.push("/register?step=1");
-         break;
-       case "Data Pendaftar":
-       case "Informasi Rekening":
-         router.push("/register?step=2");
-         break;
-       default:
-         break;
-     }
-   };
+  const handleEdit = (section) => {
+    // Arahkan ke step yang sesuai berdasarkan section
+    switch (section.title) {
+      case "Informasi Toko":
+        //  router.push("/register?step=1");
+        setCurrentStep(1);
+
+        break;
+      case "Data Pendaftar":
+        setCurrentStep(2);
+        break;
+      case "Informasi Rekening":
+        // router.push("/register?step=2");
+        setCurrentStep(2);
+        break;
+      default:
+        break;
+    }
+  };
 
   useEffect(() => {
     setFormIsFilled(true);

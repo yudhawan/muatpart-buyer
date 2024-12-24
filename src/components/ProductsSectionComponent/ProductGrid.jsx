@@ -65,15 +65,6 @@ const ProductGrid = ({
     return "grid-cols-6";
   };
 
-  // Loading placeholder component
-  const LoadingPlaceholder = () => (
-    <div className="animate-pulse">
-      <div className="w-full aspect-square bg-gray-200 rounded-lg mb-2"></div>
-      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-      <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-    </div>
-  );
-
   return (
     <section className="bg-white py-6">
       <div className="w-full max-w-[1080px] mx-auto">
@@ -91,10 +82,6 @@ const ProductGrid = ({
               image={`https://prd.place/170?id=2`}
             />
           ))}
-          {!loading &&
-            Array.from({ length: 6 }).map((_, index) => (
-              <LoadingPlaceholder key={`loading-${index}`} />
-            ))}
         </div>
 
         {totalProducts.length > 6 && <div ref={observerRef} className="h-8" />}

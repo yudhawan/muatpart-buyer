@@ -77,7 +77,7 @@ const Bottomsheet = ({
   return (
     <>
       {showBottomsheet && (
-        <div className="fixed inset-0 z-50">
+        <div className="fixed inset-0 z-[100]">
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/50 transition-opacity duration-300"
@@ -106,7 +106,7 @@ const Bottomsheet = ({
               className="w-[38px] h-1 rounded-[4px] bg-[#dddddd] mx-auto mb-3 cursor-grab active:cursor-grabbing"
               onTouchStart={handleTouchStart}
             />
-            {titleBottomsheet !== ' -' && (
+            {titleBottomsheet !== '  -' && (
               <div
                 className={`flex ${
                   withReset && "justify-between"

@@ -15,6 +15,7 @@ import { modal } from "@/store/modal";
 import { WebModal } from "../firsttimer/web";
 import { useFormProps } from "../firsttimer/page";
 import toast from "@/store/toast";
+import { Skeleton } from "@/app/profileseller/ProfilesellerWeb";
 
 export default function Web({
   selectedVehicle,
@@ -23,10 +24,18 @@ export default function Web({
   setCategories,
   searchTerm,
   setSearchTerm,
+  garageList,
 }) {
   const { setModalOpen, setModalContent, setModalConfig } = modal();
   const formProps = useFormProps();
+  if (!garageList)
+    return (
+      <div className="px-10 py-4">
+        <Skeleton fill={10} />
+      </div>
+    );
 
+  // return console.log(garageList, " aw")
   return (
     <>
       {/* Vehicle Card */}
@@ -34,8 +43,8 @@ export default function Web({
         <div className="flex items-center gap-6 h-fit">
           <div className="w-[116px] h-[116px] border border-neutral-400 rounded-md p-6 bg-neutral-50 relative">
             <Image
-              src={selectedVehicle.image}
-              alt={`${selectedVehicle.brand} ${selectedVehicle.model}`}
+              src={selectedVehicle[0]?.image || ""}
+              alt={`${selectedVehicle[0].brand} ${selectedVehicle[0].model}`}
               width={68}
               height={68}
               className="object-contain"
@@ -44,25 +53,14 @@ export default function Web({
           <div className="flex flex-col justify-between h-[116px]">
             <div className="flex flex-col justify-between">
               <span className="font-bold text-lg flex items-center gap-4">
-                {selectedVehicle.type} · {selectedVehicle.brand} ·{" "}
-                {selectedVehicle.year}
+                {selectedVehicle[0].type} · {selectedVehicle[0].brand} ·{" "}
+                {selectedVehicle[0].year}
                 <div className="flex gap-4">
                   <Pencil
                     className="cursor-pointer"
                     size={16}
                     onClick={() => {
                       setModalOpen(false);
-                      // Create new instance of formProps
-                      // const formProps = {
-                      //   formState: {
-                      //     vehicle: { value: "Mobil", error: "" },
-                      //     brand: { value: "Toyota", error: "" },
-                      //     year: { value: "2023", error: "" },
-                      //     model: { value: "Innova", error: "" },
-                      //     type: { value: "2.0 G", error: "" },
-                      //   },
-                      // };
-
                       setModalContent(
                         <WebModal
                           mode="edit"
@@ -103,10 +101,10 @@ export default function Web({
                 </div>
               </span>
               <p className="text-xs font-medium text-neutral-700">
-                {selectedVehicle.model}
+                {selectedVehicle[0].model}
               </p>
               <p className="text-xs font-medium text-neutral-700">
-                {selectedVehicle.variant}
+                {selectedVehicle[0].variant}
               </p>
             </div>
             <div className="flex gap-2">
@@ -151,8 +149,8 @@ export default function Web({
       {/* Search Section */}
       <div className="mb-8 p-6 mx-auto w-[690px]">
         <h3 className="text-lg text-center font-bold mb-4">
-          Cari Suku Cadang yang cocok dengan {selectedVehicle.brand}{" "}
-          {selectedVehicle.year}
+          Cari Suku Cadang yang cocok dengan {selectedVehicle[0].brand}{" "}
+          {selectedVehicle[0].year}
         </h3>
         <div className="flex gap-6">
           <div className="relative flex-1">
@@ -176,7 +174,7 @@ export default function Web({
       {/* Categories Grid */}
       <div className="px-[100px] pb-6">
         <h3 className="text-lg font-bold mb-4">
-          Kategori untuk {selectedVehicle.brand} {selectedVehicle.year}
+          Kategori untuk {selectedVehicle[0].brand} {selectedVehicle[0].year}
         </h3>
         {/* <DataNotFound
           image={"/img/daftarprodukicon.png"}
@@ -280,10 +278,13 @@ export const DaftarKendaraanModal = ({
   };
 
   useEffect(() => {
-    if(selectedKendaraan !== 'Scania'){
+    if (selectedKendaraan !== "Scania") {
       setModalOpen(false);
       setShowToast(true);
-      setDataToast({ type: "success", message: "Berhasil mengganti kendaraan" });
+      setDataToast({
+        type: "success",
+        message: "Berhasil mengganti kendaraan",
+      });
     }
   }, [selectedKendaraan]);
 

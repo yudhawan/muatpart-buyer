@@ -1,4 +1,3 @@
-
 import InformasiPendaftarDanRekeningResponsive from "@/containers/Register/InformasiPendaftarDanRekeningResponsive";
 import React, { useEffect } from "react";
 import { useHeader } from "@/common/ResponsiveContext";
@@ -18,7 +17,7 @@ function RegisterResponsive({
   hasVerifiedRekening,
   remainingTime,
 }) {
-  const { prevStep, formData, currentStep } = registerForm();
+  const { prevStep, formData, currentStep, setCurrentStep } = registerForm();
   const router = useRouter();
   const step = useSearchParams().get("step") || "1";
 
@@ -49,10 +48,7 @@ function RegisterResponsive({
         </button>
       </div>
     );
-  if (step === "2")
-    return (
-      <InformasiPendaftarDanRekeningResponsive />
-    );
+  if (step === "2") return <InformasiPendaftarDanRekeningResponsive />;
   if (screen === "example3")
     return (
       <div className=" flex flex-col">
@@ -75,7 +71,8 @@ function RegisterResponsive({
   const handleGoBack = () => {
     if (currentStep + 1 !== 1) {
       prevStep();
-      router.push(`/register?step=${currentStep}`);
+      // router.push(`/register?step=${currentStep}`);
+      setCurrentStep(currentStep);
     }
   };
 
@@ -130,7 +127,7 @@ function RegisterResponsive({
   return (
     <>
       <NavbarCount
-        classname="w-full fixed top-[6px] left-0"
+        classname="w-full fixed top-0 left-0"
         title="Daftar Menjadi Toko"
         subtitle={
           currentStep + 1 === 1
@@ -144,20 +141,6 @@ function RegisterResponsive({
         backAction={() => console.log("ngale")}
       />
       <div>
-        {/* <button
-        className="bg-primary-600"
-        onClick={() => {
-          setScreen("example");
-          setAppBar({
-            title: "Example",
-            appBarType: "title",
-            onBack: () => clearScreen(),
-          });
-        }}
-      >
-        To example Screen
-      </button>
-      <p>register Responsive</p> */}
         {currentStep + 1 === 1 && <InformasiTokoAkunResponsive />}
         {currentStep + 1 === 3 && <KonfirmasiDataResponsive />}
       </div>

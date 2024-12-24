@@ -11,6 +11,10 @@ import ProductGrid from "@/components/ProductsSectionComponent/ProductGrid";
 import CategoriesHandler from "@/libs/CategoriesHandler";
 
 function HomePageWeb({
+  headerImages,
+  bannerImages,
+  promotionImages,
+  joinedSellers,
   vehicleOptions,
   lastSeenProducts,
   mostVisitedProducts,
@@ -110,41 +114,12 @@ function HomePageWeb({
     }
   }, [vehicleOptions]);
 
-  const headerImages = [
-    "https://placehold.co/500x250/red/white.png",
-    "https://placehold.co/500x250/green/white.png",
-    "https://placehold.co/500x250/blue/white.png",
-  ];
-
-  const bannerImages = [
-    "https://placehold.co/1000x250/red/white.png",
-    "https://placehold.co/1000x250/green/white.png",
-    "https://placehold.co/1000x250/blue/white.png",
-  ];
-
-  const promotionImages = [
-    "https://placehold.co/1000x500/red/white.png",
-    "https://placehold.co/1000x500/green/white.png",
-    "https://placehold.co/1000x500/blue/white.png",
-  ];
-
   const handleInputChange = (e) => {
     setVehicle({ ...filter, keyword: e.target.value });
   };
 
-  const joinedSellers = [
-    "https://cdn-icons-png.flaticon.com/512/732/732212.png",
-    "https://cdn-icons-png.flaticon.com/512/145/145807.png",
-    "https://cdn-icons-png.flaticon.com/512/2111/2111370.png",
-    "https://cdn-icons-png.flaticon.com/512/733/733579.png",
-    "https://cdn-icons-png.flaticon.com/512/888/888859.png",
-    "https://cdn-icons-png.flaticon.com/512/732/732200.png",
-    "https://cdn-icons-png.flaticon.com/512/888/888879.png",
-    "https://cdn-icons-png.flaticon.com/512/888/888846.png",
-    "https://cdn-icons-png.flaticon.com/512/888/888853.png",
-    "https://cdn-icons-png.flaticon.com/512/888/888847.png",
-  ];
- 
+  joinedSellers = joinedSellers.map((seller) => seller.logo);
+
   return (
     <div>
       {/* <pre>
@@ -184,7 +159,7 @@ function HomePageWeb({
 
             <div className="grid grid-flow-row-dense grid-cols-4 grid-rows-3 gap-3">
               <Dropdown
-                defaultValue={filter.vehicle}
+                defaultValue={[filter.vehicle]}
                 options={options.vehicle}
                 placeholder="Pilih Jenis Kendaraan"
                 classname="!w-full col-span-4"
@@ -201,7 +176,7 @@ function HomePageWeb({
                 onSelected={(val) => setVehicle({ ...filter, vehicle: val[0] })}
               />
               <Dropdown
-                defaultValue={filter.brand}
+                defaultValue={[filter.brand]}
                 options={options.brand}
                 placeholder="Pilih Brand"
                 classname="!w-full col-span-2"
@@ -218,7 +193,7 @@ function HomePageWeb({
                 onSelected={(val) => setVehicle({ ...filter, brand: val[0] })}
               />
               <Dropdown
-                defaultValue={filter.year}
+                defaultValue={[filter.year]}
                 options={options.year}
                 placeholder="Pilih Tahun"
                 classname="!w-full col-span-2"
@@ -235,7 +210,7 @@ function HomePageWeb({
                 onSelected={(val) => setVehicle({ ...filter, year: val[0] })}
               />
               <Dropdown
-                defaultValue={filter.model}
+                defaultValue={[filter.model]}
                 options={options.model}
                 placeholder="Pilih Model"
                 classname="!w-full col-span-2"
@@ -252,7 +227,7 @@ function HomePageWeb({
                 onSelected={(val) => setVehicle({ ...filter, model: val[0] })}
               />
               <Dropdown
-                defaultValue={filter.type}
+                defaultValue={[filter.type]}
                 options={options.type}
                 placeholder="Pilih Tipe"
                 classname="!w-full col-span-2"
@@ -310,6 +285,7 @@ function HomePageWeb({
       <ProductGrid
         totalProducts={Array(42).fill(mostVisitedProducts).flat().slice(0, 42)}
         title="Produk Yang Banyak Dikunjungi"
+        loading={false}
       />
 
       <ProductGrid

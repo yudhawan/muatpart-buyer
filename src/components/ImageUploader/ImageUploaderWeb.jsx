@@ -11,6 +11,7 @@ import CropperImage from "../Cropper/Cropper";
 import IconComponent from "../IconComponent/IconComponent";
 
 export default function ImageUploaderWeb({
+  key,
   className,
   getImage, //get image
   error = false,
@@ -23,7 +24,7 @@ export default function ImageUploaderWeb({
   onUpload = () => {}, //function that return image of uploaded image
   onError = () => {}, //function that return error when uploading image,
   value = null,
-  onFinishCrop = () => {}
+  onFinishCrop = () => {},
 }) {
   const imageRef = useRef(null);
   const [image, setImage] = useState(null); //set image source for cropper
@@ -61,7 +62,7 @@ export default function ImageUploaderWeb({
   };
 
   const getCroppedData = (value) => {
-    onFinishCrop(imageFiles)
+    onFinishCrop(imageFiles);
     if (value) {
       setCropData(value);
       getImage(value);
@@ -89,6 +90,7 @@ export default function ImageUploaderWeb({
   return (
     <>
       <div
+        key={key}
         className={`${
           error ? styles.ImageUploaderError : styles.ImageUploader
         } ${!error && image ? styles.borderImage : styles.borderDashed} ${
